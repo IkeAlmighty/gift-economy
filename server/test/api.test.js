@@ -1,6 +1,6 @@
 const request = require("supertest");
 const mongoose = require("mongoose");
-const app = require("../server"); // Export your express app from server.js
+const app = require("../../server"); // Export your express app from server.js
 
 const User = require("../models/User");
 const Gift = require("../models/Gift");
