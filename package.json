@@ -1,0 +1,23 @@
+{
+  "name": "gift-economy",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/ikealmighty/gift-economy#readme",
+  "bugs": {
+    "url": "https://github.com/ikealmighty/gift-economy/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ikealmighty/gift-economy.git"
+  },
+  "license": "ISC",
+  "author": "ikealmighty",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "concurrently": "^9.2.0"
+  }
+}

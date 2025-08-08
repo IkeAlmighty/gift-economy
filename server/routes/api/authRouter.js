@@ -1,6 +1,5 @@
-const express = require("express");
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+import User from "../../models/User.js";
+
 const router = express.Router();
 
 router.post("/signup", async (req, res) => {
@@ -29,4 +28,4 @@ router.post("/signout", (req, res) => {
   res.clearCookie("token").json({ message: "Signed out" });
 });
 
-module.exports = router;
+export default router;
