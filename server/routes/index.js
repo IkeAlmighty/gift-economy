@@ -1,7 +1,7 @@
 import express from "express";
-import authMiddleware from "../../middleware/authMiddleware";
-import authRouter from "./authRouter";
-import listingsRouter from "./listingsRouter";
+import authMiddleware from "../middleware/authMiddleware.js";
+import authRouter from "./authRouter.js";
+import listingsRouter from "./listingsRouter.js";
 
 const router = express.Router();
 

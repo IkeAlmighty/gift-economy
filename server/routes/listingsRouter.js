@@ -1,6 +1,6 @@
 import express from "express";
-import Gift from "../../models/Gift.js";
-import Request from "../../models/Request.js";
+import Gift from "../models/Gift.js";
+import Request from "../models/Request.js";
 
 const router = express.Router();
 

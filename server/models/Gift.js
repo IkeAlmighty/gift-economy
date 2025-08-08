@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const giftSchema = new mongoose.Schema({
   title: String,
@@ -6,4 +6,4 @@ const giftSchema = new mongoose.Schema({
   owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 
-module.exports = mongoose.model("Gift", giftSchema);
+export default mongoose.model("Gift", giftSchema);

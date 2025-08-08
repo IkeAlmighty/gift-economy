@@ -1,10 +1,11 @@
-require("dotenv").config();
-const express = require("express");
-const mongoose = require("mongoose");
-const cookieParser = require("cookie-parser");
+import dotenv from "dotenv";
+import express from "express";
+import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 
-const authRoutes = require("./routes/auth");
-const apiRoutes = require("./routes/api");
+import apiRoutes from "./routes/index.js";
+
+dotenv.config();
 
 const app = express();
 app.use(express.json());
@@ -15,7 +16,6 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB error", err));
 
-app.use("/auth", authRoutes);
 app.use("/api", apiRoutes);
 
 const PORT = process.env.PORT || 3000;
@@ -23,4 +23,4 @@ if (process.env.NODE_ENV !== "test") {
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
 
-module.exports = app;
+export default app;
