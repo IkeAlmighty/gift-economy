@@ -14,7 +14,7 @@
   "author": "ikealmighty",
   "type": "commonjs",
   "scripts": {
-    "dev": "concurrently \"cd server && npm run dev\" \"echo no client available\""
+    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\""
   },
   "dependencies": {
     "concurrently": "^9.2.0"

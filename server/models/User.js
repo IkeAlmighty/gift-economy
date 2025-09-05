@@ -4,7 +4,6 @@ import bcrypt from "bcrypt";
 const userSchema = new mongoose.Schema({
   username: { type: String, unique: true },
   password: String,
-  trustworthiness: { type: Number, default: 0 },
   gifts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Gift" }],
   requests: [{ type: mongoose.Schema.Types.ObjectId, ref: "Request" }],
 });
