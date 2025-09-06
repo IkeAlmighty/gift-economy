@@ -14,9 +14,13 @@
   "author": "ikealmighty",
   "type": "commonjs",
   "scripts": {
-    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\""
+    "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\"",
+    "install": "cd client && npm i && cd ../server && npm i"
   },
   "dependencies": {
     "concurrently": "^9.2.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2"
   }
 }
