@@ -15,7 +15,8 @@
   "type": "commonjs",
   "scripts": {
     "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\"",
-    "install": "cd client && npm i && cd ../server && npm i"
+    "install": "cd client && npm i && cd ../server && npm i",
+    "seed": "node server/seeds/index.js"
   },
   "dependencies": {
     "concurrently": "^9.2.0"
