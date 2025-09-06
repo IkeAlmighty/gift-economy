@@ -13,7 +13,7 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-router.post("/signin", async (req, res) => {
+router.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
   if (!user || !(await user.comparePassword(password)))
@@ -25,7 +25,7 @@ router.post("/signin", async (req, res) => {
   res.cookie("token", token, { httpOnly: true }).json({ message: "Signed in" });
 });
 
-router.post("/signout", (req, res) => {
+router.post("/logout", (req, res) => {
   res.clearCookie("token").json({ message: "Signed out" });
 });
 
