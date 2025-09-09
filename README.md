@@ -103,4 +103,4 @@ The first iteration of this app is opensource, but it is not decentralized. Afte
 
 ## Where NOT to go
 
-This project is a response to the climate crisis, to corporate greed, and to the coming economic depression(s) caused by poor governance and the ongoing death march of Capitalism. So it does not make sense to rely on blockchain technology (at least where it affects the environment), and it does not make since to rely on LLMs either (since LLMs are energy sappers and also are owned primarily by large corporate interests). These technologies can be learned from, but need to be alterted before being included in this project.
+This project is a response to the climate crisis, to corporate greed, and to the coming economic depression(s) caused by poor governance and the ongoing death march of Capitalism. So it does not make sense to rely on blockchain technology (at least where it affects the environment), and it does not make since to rely on LLMs either (since LLMs are energy sappers and also are owned primarily by large corporate interests). These technologies can be learned from, but need to be altered before being included in this project.
