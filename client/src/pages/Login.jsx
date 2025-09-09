@@ -1,20 +1,24 @@
 import { useState } from "react";
-import { useSearchParams } from "react-router";
-import { login } from "../API/user";
+import { useSearchParams, useNavigate } from "react-router";
+import { useUser } from "../Contexts/UserContext";
 
 export default function Login() {
-  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const { login } = useUser();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   async function handleLogin(e) {
     e.preventDefault();
-    const response = await login({ username, password });
-    console.log(response);
+    const { error } = await login({ username, password });
 
-    if (response.ok) {
-      console.log(searchParams);
+    if (!error) {
+      const callback = searchParams.get("callback");
+      if (callback) navigate(callback);
+      else navigate("/");
     }
   }
 
