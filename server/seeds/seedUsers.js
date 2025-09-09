@@ -1,3 +1,1 @@
-export default [
-  { username: "test", email: "test@test.com", password: "12345" },
-];
+export default [{ username: "test", password: "12345" }];
