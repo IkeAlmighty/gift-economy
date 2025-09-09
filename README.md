@@ -64,6 +64,13 @@ User Model:
  - connections: [User._id]
 ```
 
+```
+Message Model:
+ - text: String
+ - sender: User._id
+ - chatRoom: [User._id]
+```
+
 ## User Interface
 
 ### Pages
