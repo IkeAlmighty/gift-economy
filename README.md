@@ -12,7 +12,7 @@ A application that utilizes supply/demand analysis, encourages communities to un
 
 - decentralized facilitation of trade (to avoid power grabs)
 - vertical production lines (to reduce reliance on capital based systems)
-- bootstrapping the maintenance and service of the project.
+- bootstrapping the maintenance and service of the project through the gift economy it supports.
 - meeting the basic needs (sustenance, shelter) of those using the project's system, through the system.
 - frequency of gift delivery ie "gift" velocity (which is similar to "exchange velocity" as described in market economics).
 
