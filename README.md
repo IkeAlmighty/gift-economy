@@ -91,6 +91,10 @@ A project is a collection of gifts and requests depicting a larger whole. An exa
 
 This project needs to draw on knowledge and experience in economics and logistical planning. Studying internal systems built by Amazon and Walmart seem like a good start. Studying real life and real historical examples of gift economies is important. Ideas might come from these areas.
 
+### Decentralization
+
+The first iteration of this app is opensource, but it is not decentralized. After the MVP is working to some degree, the backend needs to be integrated with the frontend and refractored into a decentralized code base. Some thought will have to be had on the architecture and how to make this work without envinronmentally harmful blockchain technology.
+
 ## Where NOT to go
 
 This project is a response to the climate crisis, to corporate greed, and to the coming economic depression. So it does not make sense to rely on blockchain technology (at least where it affects the environment), and it does not make since to rely on LLMs either (since LLMs are energy sappers and also are owned primarily by large corporate interests). These technologies can be learned from, but need to be alterted before being included in this project.
