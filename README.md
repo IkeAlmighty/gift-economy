@@ -88,10 +88,10 @@ A request is something that someone is desiring to find on the "market". Once cr
 **_Creating a Project_**  
 A project is a collection of gifts and requests depicting a larger whole. An example project might be titled "Pasta". Pasta requires flour, an hour of labor time, and water. So "flour" and "pasta making labor" might be listed under the requests for the project. Since water is fairly commonplace, the creator of the project wouldn't list it as a request. Additionally, if the creator of the request is open to gift suggestions, then other users can suggest gifts from their feeds to be used in the project. These go into the giftSuggestions. If the user is open to request suggestions, then users can create requests to be added to the project's request suggestions, and moved to the actual requests list at the project owner's discretion.
 
-**_Sort By Function_**
+**_Sort By Function_**  
 Each list item (project, gift, and request) has a type and a subtype. These, along with creation timestamps and the model types of each item should be available to a sort by function.
 
-**_Search Bar_**
+**_Search Bar_**  
 Each list item contains a large amount of text and tags, and a search bar to look for specific listings would be helpful.
 
 ## Where to from Here?
