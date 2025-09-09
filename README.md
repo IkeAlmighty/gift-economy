@@ -14,7 +14,7 @@ A application that utilizes supply/demand analysis, encourages communities to un
 - vertical production lines (to reduce reliance on capital based systems)
 - bootstrapping the maintenance and service of the project.
 - meeting the basic needs (sustenance, shelter) of those using the project's system.
-- speed of delivery ie "gift" velocity (which is mostly the same as exchange velocity).
+- frequency of gift delivery ie "gift" velocity (which is similar to "exchange velocity" as described in market economics).
 
 The idea is to start with basic and easy to meet needs like food, and push the user base towards vertically integrating other parts of industry over time.
 
@@ -27,6 +27,8 @@ Gift Model:
 - owner: User._id
 - description: String
 - titleline: String
+- type: "Food" | "Shelter" | "Labor" | "Transportation" | "Other"
+- subtypes: [String]
 - suggestedProjects: [Project]
 ```
 
@@ -35,6 +37,8 @@ Request Model:
 - owner: User._id
 - description: String
 - titleline: String
+- type: "Food" | "Shelter" | "Labor" | "Transportation" | "Other"
+- subtypes: [String]
 ```
 
 ```
@@ -42,6 +46,18 @@ Project Model:
 - owner: User._id
 - requests: [Request]
 - requestSuggestions: [Request]
+- type: "Food" | "Shelter" | "Labor" | "Transportation" | "Other"
+- subtypes: [String]
+```
+
+```
+User Model:
+ - username: String
+ - password: String
+ - gifts: [Gift]
+ - requests: [Request]
+ - Projects: [Project]
+ - connections: [User._id]
 ```
 
 ## User Interface
@@ -64,3 +80,11 @@ A gift is something that someone is offering on the "market". Once created, the 
 
 _Creating a Request_  
 Requests need a description and a title, and they can have an optional image.
+
+## Where to from Here?
+
+This project needs to draw on knowledge and experience in economics and logistical planning. Studying internal systems built by Amazon and Walmart seem like a good start. Studying real life and real historical examples of gift economies is important. Ideas might come from these areas.
+
+## Where NOT to go
+
+This project is a response to the climate crisis, to corporate greed, and to the coming economic depression. So it does not make sense to rely on blockchain technology (at least where it affects the environment), and it does not make since to rely on LLMs either (since LLMs are energy sappers and also are owned primarily by large corporate interests). These technologies can be learned from, but need to be alterted before being included in this project.
