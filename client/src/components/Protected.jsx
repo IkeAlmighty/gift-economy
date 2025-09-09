@@ -2,9 +2,11 @@ import { useUser } from "../Contexts/UserContext";
 import { Navigate } from "react-router";
 
 export function Protected({ children }) {
-  const { user } = useUser();
+  const { user, loading } = useUser();
+
+  if (loading) return <>...Loading</>;
 
   if (user) {
-    return <>{...children}</>;
-  } else return <Navigate to="/login" />;
+    return <>{children}</>;
+  } else if (!loading) return <Navigate to="/login" />;
 }

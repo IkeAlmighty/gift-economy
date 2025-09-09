@@ -1,23 +1,44 @@
-import { createContext, useContext, useState } from "react";
-import { login as apiLogin, logout as apiLogout } from "../API/user";
+import { createContext, useContext, useState, useEffect } from "react";
+import {
+  login as controllerLogin,
+  logout as controllerLogout,
+  me,
+} from "../controls/user";
 
 export const UserContext = createContext(null);
 
 export function UserProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // hydrate user from backend
+    (async () => {
+      const _user = await me();
+      console.log(_user);
+      setUser(_user);
+      setLoading(false);
+    })();
+  }, []);
 
   const login = async (credentials) => {
-    const userData = await apiLogin(credentials);
-    setUser(userData);
+    const { data, error } = await controllerLogin(credentials);
+
+    if (!error) {
+      setUser(data.user);
+      setLoading(false);
+    }
+
+    return { data, error };
   };
 
   const logout = () => {
-    apiLogout();
+    controllerLogout();
     setUser(null);
   };
 
   return (
-    <UserContext.Provider value={{ user, login, logout }}>
+    <UserContext.Provider value={{ user, login, logout, loading }}>
       {children}
     </UserContext.Provider>
   );
