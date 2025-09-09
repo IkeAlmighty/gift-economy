@@ -1,5 +1,7 @@
 import User from "../models/User.js";
 import express from "express";
+import jwt from "jsonwebtoken";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -27,6 +29,11 @@ router.post("/login", async (req, res) => {
 
 router.post("/logout", (req, res) => {
   res.clearCookie("token").json({ message: "Signed out" });
+});
+
+router.get("/me", authMiddleware, (req, res) => {
+  const user = req.user;
+  res.json(user);
 });
 
 export default router;
