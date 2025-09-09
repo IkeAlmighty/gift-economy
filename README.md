@@ -16,7 +16,7 @@ A application that utilizes supply/demand analysis, encourages communities to un
 - meeting the basic needs (sustenance, shelter) of those using the project's system, through the system.
 - frequency of gift delivery ie "gift" velocity (which is similar to "exchange velocity" as described in market economics).
 
-The idea is to start with basic and easy to meet needs like food, and push the user base towards vertically integrating other parts of industry over time, with the priorities being basic needs so that reliance on the outside market economy is less necessary.
+The idea is to start with basic and easy to meet needs like food, and push the user base towards vertically integrating other parts of industry over time.
 
 ## Data Models
 
