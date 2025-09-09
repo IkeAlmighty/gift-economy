@@ -39,6 +39,7 @@ Request Model:
 - titleline: String
 - type: "Food" | "Shelter" | "Labor" | "Transportation" | "Other"
 - subtypes: [String]
+- completed: Boolean
 ```
 
 ```
