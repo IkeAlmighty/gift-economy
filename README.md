@@ -46,6 +46,9 @@ Project Model:
 - owner: User._id
 - requests: [Request]
 - requestSuggestions: [Request]
+- openToRequestSuggesions: Boolean
+- giftSuggestions: [Gift]
+- openToGiftSuggestions: Boolean
 - type: "Food" | "Shelter" | "Labor" | "Transportation" | "Other"
 - subtypes: [String]
 ```
@@ -76,10 +79,13 @@ Each item has a button for opening a chatroom with the owner of the list item.
 At the top of the feed is a create button where the user can choose to create a new project, new gift, or new request.
 
 _Creating a Gift | The Gift Component_  
-A gift is something that someone is offering on the "market". Once created, the gift component displays its title, description, image, and a button to open a chat room with the owner of the gift. Additionally, the gift can be
+A gift is something that someone is offering on the "market". Once created, the gift component displays its title, description, image, type, subtypes, and a button to open a chat room with the owner of the gift. Additionally, the gift can be suggested to a _Project_ by any user, which adds it to a the project's publically available gift suggestion list.
 
 _Creating a Request_  
-Requests need a description and a title, and they can have an optional image.
+A request is something that someone is desiring to find on the "market". Once created, the request component displays its title, description, image, type, subtypes, and a button to open a chat room with the owner of the request.
+
+_Creating a Project_
+A project is a collection of gifts and requests depicting a larger whole. An example project might be titled "Pasta". Pasta requires flour, an hour of labor time, and water. So "flour" and "pasta making labor" might be listed under the requests for the project. Since water is fairly commonplace, the creator of the project wouldn't list it as a request. Additionally, if the creator of the request is open to gift suggestions, then other users can suggest gifts from their feeds to be used in the project. These go into the giftSuggestions. If the user is open to request suggestions, then users can create requests to be added to the project's request suggestions, and moved to the actual requests list at the project owner's discretion.
 
 ## Where to from Here?
 
