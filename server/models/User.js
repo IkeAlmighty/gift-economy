@@ -6,6 +6,8 @@ const userSchema = new mongoose.Schema({
   password: String,
   gifts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Gift" }],
   requests: [{ type: mongoose.Schema.Types.ObjectId, ref: "Request" }],
+  projects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Project" }],
+  connections: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
 userSchema.pre("save", async function () {
