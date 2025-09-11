@@ -15,7 +15,6 @@ export function UserProvider({ children }) {
     // hydrate user from backend
     (async () => {
       const _user = await me();
-      console.log(_user);
       setUser(_user);
       setLoading(false);
     })();
