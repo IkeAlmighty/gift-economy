@@ -24,7 +24,7 @@ export function UserProvider({ children }) {
     const { data, error } = await controllerLogin(credentials);
 
     if (!error) {
-      setUser(data.user);
+      setUser(data);
       setLoading(false);
     }
 
