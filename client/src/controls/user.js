@@ -1,4 +1,4 @@
-// NOTE: Use the UserContext for logging in and logging out. This code
+// IMPORTANT NOTE: Use the UserContext for logging in and logging out. This code
 // is called by the context's respective functions.
 
 export async function login({ username, password }) {
@@ -16,7 +16,10 @@ export async function login({ username, password }) {
   return { data, error: data.error };
 }
 
-export async function logout() {}
+export async function logout() {
+  const response = await fetch("/api/auth/logout", { method: "POST" });
+  return await response.json();
+}
 
 export async function signup() {}
 

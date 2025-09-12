@@ -1,3 +1,4 @@
+import LogoutButton from "../components/LogoutButton";
 import PlusCloseButton from "../components/PlusCloseButton";
 
 function App() {
@@ -5,6 +6,7 @@ function App() {
     <>
       <div className="text-5xl">Gift Economy</div>
       <PlusCloseButton />
+      <LogoutButton />
     </>
   );
 }
