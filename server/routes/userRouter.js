@@ -24,7 +24,9 @@ router.post("/login", async (req, res) => {
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
     expiresIn: "7d",
   });
-  res.cookie("token", token, { httpOnly: true }).json({ message: "Signed in" });
+  res
+    .cookie("token", token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 100 })
+    .json({ message: "Signed in" });
 });
 
 router.post("/logout", (req, res) => {
