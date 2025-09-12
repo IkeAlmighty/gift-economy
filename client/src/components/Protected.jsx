@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useUser } from "../Contexts/UserContext";
 import { Navigate } from "react-router";
 
@@ -8,5 +9,7 @@ export function Protected({ children }) {
 
   if (user) {
     return <>{children}</>;
-  } else if (!loading) return <Navigate to="/login" />;
+  } else {
+    return <Navigate to="/login" />;
+  }
 }
