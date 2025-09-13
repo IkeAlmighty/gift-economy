@@ -25,6 +25,8 @@ input {
 }
 
 input[type="submit"],
-input[type="button"] {
+input[type="button"],
+input[type="file"],
+button {
   @apply cursor-pointer;
 }
