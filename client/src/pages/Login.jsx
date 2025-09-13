@@ -23,7 +23,7 @@ export default function Login() {
   }
 
   return (
-    <div className="my-5">
+    <div className="my-5 mx-2">
       <h1>Login</h1>
       <form className="[&>*]:my-5" onSubmit={handleLogin}>
         <label>
