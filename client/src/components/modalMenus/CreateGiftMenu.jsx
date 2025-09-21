@@ -1,22 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function CreateGiftMenu({ onAction }) {
+export default function CreateGiftMenu({ onAction, prefill = {} }) {
+  const [selectedImage, setSelectedImage] = useState(undefined);
+  const [previewImage, setPreviewImage] = useState();
+
   const [description, setDescription] = useState("");
   const MAX_DESCR_CHAR = 200;
 
   function handleFormSubmit(e) {
     e.preventDefault();
 
-    console.log(new FormData(e.target));
+    const data = new FormData(e.target);
+    onAction({ nextMenu: "PreviewListingMenu", data });
   }
+
+  useEffect(() => {
+    if (!selectedImage) return setPreviewImage(undefined);
+
+    const objectUrl = URL.createObjectURL(selectedImage);
+    setPreviewImage(objectUrl);
+  }, [selectedImage]);
 
   return (
     <div>
       <h2 className="mb-5">Post a Gift 🎁</h2>
-      <form className="flex flex-col space-y-2" onSubmit={handleFormSubmit}>
+      <form className="flex flex-col space-y-5" onSubmit={handleFormSubmit}>
         <label>
           <div>Title: </div>
-          <input type="text" name="title" />
+          <input type="text" name="title" value={prefill.title} />
         </label>
 
         <label>
@@ -46,12 +57,13 @@ export default function CreateGiftMenu({ onAction }) {
           <input
             name="image"
             type="file"
+            onChange={(e) => setSelectedImage(e.target.files[0])}
             accept="image/png, image/jpg, image/jpeg"
           />
         </div>
 
         <div>
-          <input type="submit" value="Post" />
+          <input type="submit" value="Preview" />
         </div>
       </form>
     </div>
