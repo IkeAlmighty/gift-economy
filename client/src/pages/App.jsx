@@ -8,25 +8,108 @@ import CreateProjectMenu from "../components/modalMenus/CreateProjectMenu";
 import CreateRequestMenu from "../components/modalMenus/CreateRequestMenu";
 import PreviewListingMenu from "../components/modalMenus/PreviewListingMenu";
 import Modal from "../components/Modal";
+import { createGift } from "../controls/gifts";
+import { createProject } from "../controls/projects";
 
 function App() {
   const [showModalMenu, setShowModalMenu] = useState(false);
-  const [menuData, setMenuData] = useState({});
+  const [formData, setMenuFormData] = useState({});
   const [menuStack, setMenuStack] = useState(["CreateMenu"]);
+
+  const [submitting, setSubmitting] = useState(false);
+
+  const [listingItems, setListingItems] = useState([]);
 
   const menus = {
     CreateMenu: (props) => <CreateMenu {...props} />,
-    CreateProjectMenu: (props) => <CreateProjectMenu {...props} prefill={menuData} />,
-    CreateGiftMenu: (props) => <CreateGiftMenu {...props} prefill={menuData} />,
-    CreateRequestMenu: (props) => <CreateRequestMenu {...props} prefill={menuData} />,
-    PreviewListingMenu: (props) => <PreviewListingMenu {...props} data={menuData} />,
+    CreateProjectMenu: (props) => <CreateProjectMenu {...props} />,
+    CreateGiftMenu: (props) => <CreateGiftMenu {...props} />,
+    CreateRequestMenu: (props) => <CreateRequestMenu {...props} />,
+    PreviewListingMenu: (props) => <PreviewListingMenu {...props} />,
   };
 
-  function handleMenuSubmission(event) {
-    setMenuStack([event.nextMenu, ...menuStack]);
-    setMenuData(event.data);
+  function snapshotFormData(fd) {
+    const data = {};
+    for (const [key, value] of fd.entries()) {
+      if (!(value instanceof File)) {
+        data[key] = value;
+      } else if (value.size > 0) {
+        // we can't store files in react state, so we just store
+        // the imageUrl and recreate the file later.
+        data.imageUrl = URL.createObjectURL(value);
+        data.imageName = value.name;
+        // delete the old imageUrl and imageName to make sure this one is not overwritten:
+        fd.delete("imageUrl");
+        fd.delete("imageName");
+      }
+    }
 
-    console.log(event.data);
+    return data;
+  }
+
+  async function recreateImageFromUrl(url, imageName) {
+    const res = await fetch(url, { credentials: "omit" });
+    if (!res.ok) throw new Error(`Fetch failed: ${res.status} ${res.statusText}`);
+
+    const blob = await res.blob();
+
+    const name = imageName ?? new URL(res.url).pathname.split("/").pop() ?? "file";
+
+    return new File([blob], name, { type: blob.type || "image/jpeg" });
+  }
+
+  function buildMultipart(formDataObj) {
+    const fd = new FormData();
+    for (const [k, v] of Object.entries(formDataObj)) {
+      if (v !== undefined && v !== null) fd.append(k, v);
+    }
+    return fd;
+  }
+
+  async function handleMenuSubmission(event) {
+    setMenuStack([event.nextMenu, ...menuStack]);
+
+    // take a snapshot of the formdata for passing between menus:
+    if (event.formData) {
+      let snapshot = formData;
+      if (event.formData instanceof FormData) {
+        snapshot = snapshotFormData(event.formData);
+      }
+      setMenuFormData(snapshot);
+    }
+
+    if (event.nextMenu !== "SUBMIT") return;
+
+    if (submitting) return;
+    setSubmitting(true);
+
+    try {
+      // first, recreate the image file from the url:
+      const image = await recreateImageFromUrl(formData.imageUrl, formData.imageName);
+
+      //prep payload:
+      const payload = { ...formData, image };
+      const multipart = buildMultipart(payload);
+
+      const submitBySuperType = {
+        Gift: () => createGift(multipart),
+        Project: () => createProject(multipart),
+      };
+
+      const res = await submitBySuperType[formData.superType]();
+      const newListingItem = await res.json();
+
+      setListingItems([newListingItem, ...listingItems]);
+
+      // reset the menu stack
+      setMenuStack(["CreateMenu"]);
+      setMenuFormData({});
+      setShowModalMenu(false);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   function handleMenuBack() {
@@ -43,12 +126,12 @@ function App() {
         <button className="float-right" onClick={handleMenuBack}>
           Back
         </button>
-        {menus[menuStack[0]]?.({ onAction: handleMenuSubmission })}
+        {menus[menuStack[0]]?.({ onAction: handleMenuSubmission, formData })}
       </Modal>
 
       <ToolBar>
         <PlusCloseButton value={showModalMenu} onClick={() => setShowModalMenu(!showModalMenu)} />
-        <div className="text-5xl">G.E.</div>
+        <div className="text-lg underline">The Gift Economy</div>
 
         <LogoutButton />
       </ToolBar>
