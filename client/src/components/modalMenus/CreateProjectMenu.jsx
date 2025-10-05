@@ -1,14 +1,18 @@
 import { useState } from "react";
 
-export default function CreateProjectMenu({ onAction, prefill = {} }) {
-  const [description, setDescription] = useState("");
+export default function CreateProjectMenu({ onAction, formData = {} }) {
+  const [description, setDescription] = useState(formData.description || "");
   const MAX_DESCR_CHAR = 200;
 
   function handleFormSubmit(e) {
     e.preventDefault();
 
-    const data = new FormData(e.target);
-    onAction({ nextMenu: "PreviewListingMenu", data });
+    const newFormData = new FormData(e.target);
+    newFormData.append("superType", "Gift");
+
+    if (formData.imageUrl && !newFormData.image) newFormData.append("imageUrl", formData.imageUrl);
+
+    onAction({ nextMenu: "PreviewListingMenu", formData: newFormData });
   }
 
   return (
@@ -18,14 +22,19 @@ export default function CreateProjectMenu({ onAction, prefill = {} }) {
       <form className="flex flex-col space-y-5" onSubmit={handleFormSubmit}>
         <label>
           <div>Title: </div>
-          <input type="text" name="title" />
+          <input type="text" name="title" defaultValue={formData.title} />
         </label>
 
         <label>
           <div>Listing Type(s):</div>
           {["Food", "Shelter", "Labor", "Transportation", "Other"].map((t) => (
-            <label>
-              <input className="mr-1" type="checkbox" name={`Type-${t}`} />
+            <label key={t}>
+              <input
+                className="mr-1"
+                type="checkbox"
+                name={`Type-${t}`}
+                defaultChecked={formData[`Type-${t}`]}
+              />
               <span className="mr-5">{t}</span>
             </label>
           ))}
@@ -41,6 +50,7 @@ export default function CreateProjectMenu({ onAction, prefill = {} }) {
             type="radio"
             value={true}
             name="allowGiftSuggestions"
+            defaultChecked={formData.allowGiftSuggestions}
           />{" "}
           yes
           <input
@@ -49,6 +59,7 @@ export default function CreateProjectMenu({ onAction, prefill = {} }) {
             type="radio"
             value={false}
             name="allowGiftSuggestions"
+            defaultChecked={formData.allowGiftSuggestions === "false"}
           />{" "}
           no
         </fieldset>
@@ -63,6 +74,7 @@ export default function CreateProjectMenu({ onAction, prefill = {} }) {
             type="radio"
             value={true}
             name="allowRequestSuggestions"
+            defaultChecked={formData.allowRequestSuggestions}
           />{" "}
           yes
           <input
@@ -71,6 +83,7 @@ export default function CreateProjectMenu({ onAction, prefill = {} }) {
             type="radio"
             value={false}
             name="allowRequestSuggestions"
+            defaultChecked={formData.allowRequestSuggestions === "false"}
           />{" "}
           no
         </fieldset>
@@ -88,18 +101,11 @@ export default function CreateProjectMenu({ onAction, prefill = {} }) {
         </div>
 
         <div>
-          <div>Select an image:</div>
-          <input
-            name="image"
-            type="file"
-            accept="image/png, image/jpg, image/jpeg"
-          />
+          <div>{formData.imageUrl ? "Change image:" : "Select an image:"}</div>
+          <input name="image" type="file" accept="image/png, image/jpg, image/jpeg" />
         </div>
 
-        <div>
-          After you post the project, you can select listings from your feed to
-          add to it.
-        </div>
+        <div>After you post the project, you can select listings from your feed to add to it.</div>
 
         <div>
           <input type="submit" value="Post" />
