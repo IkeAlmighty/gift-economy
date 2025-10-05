@@ -4,8 +4,7 @@ import bcrypt from "bcrypt";
 const userSchema = new mongoose.Schema({
   username: { type: String, unique: true },
   password: String,
-  gifts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Gift" }],
-  requests: [{ type: mongoose.Schema.Types.ObjectId, ref: "Request" }],
+  contributions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Contribution" }],
   projects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Project" }],
   connections: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
