@@ -8,9 +8,8 @@ import CreateProjectMenu from "../components/modalMenus/CreateProjectMenu";
 import CreateRequestMenu from "../components/modalMenus/CreateRequestMenu";
 import PreviewListingMenu from "../components/modalMenus/PreviewListingMenu";
 import Modal from "../components/Modal";
-import { createGift } from "../controls/gifts";
+import { createContribution } from "../controls/contributions";
 import { createProject } from "../controls/projects";
-import { createRequest } from "../controls/requests";
 
 function App() {
   const [showModalMenu, setShowModalMenu] = useState(false);
@@ -92,13 +91,13 @@ function App() {
       const payload = { ...formData, image };
       const multipart = buildMultipart(payload);
 
-      const submitBySuperType = {
-        Gift: () => createGift(multipart),
-        Request: () => createRequest(multipart),
-        Project: () => createProject(multipart),
+      const submitByIntent = {
+        GIFT: () => createContribution(multipart),
+        REQUEST: () => createContribution(multipart),
+        PROJECT: () => createProject(multipart),
       };
 
-      const res = await submitBySuperType[formData.superType]();
+      const res = await submitByIntent[formData.intent]();
       const newListingItem = await res.json();
 
       setListingItems([newListingItem, ...listingItems]);

@@ -4,17 +4,16 @@ const projectSchema = new mongoose.Schema({
   title: String,
   description: String,
   owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  requests: [{ type: mongoose.Types.ObjectId, ref: "Request" }],
-  requestSuggestions: [{ type: mongoose.Types.ObjectId, ref: "Request" }],
+  contributions: [{ type: mongoose.Types.ObjectId, ref: "Contribution" }],
+  contributionSuggestions: [{ type: mongoose.Types.ObjectId, ref: "Contribution" }],
   openToRequestSuggesions: Boolean,
-  giftSuggestions: [{ type: mongoose.Types.ObjectId, ref: "Gift" }],
   openToGiftSuggestions: Boolean,
-  listingType: {
+  category: {
     type: String,
     enum: ["Food", "Shelter", "Labor", "Transportation", "Other"],
     default: "Other",
   },
-  subtypes: [String],
+  labels: [String],
 });
 
 export default mongoose.model("Project", projectSchema);
