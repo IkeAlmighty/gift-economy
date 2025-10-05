@@ -50,12 +50,7 @@ export default function CreateGiftMenu({ onAction, formData = {} }) {
         </div>
         <div>
           <div>{formData.imageUrl ? "Change image:" : "Select an image:"}</div>
-          <input
-            name="image"
-            type="file"
-            defaultValue={formData.image}
-            accept="image/png, image/jpg, image/jpeg"
-          />
+          <input name="image" type="file" accept="image/png, image/jpg, image/jpeg" />
         </div>
 
         <div>
