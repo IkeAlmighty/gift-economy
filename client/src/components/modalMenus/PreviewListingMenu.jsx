@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ListItem from "../ListItem.jsx";
+import { convertFormDataCategories } from "../../utils/forms.js";
 
 export default function PreviewListingMenu({ onAction, formData }) {
   const [data, setData] = useState(undefined);
@@ -8,13 +9,13 @@ export default function PreviewListingMenu({ onAction, formData }) {
     if (!formData) return;
     const imageUrl = formData.imageUrl;
     const title = formData.title;
-    const superType = formData.superType; // Gift | Request | Project
+    const intent = formData.intent; // Gift | Request | Project
 
-    const listingTypes = convertFormDataListingTypes(formData);
+    const categories = convertFormDataCategories(formData);
 
     const description = formData.description;
 
-    setData({ title, imageUrl, superType, listingTypes, description });
+    setData({ title, imageUrl, intent, categories, description });
   }, []);
 
   return (
@@ -25,21 +26,9 @@ export default function PreviewListingMenu({ onAction, formData }) {
           className="border-1 text-3xl rounded p-2 m-2"
           onClick={() => onAction({ nextMenu: "SUBMIT", formData })}
         >
-          Submit {formData.superType}
+          Submit {formData.intent}
         </button>
       </div>
     </div>
   );
-}
-
-function convertFormDataListingTypes(formData) {
-  const listingTypes = [];
-  for (let key in formData) {
-    const value = formData[key];
-    if (key.match(/Type-/) && value === "on") {
-      listingTypes.push(key.slice(5).toLowerCase());
-    }
-  }
-
-  return listingTypes;
 }

@@ -1,15 +1,15 @@
 export default function ListItem({ data, disabled }) {
-  const { title, description, imageUrl, listingTypes, superType } = data;
+  const { title, description, imageUrl, categories, intent } = data;
 
   const typeBorder = { Gift: "border-blue-300", Project: "border-brown-300" };
 
   return (
     <div
-      className={`mt-10 bg-black rounded text-blue-100 pt-2 border-6 border- ${typeBorder[superType]}`}
+      className={`mt-10 bg-black rounded text-blue-100 pt-2 border-6 border- ${typeBorder[intent]}`}
     >
       {title && (
         <div className="w-full pb-3 text-center">
-          <span className="text-2xl">{title}</span> | <span className="text-sm">{superType}</span>
+          <span className="text-2xl">{title}</span> | <span className="text-sm">{intent}</span>
         </div>
       )}
 
@@ -21,7 +21,7 @@ export default function ListItem({ data, disabled }) {
         />
       </div>
       <div className="text-sm my-1 text-center">
-        {listingTypes.map((t) => (
+        {categories.map((t) => (
           <span className="ml-2">{t}</span>
         ))}
       </div>
