@@ -10,6 +10,8 @@ import PreviewListingMenu from "../components/modalMenus/PreviewListingMenu";
 import Modal from "../components/Modal";
 import { createContribution } from "../controls/contributions";
 import { createProject } from "../controls/projects";
+import { convertFormDataCategories } from "../utils/forms";
+import ListItem from "../components/ListItem";
 
 function App() {
   const [showModalMenu, setShowModalMenu] = useState(false);
@@ -60,9 +62,16 @@ function App() {
 
   function buildMultipart(formDataObj) {
     const fd = new FormData();
+
+    // append the non null other values, ignoring categories:
     for (const [k, v] of Object.entries(formDataObj)) {
-      if (v !== undefined && v !== null) fd.append(k, v);
+      if (!k.match(/Type-/) && v !== undefined && v !== null) fd.append(k, v);
     }
+
+    // then, pull the categories and append to form as JSON string:
+    const categories = convertFormDataCategories(formDataObj);
+    fd.append("categories", JSON.stringify(categories));
+
     return fd;
   }
 
@@ -92,13 +101,14 @@ function App() {
       const multipart = buildMultipart(payload);
 
       const submitByIntent = {
-        GIFT: () => createContribution(multipart),
-        REQUEST: () => createContribution(multipart),
-        PROJECT: () => createProject(multipart),
+        GIFT: async (m) => createContribution(m),
+        REQUEST: async (m) => createContribution(m),
+        PROJECT: async (m) => createProject(m),
       };
 
-      const res = await submitByIntent[formData.intent]();
+      const res = await submitByIntent[formData.intent](multipart);
       const newListingItem = await res.json();
+      console.log("listing item: ", newListingItem);
 
       setListingItems([newListingItem, ...listingItems]);
 
@@ -137,6 +147,12 @@ function App() {
 
         <LogoutButton />
       </ToolBar>
+
+      <div>
+        {listingItems.map((itemData) => (
+          <ListItem data={itemData} />
+        ))}
+      </div>
     </>
   );
 }
