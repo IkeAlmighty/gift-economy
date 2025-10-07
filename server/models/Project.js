@@ -8,12 +8,7 @@ const projectSchema = new mongoose.Schema({
   contributionSuggestions: [{ type: mongoose.Types.ObjectId, ref: "Contribution" }],
   openToRequestSuggesions: Boolean,
   openToGiftSuggestions: Boolean,
-  category: {
-    type: String,
-    enum: ["Food", "Shelter", "Labor", "Transportation", "Other"],
-    default: "Other",
-  },
-  labels: [String],
+  categories: [String],
 });
 
 export default mongoose.model("Project", projectSchema);

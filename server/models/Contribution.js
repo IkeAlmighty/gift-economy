@@ -8,12 +8,7 @@ const contributionSchema = new mongoose.Schema({
     type: String,
     enum: ["GIFT", "REQUEST"],
   },
-  category: {
-    type: String,
-    enum: ["FOOD", "SHELTER", "LABOR", "TRANSPORTATION", "OTHER"],
-    default: "OTHER",
-  },
-  labels: [String],
+  categories: [String],
   suggestedProjects: [{ type: mongoose.Types.ObjectId, ref: "Project" }],
 });
 
