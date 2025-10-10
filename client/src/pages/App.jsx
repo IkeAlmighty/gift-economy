@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LogoutButton from "../components/LogoutButton";
 import PlusCloseButton from "../components/PlusCloseButton";
 import ToolBar from "../components/ToolBar";
@@ -8,7 +8,7 @@ import CreateProjectMenu from "../components/modalMenus/CreateProjectMenu";
 import CreateRequestMenu from "../components/modalMenus/CreateRequestMenu";
 import PreviewListingMenu from "../components/modalMenus/PreviewListingMenu";
 import Modal from "../components/Modal";
-import { createContribution } from "../controls/contributions";
+import { createContribution, getContributions } from "../controls/contributions";
 import { createProject } from "../controls/projects";
 import { convertFormDataCategories } from "../utils/forms";
 import ListItem from "../components/ListItem";
@@ -21,6 +21,21 @@ function App() {
   const [submitting, setSubmitting] = useState(false);
 
   const [listingItems, setListingItems] = useState([]);
+
+  useEffect(() => {
+    async function fetchAndSetListingItems() {
+      const contributionsRes = await getContributionsInNetwork();
+      const projectsRes = await getProjectsInNetwork();
+
+      const projects = await projectsRes.json();
+      const contributions = await contributionsRes.json();
+
+      // concat the listings and sort by update timestamps:
+      const listings = [...projects, ...contributions].sort((a, b) => a.updatedAt - b.updatedAt);
+
+      setListingItems(listings);
+    }
+  }, []);
 
   const menus = {
     CreateMenu: (props) => <CreateMenu {...props} />,
