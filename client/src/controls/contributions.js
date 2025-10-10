@@ -1,13 +1,14 @@
 export async function createContribution(contributionData) {
-  const res = await fetch("/listings/contributions", {
+  const res = await fetch("/api/listings/my-contributions", {
     method: "POST",
     body: contributionData,
-    "Content-Type": "multipart/form-data",
   });
+
+  return res;
 }
 
-export async function getContributions({ ownerId }) {
-  const res = await fetch("/listings/contributions");
+export async function getContributionsInNetwork() {
+  const res = await fetch("/api/listings/contributions-in-network");
 
   if (!res.ok) {
     return await res.json()?.error;
