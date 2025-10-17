@@ -5,7 +5,7 @@ export default function ListItem({ data, disabled }) {
 
   return (
     <div
-      className={`mt-10 bg-black rounded text-blue-100 pt-2 border-6 border- ${typeBorder[intent]}`}
+      className={`mt-5 mb-5 bg-black rounded text-blue-100 pt-2 border-6 border- ${typeBorder[intent]}`}
     >
       {title && (
         <div className="w-full pb-3 text-center">
