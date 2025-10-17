@@ -7,30 +7,32 @@ const router = express.Router();
 
 // Get all gifts
 router.get("/gifts", async (req, res) => {
-  const gifts = await Contribution.find({ owner: req.user.id, intent: "GIFT" }).populate("owner");
+  const gifts = await Contribution.find({ creator: req.user.id, intent: "GIFT" }).populate(
+    "creator"
+  );
   res.json(gifts);
 });
 
 // Get all requests
 router.get("/my-requests", async (req, res) => {
-  const requests = await Contribution.find({ owner: req.user.id, intent: "REQUEST" }).populate(
-    "owner"
+  const requests = await Contribution.find({ creator: req.user.id, intent: "REQUEST" }).populate(
+    "creator"
   );
   res.json(requests);
 });
 
-// Get all contributions created by the loggged in user (gifts and requests)
-router.get("/my-contributions", async (req, res) => {
-  const contributions = await Contribution.find({ owner: req.user.id }).populate("owner");
-  res.json(contributions);
+// Get all listings created by the loggged in user (gifts, requests, and projects)
+router.get("/my-listings", async (req, res) => {
+  const listings = await Contribution.find({ creator: req.user.id }).populate("creator");
+  res.json(listings);
 });
 
-router.get("/contributions-in-network", async (req, res) => {
+router.get("/listings-in-network", async (req, res) => {
   // TODO:
 });
 
 // Create contribution (gift or request)
-router.post("/my-contributions", upload.single("image"), async (req, res) => {
+router.post("/my-listings", upload.single("image"), async (req, res) => {
   // TODO: upload image file to image server:
 
   const { intent, description, title } = req.body;
@@ -40,7 +42,7 @@ router.post("/my-contributions", upload.single("image"), async (req, res) => {
     categories: JSON.parse(req.body.categories),
     intent,
     description,
-    owner: req.user.id,
+    creator: req.user.id,
   }).save();
 
   await User.findByIdAndUpdate(req.user.id, { $push: { contributions: contribution._id } });
@@ -48,16 +50,8 @@ router.post("/my-contributions", upload.single("image"), async (req, res) => {
   res.json(contribution);
 });
 
-router.get("/projects-in-network", async (req, res) => {
-  // TODO:
-});
-
 router.get("/saved-projects", async (req, res) => {
-  // TODO:
-});
-
-router.get("/my-projects", async (req, res) => {
-  // TODO:
+  // TODO: get the projects user has saved to their savedProjects field
 });
 
 export default router;
