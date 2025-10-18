@@ -8,8 +8,6 @@ export const NewListingContext = createContext(null);
 export function NewListingProvider({ children }) {
   const [newListingData, setNewListingData] = useState({});
 
-  useEffect(() => console.log("formdata:", newListingData, [newListingData]));
-
   function snapshotFormData(fd) {
     const data = {};
     for (const [key, value] of fd.entries()) {
@@ -85,8 +83,16 @@ export function NewListingProvider({ children }) {
 
   function updateNewListingData(newFormData) {
     const newSnapshot = snapshotFormData(newFormData);
-    console.log("snapshot: ", newSnapshot);
-    setNewListingData(newSnapshot);
+
+    // for each key in the new snapshot, overwrite the corresponding key in the current
+    // newListingData:
+    const copyLD = { ...newListingData };
+    Object.keys(newSnapshot).forEach((key) => {
+      const value = newSnapshot[key];
+      copyLD[key] = value;
+    });
+
+    setNewListingData(copyLD);
   }
 
   return (

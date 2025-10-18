@@ -1,15 +1,20 @@
-import { useNavigate } from "react-router";
-export default function CreateListing() {
-  const navigate = useNavigate();
+import { useEffect } from "react";
+import { useLocation } from "react-router";
+import { useNewListingData } from "../Contexts/NewListingContext.jsx";
+import CreateListingForm from "../components/forms/CreateListingForm.jsx";
 
-  return (
-    <>
-      <div className="flex flex-col space-y-10 my-20 bg-white text-2xl">
-        <div className="text-center underline">Choose One:</div>
-        <button onClick={() => navigate("/create-gift")}>Post Gift 🎁</button>
-        <button onClick={() => navigate("/create-request")}>Post Request 🪫</button>
-        <button onClick={() => navigate("/create-project")}>Create Project 🏗️</button>
-      </div>
-    </>
-  );
+export default function CreateGift() {
+  const { updateNewListingData } = useNewListingData();
+  const location = useLocation();
+  const intent = location.pathname.split("-")[1].toUpperCase();
+
+  useEffect(() => {
+    // on load in, change the intent on newListingData to match the path
+    const fd = new FormData();
+    fd.append("intent", intent);
+
+    updateNewListingData(fd);
+  }, []);
+
+  return <CreateListingForm intent={intent} />;
 }

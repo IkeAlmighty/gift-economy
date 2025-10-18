@@ -4,13 +4,15 @@ import ToolBar from "./ToolBar";
 import PlusCloseButton from "./PlusCloseButton";
 import LogoutButton from "./LogoutButton";
 import { Protected } from "./Protected";
+import { useNewListingData } from "../Contexts/NewListingContext";
 
 export default function ToolBarMenu() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { newListingData } = useNewListingData();
 
   const [menuOpen, setMenuOpen] = useState(false);
-  const [lastMenu, setLastMenu] = useState("/create-listing");
+  const [lastMenu, setLastMenu] = useState("/create-listing-options");
 
   function handleMenuButton() {
     if (menuOpen) {
@@ -23,6 +25,30 @@ export default function ToolBarMenu() {
     }
   }
 
+  function handleBackClick() {
+    const previewBackOptions = {
+      GIFT: "/create-gift",
+      PROJECT: "/create-project",
+      REQUEST: "/create-request",
+    };
+
+    switch (location.pathname) {
+      case "/create-listing-options":
+        navigate("/");
+        setMenuOpen(false);
+        break;
+      case "/create-gift":
+      case "/create-request":
+      case "/create-project":
+        navigate("/create-listing-options");
+        break;
+      case "/preview-listing":
+        setLastMenu(previewBackOptions[newListingData.intent]);
+        navigate(previewBackOptions[newListingData.intent]);
+        break;
+    }
+  }
+
   return (
     <>
       <ToolBar>
@@ -31,6 +57,14 @@ export default function ToolBarMenu() {
 
         <LogoutButton />
       </ToolBar>
+
+      {menuOpen && (
+        <div className="text-right [&>button]:underline mt-5">
+          <button onClick={handleBackClick}>
+            {location.pathname === "/create-listing-options" ? "Cancel" : "Back"}
+          </button>
+        </div>
+      )}
 
       <Protected>
         <Outlet />
