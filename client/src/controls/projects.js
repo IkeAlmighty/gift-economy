@@ -1,6 +1,6 @@
 export async function createProject(projectData) {}
 
-export async function getProjects({ ownerId, location }) {}
+export async function getProjectsInNetwork() {}
 
 export async function editProject({ projectId, newData }) {}
 
