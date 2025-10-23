@@ -2,16 +2,16 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 
 import ListItem from "../components/ListItem";
+import { getListingsInNetwork } from "../controls/listings";
 
 function App() {
   const [listingItems, setListingItems] = useState([]);
 
   useEffect(() => {
-    // concat the listings and sort by update timestamps:
-    // const listings = [...inNetworkProjects, ...inNetworkContributions].sort(
-    //   (a, b) => a.updatedAt - b.updatedAt
-    // );
-    // setListingItems(listings);
+    (async () => {
+      const listings = await getListingsInNetwork();
+      setListingItems(listings);
+    })();
   }, []);
 
   return (
