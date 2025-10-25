@@ -5,6 +5,7 @@ import { UserProvider } from "./Contexts/UserContext";
 import Router from "./Router";
 import { ListingsProvider } from "./Contexts/ListingsContext";
 import { NewListingProvider } from "./Contexts/NewListingContext";
+import { ToastContainer } from "react-toastify";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -12,6 +13,7 @@ createRoot(document.getElementById("root")).render(
       <NewListingProvider>
         <ListingsProvider>
           <Router />
+          <ToastContainer />
         </ListingsProvider>
       </NewListingProvider>
     </UserProvider>
