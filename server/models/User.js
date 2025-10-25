@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   listings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Listing" }],
   savedProjects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Listing" }],
   connections: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  connectionRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 });
 
 userSchema.pre("save", async function () {
