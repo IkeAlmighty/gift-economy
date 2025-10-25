@@ -1,4 +1,4 @@
-import { Outlet, useLocation, useNavigate } from "react-router";
+import { Outlet, useLocation, useNavigate, Link } from "react-router";
 import { useState } from "react";
 import ToolBar from "./ToolBar";
 import PlusCloseButton from "./PlusCloseButton";
@@ -13,13 +13,15 @@ export default function ToolBarMenu() {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [lastMenu, setLastMenu] = useState("/create-listing-options");
+  const [lastPage, setLastPage] = useState(location.pathname);
 
   function handleMenuButton() {
     if (menuOpen) {
       setLastMenu(location.pathname);
       setMenuOpen(false);
-      navigate("/");
+      navigate(lastPage);
     } else {
+      setLastPage(location.pathname);
       setMenuOpen(true);
       navigate(lastMenu);
     }
@@ -34,7 +36,7 @@ export default function ToolBarMenu() {
 
     switch (location.pathname) {
       case "/create-listing-options":
-        navigate("/");
+        navigate(lastPage);
         setMenuOpen(false);
         break;
       case "/create-gift":
@@ -53,7 +55,9 @@ export default function ToolBarMenu() {
     <>
       <ToolBar>
         <PlusCloseButton value={menuOpen} onClick={handleMenuButton} />
-        <div className="text-lg underline">The Gift Economy</div>
+        <button>
+          <Link to="/connections">View Connections</Link>
+        </button>
 
         <LogoutButton />
       </ToolBar>
