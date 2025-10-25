@@ -1,9 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import {
-  login as controllerLogin,
-  logout as controllerLogout,
-  me,
-} from "../controls/user";
+import { login as controllerLogin, logout as controllerLogout, me } from "../controls/user";
 
 export const UserContext = createContext(null);
 
@@ -12,13 +8,15 @@ export function UserProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // hydrate user from backend
-    (async () => {
-      const _user = await me();
-      setUser(_user);
-      setLoading(false);
-    })();
+    hydrateUser();
   }, []);
+
+  async function hydrateUser() {
+    setLoading(true);
+    const _user = await me();
+    setUser(_user);
+    setLoading(false);
+  }
 
   const login = async (credentials) => {
     const { data, error } = await controllerLogin(credentials);
@@ -37,7 +35,7 @@ export function UserProvider({ children }) {
   };
 
   return (
-    <UserContext.Provider value={{ user, login, logout, loading }}>
+    <UserContext.Provider value={{ user, login, logout, loading, hydrateUser }}>
       {children}
     </UserContext.Provider>
   );
