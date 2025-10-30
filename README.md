@@ -49,7 +49,7 @@ More horizontal administration will be set up as the project grows as well as a 
 
 After the proof of concept has been developed, the aim is to start replacing centralized architecture with a decentralized one that can be ran independently of a central server.
 
-This project is a response to the climate crisis and to corporate greed's disregard for social costs of profit driven economies. So it does not make sense to rely on technologies that require large, centralized architectures in the long run, such as:
+This project is a response to the climate crisis and to corporate greed's disregard for social costs of profit driven economies. So it does not make sense to rely on technologies that require large, centralized architectures market economies in the long run, such as:
 
 - Blockchain
 - Large Language Models
