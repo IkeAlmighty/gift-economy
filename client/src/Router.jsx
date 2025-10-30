@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router";
 import FeedLayout from "./components/FeedLayout.jsx";
 import App from "./pages/App.jsx";
+import ConnectionsPage from "./pages/ConnectionsPage.jsx";
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import CreateListingOptions from "./pages/CreateListingOptions.jsx";
@@ -21,6 +22,7 @@ export default function Router() {
           <Route path="/preview-listing" element={<PreviewListing />} />
         </Route>
 
+        <Route path="/connections" element={<ConnectionsPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
