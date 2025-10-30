@@ -22,12 +22,12 @@ The cycle of money to commodities to money again is one that encourages lower ho
 
 Gift Economies, as well as debt systems, were primarily used before the introduction of money into human society. If you've ever started a communal chest in minecraft, given someone clothes you no longer want, or bummed a cigarette you've participated in one. At its simplest, individuals in a gift economy ask for what they need from others and give excess of whatever they produce to whoever needs it.
 
-Gift economies are built on abundance, whereas Market economies are built on scarcity (often times artifically created). The invention of money has many advantages within market economies compared to gift economies powered by word of mouth. Money is somewhat regulatable by governmental entities, allows for supply and demand to be regulated in a decentralized manner through pricing, and facilitates enormous supply chains across the globe. On the other hand, word of mouth powered gift economies have very little comparative digital infrastructure built around them, and require a more direct analysis of supply and demand.
+Gift economies are built on abundance, whereas market economies are built on scarcity (often times artifically created). The invention of money has many advantages within market economies compared to gift economies powered by word of mouth. Money is somewhat regulatable by governmental entities, allows for supply and demand to be regulated in a decentralized manner through pricing, and facilitates enormous supply chains across the globe. On the other hand, word of mouth powered gift economies have very little comparative digital infrastructure built around them, and require a more direct analysis of supply and demand.
 
 A application that utilizes supply/demand analysis, encourages communities to unite to meet these problems, facilitates the gifting and requesting of labor and resources, and eschews money entirely could possibly help us build stronger communities that are not reliant on the corporate giants of the world - who have shown their tendency to create brittle, centralized infrastructure and disregard social impact in favor of profit. The success of this project relies on several ideas:
 
 - Decentralized facilitation of trade (to avoid power grabs that could corrupt the intent of the gift economy system).
-- Vertical production lines (to reduce reliance on market based systems)
+- 'Project based' supply chain planning that spans across industry.
 - Bootstrapping the maintenance and service of the project through the gift economy it supports.
 - Meeting the basic needs (primarily sustenance, shelter) of those using the project's system, through the system.
 - Frequency of gift delivery ie "gift" velocity (which is similar to "exchange velocity" as described in market economics).
