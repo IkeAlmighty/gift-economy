@@ -1,27 +1,21 @@
 import { useState, useEffect, createContext } from "react";
-import { getContributionsInNetwork } from "../controls/contributions";
-import { getProjectsInNetwork } from "../controls/projects";
+import { getListingsInNetwork } from "../controls/listings";
 export const ListingsContext = createContext(null);
 
 export function ListingsProvider({ children }) {
-  const [inNetworkContributions, setInNetworkContributions] = useState([]);
-  const [inNetworkProjects, setInNetworkProjects] = useState([]);
+  const [inNetworkListings, setInNetworkListings] = useState([]);
 
   useEffect(() => {
     // hydrate listings from backend
     (async () => {
-      const _inNetworkContributions = await getContributionsInNetwork();
-      const _inNetworkProjects = await getProjectsInNetwork();
+      const _inNetworkListings = await getListingsInNetwork();
 
-      setInNetworkContributions(_inNetworkContributions);
-      setInNetworkProjects(_inNetworkProjects);
+      setInNetworkListings(_inNetworkListings);
     })();
   }, []);
 
   return (
-    <ListingsContext.Provider value={{ inNetworkContributions, inNetworkProjects }}>
-      {children}
-    </ListingsContext.Provider>
+    <ListingsContext.Provider value={{ inNetworkListings }}>{children}</ListingsContext.Provider>
   );
 }
 
