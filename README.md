@@ -1,114 +1,58 @@
 # Gift Economy Logistics Application
 
-## Idea
+## Table of Contents
 
-Capitalism rewards those who already have money. The cycle of money to commodities to money again is one that encourages lower hourly wages, increases the divide between rich and poor, rewards greed over environmental and community well-being, and ultimately allows those with power to retain power despite any social costs.
+- [Local Setup](#local-setup)
+- [Project Overview](#project-overview)
+- [Contribution Guide](#contribution-guide)
+- [Development Roadmap](#development-roadmap)
 
-Gift Economies were primarily used before the introduction of money into human society, and if you've ever played Minecraft with some friends you've probably participated in one. At its simplest, individuals in a gift economy ask for what they need from others and give excess of whatever they produce to whoever needs it (the communal chest for all you crafters).
+## Local Setup
 
-Problems arise when demand for a certain item is higher than the supply. In Soviet Russia, the state oversaw the economy to avoid this kind of crisis when possible. In more modern times, Walmart and Amazon have utilized supply and demand analysis, taking into account the bullwhip effect, to create efficient internal logistical systems to make sure their stores are stocked at all times to meet the demand of consumers.
+1. Ensure that you have npm and node installed.
+2. Run `cp ./server/.env_EXAMPLE ./server/.env`
+3. Ensure that you have a MongoDb server installed locally, or go to `./server/.env` and enter your own connection string.
+4. Generate a secret and assign it to the `JWT_SECRET` env variable in `./server/.env`.
+5. Run `npm i` to install depedencies.
+6. Run `npm run dev` to start the web client and the web server.
 
-A application that utilizes supply/demand analysis, encourages communities to unite to meet these problems, facilitates the gifting and requesting of labor and resources, and eschews money entirely could possibly help us build stronger communities that are not reliant on the corporate giants of the world. The success of this project relies on several ideas:
+## Project Overview
 
-- decentralized facilitation of trade (to avoid power grabs)
-- vertical production lines (to reduce reliance on capital based systems)
-- bootstrapping the maintenance and service of the project through the gift economy it supports.
-- meeting the basic needs (sustenance, shelter) of those using the project's system, through the system.
-- frequency of gift delivery ie "gift" velocity (which is similar to "exchange velocity" as described in market economics).
+The cycle of money to commodities to money again is one that encourages lower hourly wages, increases the divide between rich and poor, rewards greed over environmental and community well-being, and ultimately allows those with power to retain power despite any social costs.
 
-The idea is to start with basic and easy to meet needs like food, and push the user base towards vertically integrating other parts of industry over time.
+Gift Economies, as well as debt systems, were primarily used before the introduction of money into human society. If you've ever started a communal chest in minecraft, given someone clothes you no longer want, or bummed a cigarette you've participated in one. At its simplest, individuals in a gift economy ask for what they need from others and give excess of whatever they produce to whoever needs it.
 
-## Data Models
+Gift economies are built on abundance, whereas Market economies are built on scarcity (often times artifically created). The invention of money has many advantages within market economies compared to gift economies powered by word of mouth. Money is somewhat regulatable by governmental entities, allows for supply and demand to be regulated in a decentralized manner through pricing, and facilitates enormous supply chains across the globe. On the other hand, word of mouth powered gift economies have very little comparative digital infrastructure built around them, and require a more direct analysis of supply and demand.
 
-Gift, Request, User, Project
+A application that utilizes supply/demand analysis, encourages communities to unite to meet these problems, facilitates the gifting and requesting of labor and resources, and eschews money entirely could possibly help us build stronger communities that are not reliant on the corporate giants of the world - who have shown their tendency to create brittle, centralized infrastructure and disregard social impact in favor of profit. The success of this project relies on several ideas:
 
-```
-Gift Model:
-- owner: User._id
-- description: String
-- titleline: String
-- type: "Food" | "Shelter" | "Labor" | "Transportation" | "Other"
-- subtypes: [String]
-- suggestedProjects: [Project]
-```
+- Decentralized facilitation of trade (to avoid power grabs that could corrupt the intent of the gift economy system).
+- Vertical production lines (to reduce reliance on market based systems)
+- Bootstrapping the maintenance and service of the project through the gift economy it supports.
+- Meeting the basic needs (primarily sustenance, shelter) of those using the project's system, through the system.
+- Frequency of gift delivery ie "gift" velocity (which is similar to "exchange velocity" as described in market economics).
+- Analysis of demand and supply without the use of market pricing.
 
-```
-Request Model:
-- owner: User._id
-- description: String
-- titleline: String
-- type: "Food" | "Shelter" | "Labor" | "Transportation" | "Other"
-- subtypes: [String]
-- completed: Boolean
-```
+The idea is to start with basic and easy to meet needs like food, and push the user base towards integrating other industry supply chains over time.
 
-```
-Project Model:
-- owner: User._id
-- requests: [Request]
-- requestSuggestions: [Request]
-- openToRequestSuggesions: Boolean
-- giftSuggestions: [Gift]
-- openToGiftSuggestions: Boolean
-- type: "Food" | "Shelter" | "Labor" | "Transportation" | "Other"
-- subtypes: [String]
-```
+## Contribution Guide
 
-```
-User Model:
- - username: String
- - password: String
- - gifts: [Gift]
- - requests: [Request]
- - Projects: [Project]
- - connections: [User._id]
-```
+1. Install a [Matrix chat client](https://element.io/download) and join [the project's matrix page](https://matrix.to/#/#gift-economy:matrix.org)
+2. DM [@ikeyates:matrix.org](@ikeyates:matrix.org) to be given repository and github project permissions.
+3. Follow the [Local Setup](#local-setup) guide to run the app locally in development mode.
+4. Go to [the project's kanban board](https://github.com/users/ikealmighty/projects/9), choose a task that hasn't been started, move it to the "In Progress" column, assign yourself to the task, and `create a branch` locally.
+5. Create a PR when you're ready for review.
 
-```
-Message Model:
- - text: String
- - sender: User._id
- - chatRoom: [User._id]
-```
+More horizontal administration will be set up as the project grows as well as a schedule for virtual standup meetings. You are welcome to DM [ikeyates:matrix.org](ikeyates:matrix.org) with inqueries in the meantime.
 
-## User Interface
+## Development Roadmap
 
-### Pages
+After the proof of concept has been developed, the aim is to start replacing centralized architecture with a decentralized one that can be ran independently of a central server.
 
-/feed  
-/profile
+This project is a response to the climate crisis and to corporate greed's disregard for social costs of profit driven economies. So it does not make sense to rely on technologies that require large, centralized architectures in the long run, such as:
 
-### Feed
+- Blockchain
+- Large Language Models
+- Centralized Servers
 
-A list of gifts, requests, and projects. Default sort order tbd, but should encourage users to make connections between the three.
-
-Each item has a button for opening a chatroom with the owner of the list item.
-
-At the top of the feed is a create button where the user can choose to create a new project, new gift, or new request.
-
-**_Creating a Gift | The Gift Component_**  
-A gift is something that someone is offering on the "market". Once created, the gift component displays its title, description, image, type, subtypes, and a button to open a chat room with the owner of the gift. Additionally, the gift can be suggested to a _Project_ by any user, which adds it to a the project's publically available gift suggestion list. If the user wants to only show the gift to their "connections" then the user can select to do so, otherwise gifts are shown to other users based on how close the gift giver is to them.
-
-**_Creating a Request | The Request Component_**  
-A request is something that someone is desiring to find on the "market". Once created, the request component displays its title, description, image, type, subtypes, and a button to open a chat room with the owner of the request. Request can be created on the main feed, or they can be created as part of a \_Project\_.
-
-**_Creating a Project_**  
-A project is a collection of gifts and requests depicting a larger whole. An example project might be titled "Pasta". Pasta requires flour, an hour of labor time, and water. So "flour" and "pasta making labor" might be listed under the requests for the project. Since water is fairly commonplace, the creator of the project wouldn't list it as a request. Additionally, if the creator of the request is open to gift suggestions, then other users can suggest gifts from their feeds to be used in the project. These go into the giftSuggestions. If the user is open to request suggestions, then users can create requests to be added to the project's request suggestions, and moved to the actual requests list at the project owner's discretion.
-
-**_Sort By Function_**  
-Each list item (project, gift, and request) has a type and a subtype. These, along with creation timestamps and the model types of each item should be available to a sort by function.
-
-**_Search Bar_**  
-Each list item contains a large amount of text and tags, and a search bar to look for specific listings would be helpful.
-
-## Where to from Here?
-
-This project needs to draw on knowledge and experience in economics and logistical planning. Studying internal systems built by Amazon and Walmart seem like a good start. Studying real life and real historical examples of gift economies is important. Ideas might come from these areas.
-
-### Decentralization
-
-The first iteration of this app is opensource, but it is not decentralized. After the MVP is working to some degree, the backend needs to be integrated with the frontend and refractored into a decentralized code base. Some thought will have to be had on the architecture and how to make this work without envinronmentally harmful blockchain technology.
-
-## Where NOT to go
-
-This project is a response to the climate crisis, to corporate greed, and to the coming economic depression(s) caused by poor governance and the ongoing death march of Capitalism. So it does not make sense to rely on blockchain technology (at least where it affects the environment), and it does not make since to rely on LLMs either (since LLMs are energy sappers and also are owned primarily by large corporate interests). These technologies can be learned from, but need to be altered before being included in this project.
+There of course are aspects of these technologies that can be learned from, but need to be altered before being included in this project.
