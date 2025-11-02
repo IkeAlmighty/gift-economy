@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const LListingSchema = new mongoose.Schema(
+const ListingSchema = new mongoose.Schema(
   {
     title: String,
     description: String,
@@ -9,12 +9,12 @@ const LListingSchema = new mongoose.Schema(
       type: String,
       enum: ["GIFT", "REQUEST", "PROJECT"],
     },
-    contributions: [{ type: mongoose.Types.ObjectId, ref: "Listing" }],
-    contributionSuggestions: [{ type: mongoose.Types.ObjectId, ref: "Listing" }],
+    listings: [{ type: mongoose.Types.ObjectId, ref: "Listing" }],
+    listingsSuggestions: [{ type: mongoose.Types.ObjectId, ref: "Listing" }],
     tags: [String],
     suggestedProjects: [{ type: mongoose.Types.ObjectId, ref: "Listing" }],
   },
   { timestamps: true }
 );
 
-export default mongoose.model("Listing", LListingSchema);
+export default mongoose.model("Listing", ListingSchema);
