@@ -68,7 +68,7 @@ export default function ConnectionsPage() {
 
         {user.connections.map((connection) => {
           return (
-            <div className="[&>*]:mr-3">
+            <div className="[&>*]:mr-3 [&>*]:my-2 border-b-2 flex justify-between">
               <span>{connection.username}</span>
               <button
                 className="border-2 rounded px-2"
