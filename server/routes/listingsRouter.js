@@ -7,26 +7,29 @@ const router = express.Router();
 
 // Get all gifts
 router.get("/gifts", async (req, res) => {
-  const gifts = await Listing.find({ creator: req.user.id, intent: "GIFT" }).populate("creator");
+  const gifts = await Listing.find({ creator: req.user.id, intent: "GIFT" });
   res.json(gifts);
 });
 
 // Get all requests
 router.get("/my-requests", async (req, res) => {
-  const requests = await Listing.find({ creator: req.user.id, intent: "REQUEST" }).populate(
-    "creator"
-  );
+  const requests = await Listing.find({ creator: req.user.id, intent: "REQUEST" });
   res.json(requests);
 });
 
 // Get all listings created by the loggged in user (gifts, requests, and projects)
 router.get("/my-listings", async (req, res) => {
-  const listings = await Listing.find({ creator: req.user.id }).populate("creator");
-  res.json(listings);
+  try {
+    const listings = await Listing.find({ creator: req.user.id });
+    res.json(listings);
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 router.get("/listings-in-network", async (req, res) => {
-  // TODO:
+  //TODO for now, return nothing
+  res.json([]);
 });
 
 // Create listing (gift or request)
