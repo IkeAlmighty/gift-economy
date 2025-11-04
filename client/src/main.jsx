@@ -10,12 +10,12 @@ import { ToastContainer } from "react-toastify";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <UserProvider>
-      <NewListingProvider>
-        <ListingsProvider>
+      <ListingsProvider>
+        <NewListingProvider>
           <Router />
           <ToastContainer />
-        </ListingsProvider>
-      </NewListingProvider>
+        </NewListingProvider>
+      </ListingsProvider>
     </UserProvider>
   </StrictMode>
 );
