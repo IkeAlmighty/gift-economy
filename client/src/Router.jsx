@@ -7,6 +7,7 @@ import Signup from "./pages/Signup.jsx";
 import CreateListingOptions from "./pages/CreateListingOptions.jsx";
 import CreateListing from "./pages/CreateListing.jsx";
 import PreviewListing from "./pages/PreviewListing.jsx";
+import { SavedListingsPage } from "./pages/SavedListingsPage.jsx";
 
 export default function Router() {
   return (
@@ -22,6 +23,7 @@ export default function Router() {
           <Route path="/preview-listing" element={<PreviewListing />} />
         </Route>
 
+        <Route path="/my-listings" element={<SavedListingsPage />} />
         <Route path="/connections" element={<ConnectionsPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
