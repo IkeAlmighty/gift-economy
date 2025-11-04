@@ -1,4 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { createListing } from "../controls/listings";
+import { convertFormDataCategories } from "../utils/forms";
+import { useListingsData } from "./ListingsContext";
 
 export const NewListingContext = createContext(null);
 
@@ -7,6 +10,7 @@ export const NewListingContext = createContext(null);
 // in the snapshot and sends a formdata object to the controller
 export function NewListingProvider({ children }) {
   const [newListingData, setNewListingData] = useState({});
+  const { hydrateListings } = useListingsData();
 
   function snapshotFormData(fd) {
     const data = {};
@@ -53,29 +57,23 @@ export function NewListingProvider({ children }) {
     return fd;
   }
 
-  async function submitNewListing(formData) {
+  async function submitNewListing() {
     try {
       // first, recreate the image file from the url:
-      const image = await recreateImageFromUrl(formData.imageUrl, formData.imageName);
+      const image = await recreateImageFromUrl(newListingData.imageUrl, newListingData.imageName);
 
-      //prep payload:
-      const payload = { ...formData, image };
+      // prep payload by rewraping it in a FormData object:
+      const payload = { ...newListingData, image };
       const multipart = buildMultipart(payload);
 
-      // TODO: update once the model is refractored to just one
-      // 'listing' model
-      const submitByIntent = {
-        GIFT: async (m) => createContribution(m),
-        REQUEST: async (m) => createContribution(m),
-        PROJECT: async (m) => createProject(m),
-      };
+      const res = await createListing(multipart);
 
-      const res = await submitByIntent[formData.intent](multipart);
-      const newListingItem = await res.json();
+      if (res.ok) {
+        setNewListingData({});
+        hydrateListings();
+      }
 
-      // reset the menu stack
-      setNewListingData({});
-      return newListingItem;
+      return res;
     } catch (err) {
       console.error(err);
     }
