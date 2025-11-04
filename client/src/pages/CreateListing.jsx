@@ -16,5 +16,9 @@ export default function CreateGift() {
     updateNewListingData(fd);
   }, []);
 
-  return <CreateListingForm intent={intent} />;
+  return (
+    <div className="px-2">
+      <CreateListingForm intent={intent} />
+    </div>
+  );
 }
