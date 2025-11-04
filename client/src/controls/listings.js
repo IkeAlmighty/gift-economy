@@ -1,18 +1,31 @@
-export async function createListing(listingData) {
+export async function createListing(listingDataForm) {
   const res = await fetch("/api/listings/my-listings", {
     method: "POST",
-    body: listingData,
+    body: listingDataForm,
   });
 
   return res;
 }
 
 export async function getListingsInNetwork() {
-  const res = await fetch("/api/listings/listings-in-network");
+  try {
+    const res = await fetch("/api/listings/listings-in-network");
+
+    if (!res.ok) console.log(res);
+    else return await res.json();
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function getMyListings() {
+  const res = await fetch("/api/listings/my-listings");
 
   if (!res.ok) {
-    return await res.json()?.error;
-  } else return await res.json();
+    console.log(res);
+  }
+
+  return await res.json();
 }
 
 export async function editListing({ listingId, newData }) {}
