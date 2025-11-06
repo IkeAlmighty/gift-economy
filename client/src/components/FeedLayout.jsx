@@ -1,5 +1,5 @@
 import { Outlet, useLocation, useNavigate, Link } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ToolBar from "./ToolBar";
 import PlusCloseButton from "./PlusCloseButton";
 import LogoutButton from "./LogoutButton";
@@ -14,6 +14,13 @@ export default function ToolBarMenu() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [lastMenu, setLastMenu] = useState("/create-listing-options");
   const [lastPage, setLastPage] = useState(location.pathname);
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      setLastMenu("create-listing-options");
+      setMenuOpen(false);
+    }
+  }, [location.pathname]);
 
   function handleMenuButton() {
     if (menuOpen) {
@@ -56,14 +63,18 @@ export default function ToolBarMenu() {
       <ToolBar>
         <PlusCloseButton value={menuOpen} onClick={handleMenuButton} />
         <button>
-          <Link to="/connections">View Connections</Link>
+          <Link to="/connections">Connections</Link>
+        </button>
+
+        <button>
+          <Link to="/my-listings">Your Listings</Link>
         </button>
 
         <LogoutButton />
       </ToolBar>
 
       {menuOpen && (
-        <div className="text-right [&>button]:underline mt-5">
+        <div className="text-right [&>button]:underline mt-5 px-2">
           <button onClick={handleBackClick}>
             {location.pathname === "/create-listing-options" ? "Cancel" : "Back"}
           </button>
