@@ -28,8 +28,18 @@ router.get("/my-listings", async (req, res) => {
 });
 
 router.get("/listings-in-network", async (req, res) => {
-  //TODO for now, return nothing
-  res.json([]);
+  // get all connections
+  const me = await User.findById(req.user.id);
+
+  // for each connection, append all the connection's listings to return list
+  let listingsInNetwork = [];
+  for (let id of me.connections) {
+    const connection = await User.findById(id).populate("listings");
+    listingsInNetwork = [...listingsInNetwork, ...connection.listings];
+  }
+
+  // return list
+  res.json(listingsInNetwork);
 });
 
 // Create listing (gift or request)
@@ -40,7 +50,7 @@ router.post("/my-listings", upload.single("image"), async (req, res) => {
 
   const listing = await new Listing({
     title,
-    categories: JSON.parse(req.body.categories),
+    tags: JSON.parse(req.body.tags),
     intent,
     description,
     creator: req.user.id,

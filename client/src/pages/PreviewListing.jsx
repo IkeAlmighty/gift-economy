@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ListItem from "../components/ListItem.jsx";
 import { useNewListingData } from "../Contexts/NewListingContext.jsx";
-import { convertFormDataCategories } from "../utils/forms.js";
+import { convertFormDataTags } from "../utils/forms.js";
 import { toTitleCase } from "../utils/strings.js";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
@@ -18,11 +18,11 @@ export default function PreviewListing() {
     const title = newListingData.title;
     const intent = newListingData.intent; // Gift | Request | Project
 
-    const categories = convertFormDataCategories(newListingData);
+    const tags = convertFormDataTags(newListingData);
 
     const description = newListingData.description;
 
-    setData({ title, imageUrl, intent, categories, description });
+    setData({ title, imageUrl, intent, tags, description });
   }, [newListingData]);
 
   async function handleSubmit() {

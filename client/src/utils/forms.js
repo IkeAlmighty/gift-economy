@@ -1,4 +1,4 @@
-export function convertFormDataCategories(formData) {
+export function convertFormDataTags(formData) {
   const listingTypes = [];
   for (let key in formData) {
     const value = formData[key];

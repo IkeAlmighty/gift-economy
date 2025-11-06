@@ -1,5 +1,5 @@
 export default function ListItem({ data, disabled }) {
-  const { title, description, imageUrl, categories, intent } = data;
+  const { title, description, imageUrl, tags, intent } = data;
 
   const typeBorder = { Gift: "border-blue-300", Project: "border-brown-300" };
 
@@ -21,7 +21,7 @@ export default function ListItem({ data, disabled }) {
         />
       </div>
       <div className="text-sm my-1 text-center">
-        {categories.map((t) => (
+        {tags.map((t) => (
           <span className="ml-2">{t}</span>
         ))}
       </div>

@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { createListing } from "../controls/listings";
-import { convertFormDataCategories } from "../utils/forms";
+import { convertFormDataTags } from "../utils/forms";
 import { useListingsData } from "./ListingsContext";
 
 export const NewListingContext = createContext(null);
@@ -45,14 +45,14 @@ export function NewListingProvider({ children }) {
   function buildMultipart(formDataObj) {
     const fd = new FormData();
 
-    // append the non null other values, ignoring categories:
+    // append the non null other values, ignoring tags:
     for (const [k, v] of Object.entries(formDataObj)) {
       if (!k.match(/Type-/) && v !== undefined && v !== null) fd.append(k, v);
     }
 
-    // then, pull the categories and append to form as JSON string:
-    const categories = convertFormDataCategories(formDataObj);
-    fd.append("categories", JSON.stringify(categories));
+    // then, pull the tags and append to form as JSON string:
+    const tags = convertFormDataTags(formDataObj);
+    fd.append("tags", JSON.stringify(tags));
 
     return fd;
   }
