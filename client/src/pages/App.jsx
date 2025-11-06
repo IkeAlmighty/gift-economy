@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
 
 import ListItem from "../components/ListItem";
 import { getListingsInNetwork } from "../controls/listings";
