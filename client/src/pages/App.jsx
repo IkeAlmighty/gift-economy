@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-
 import ListItem from "../components/ListItem";
 import { getListingsInNetwork } from "../controls/listings";
 
