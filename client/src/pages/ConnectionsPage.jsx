@@ -66,7 +66,7 @@ export default function ConnectionsPage() {
 
         <h1 className="my-5">Your Connections</h1>
 
-        {user.connections.map((connection) => {
+        {user?.connections?.map((connection) => {
           return (
             <div className="[&>*]:mr-3 [&>*]:my-2 border-b-2 flex justify-between">
               <span>{connection.username}</span>
