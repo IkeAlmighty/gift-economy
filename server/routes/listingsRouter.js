@@ -65,4 +65,10 @@ router.get("/saved-projects", async (req, res) => {
   // TODO: get the projects user has saved to their savedProjects field
 });
 
+router.delete("/", async (req, res) => {
+  const { _id } = req.query;
+  await Listing.findByIdAndDelete(_id);
+  res.json({ message: "Deleted Listing!" });
+});
+
 export default router;
