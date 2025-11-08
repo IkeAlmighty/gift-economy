@@ -22,8 +22,7 @@ export function UserProvider({ children }) {
     const { data, error } = await controllerLogin(credentials);
 
     if (!error) {
-      setUser(data);
-      setLoading(false);
+      hydrateUser();
     }
 
     return { data, error };
