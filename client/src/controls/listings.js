@@ -21,6 +21,8 @@ export async function getMyListings() {
   if (res.ok) return await res.json();
 }
 
-export async function editListing({ listingId, newData }) {}
+export async function editListing({ _id }, newData) {}
 
-export async function deleteListing({ listingId }) {}
+export async function deleteListing({ _id }) {
+  return await fetch(`/api/listings?_id=${_id}`, { method: "DELETE" });
+}
