@@ -20,7 +20,13 @@ export function ListingsProvider({ children }) {
   }
 
   return (
-    <ListingsContext.Provider value={{ inNetworkListings, myListings, hydrateListings }}>
+    <ListingsContext.Provider
+      value={{
+        inNetworkListings,
+        myListings,
+        hydrateListings,
+      }}
+    >
       {children}
     </ListingsContext.Provider>
   );
