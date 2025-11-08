@@ -1,11 +1,28 @@
+import { useState, useEffect } from "react";
 import ToolBar from "../components/ToolBar";
 import LogoutButton from "../components/LogoutButton";
-import { Link } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
 import { useListingsData } from "../Contexts/ListingsContext";
-import { useEffect } from "react";
+import { deleteListing } from "../controls/listings";
+import { toast } from "react-toastify";
 
 export function SavedListingsPage() {
-  const { myListings } = useListingsData();
+  const { myListings, setSelectedListing, hydrateListings } = useListingsData();
+  const [searchParams, _] = useSearchParams();
+  const navigate = useNavigate();
+
+  const [actionText, setActionText] = useState(searchParams.get("actionText") || "Delete");
+  const [actionId, setActionId] = useState(searchParams.get("actionId"));
+
+  async function handleAction(listing) {
+    // when there is no action id, default to deleting the listing:
+    if (!actionId) {
+      const res = await deleteListing(listing);
+      await hydrateListings();
+
+      if (res.ok) toast(`Deleted Listing! (${listing.title})`);
+    }
+  }
 
   return (
     <div>
@@ -24,10 +41,17 @@ export function SavedListingsPage() {
       <div className="px-2">
         <h1>Your Listings</h1>
 
-        {myListings?.map((listing) => (
-          <div className="border-b-2 flex [&>*]:mx-2">
+        {myListings?.map((listing, index) => (
+          <div
+            key={`mylistings${index}`}
+            className="border-b-2 flex [&>*]:mx-2 py-2 justify-between"
+          >
             <div>{listing.title}</div>
             <div>{listing.intent}</div>
+
+            <div>
+              <button onClick={() => handleAction(listing)}>{actionText}</button>
+            </div>
           </div>
         ))}
       </div>
