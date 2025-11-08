@@ -24,7 +24,7 @@ export function SavedListingsPage() {
       <div className="px-2">
         <h1>Your Listings</h1>
 
-        {myListings.map((listing) => (
+        {myListings?.map((listing) => (
           <div className="border-b-2 flex [&>*]:mx-2">
             <div>{listing.title}</div>
             <div>{listing.intent}</div>
