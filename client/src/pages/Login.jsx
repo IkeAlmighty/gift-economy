@@ -11,6 +11,8 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const [errorMessage, setErrorMessage] = useState("");
+
   async function handleLogin(e) {
     e.preventDefault();
     const { error } = await login({ username, password });
@@ -19,6 +21,8 @@ export default function Login() {
       const callback = searchParams.get("callback");
       if (callback) navigate(callback);
       else navigate("/");
+    } else {
+      setErrorMessage(error);
     }
   }
 
@@ -28,25 +32,19 @@ export default function Login() {
       <form className="[&>*]:my-5" onSubmit={handleLogin}>
         <label>
           <div>Username:</div>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
         </label>
         <label>
           <div>Password:</div>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </label>
 
         <div>
           <input type="submit" value="Login" />
         </div>
       </form>
+
+      <div className="text-red-600 italic">{errorMessage}</div>
     </div>
   );
 }
