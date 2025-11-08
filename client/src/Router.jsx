@@ -8,6 +8,7 @@ import CreateListingOptions from "./pages/CreateListingOptions.jsx";
 import CreateListing from "./pages/CreateListing.jsx";
 import PreviewListing from "./pages/PreviewListing.jsx";
 import { SavedListingsPage } from "./pages/SavedListingsPage.jsx";
+import { Protected } from "./components/Protected.jsx";
 
 export default function Router() {
   return (
@@ -23,8 +24,22 @@ export default function Router() {
           <Route path="/preview-listing" element={<PreviewListing />} />
         </Route>
 
-        <Route path="/my-listings" element={<SavedListingsPage />} />
-        <Route path="/connections" element={<ConnectionsPage />} />
+        <Route
+          path="/my-listings"
+          element={
+            <Protected>
+              <SavedListingsPage />
+            </Protected>
+          }
+        />
+        <Route
+          path="/connections"
+          element={
+            <Protected>
+              <ConnectionsPage />
+            </Protected>
+          }
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
