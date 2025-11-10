@@ -32,7 +32,7 @@ export function PasswordField({ value, onChange }) {
           onChange={(e) => onChange(e.target.value)}
         />
         <div
-          className="absolute top-1/2 -translate-y-1/2 right-2"
+          className="cursor-pointer absolute top-1/2 -translate-y-1/2 right-2"
           role="button"
           onClick={() => setShowText((p) => !p)}
         >
