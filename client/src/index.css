@@ -21,7 +21,11 @@ h4 {
 }
 
 input {
-  @apply border-2 rounded py-1 px-2;
+  @apply h-8 box-border border-1 rounded py-1 px-2 border-gray-700;
+}
+
+input:focus-visible {
+  @apply outline-0 border-2;
 }
 
 input[type="submit"],

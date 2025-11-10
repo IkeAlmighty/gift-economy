@@ -22,7 +22,19 @@ export async function logout() {
   return await response.json();
 }
 
-export async function signup() {}
+export async function signup({ username, password }) {
+  const response = await fetch("/api/auth/signup", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ username, password }),
+  });
+
+  const data = await response.json();
+
+  return { data, error: data.error };
+}
 
 // USER RELATED DATA
 
@@ -33,7 +45,7 @@ export async function me() {
       const data = await response.json();
       return data;
     }
-  } catch (err) {
+  } catch {
     return null;
   }
 }

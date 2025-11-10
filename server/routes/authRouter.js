@@ -7,8 +7,19 @@ const router = express.Router();
 router.post("/signup", async (req, res) => {
   const { username, password } = req.body;
   try {
-    await new User({ username, password }).save();
-    res.json({ message: "User created" });
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      res.status(400).json({ error: "That username is taken." });
+      return;
+    }
+
+    const user = await new User({ username, password }).save();
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+    res
+      .cookie("token", token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 100 })
+      .json({ message: "User created" });
   } catch (err) {
     res.status(400).json({ error: "User creation failed" });
   }

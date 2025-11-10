@@ -40,8 +40,8 @@ export default function Router() {
             </Protected>
           }
         />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login mode="login" />} />
+        <Route path="/signup" element={<Login mode="signup" />} />
       </Routes>
     </BrowserRouter>
   );
