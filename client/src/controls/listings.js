@@ -26,3 +26,9 @@ export async function editListing({ _id }, newData) {}
 export async function deleteListing({ _id }) {
   return await fetch(`/api/listings?_id=${_id}`, { method: "DELETE" });
 }
+
+export async function suggestToListing({ _id }, subListing) {
+  return await fetch(`/api/listings/suggest?suggest=${subListing._id}&to=${_id}`, {
+    method: "PATCH",
+  });
+}

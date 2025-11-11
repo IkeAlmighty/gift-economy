@@ -21,6 +21,8 @@ export function SavedListingsPage() {
       await hydrateListings();
 
       if (res.ok) toast(`Deleted Listing! (${listing.title})`);
+    } else {
+      const res = await suggestToListing({ _id: actionId }, listing);
     }
   }
 
