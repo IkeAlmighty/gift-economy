@@ -5,11 +5,13 @@ import PlusCloseButton from "./PlusCloseButton";
 import LogoutButton from "./LogoutButton";
 import { Protected } from "./Protected";
 import { useNewListingData } from "../Contexts/NewListingContext";
+import { useUser } from "../Contexts/UserContext";
 
 export default function ToolBarMenu() {
   const navigate = useNavigate();
   const location = useLocation();
   const { newListingData } = useNewListingData();
+  const { user } = useUser();
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [lastMenu, setLastMenu] = useState("/create-listing-options");
@@ -62,6 +64,7 @@ export default function ToolBarMenu() {
     <>
       <ToolBar>
         <PlusCloseButton value={menuOpen} onClick={handleMenuButton} />
+
         <button>
           <Link to="/connections">Connections</Link>
         </button>
@@ -72,6 +75,8 @@ export default function ToolBarMenu() {
 
         <LogoutButton />
       </ToolBar>
+
+      {user && <div className="m-2">Logged in as {user.username}</div>}
 
       {menuOpen && (
         <div className="text-right [&>button]:underline mt-5 px-2">
