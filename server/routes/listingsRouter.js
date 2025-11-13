@@ -1,5 +1,5 @@
 import express from "express";
-import Listing from "../models/listing.js";
+import Listing from "../models/Listing.js";
 import User from "../models/User.js";
 import { upload } from "../middleware/upload.js"; // middleware for parseing files sent to the server
 
@@ -34,7 +34,14 @@ router.get("/listings-in-network", async (req, res) => {
   // for each connection, append all the connection's listings to return list
   let listingsInNetwork = [];
   for (let id of me.connections) {
-    const connection = await User.findById(id).populate("listings");
+    const connection = await User.findById(id).populate({
+      path: "listings",
+      model: Listing,
+      populate: {
+        path: "creator",
+        select: "username",
+      },
+    });
     listingsInNetwork = [...listingsInNetwork, ...connection.listings];
   }
 
@@ -70,5 +77,7 @@ router.delete("/", async (req, res) => {
   await Listing.findByIdAndDelete(_id);
   res.json({ message: "Deleted Listing!" });
 });
+
+router.patch("/suggest", (req, res) => {});
 
 export default router;
