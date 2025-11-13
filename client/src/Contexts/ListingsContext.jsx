@@ -1,15 +1,17 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { getListingsInNetwork, getMyListings } from "../controls/listings";
+import { useUser } from "./UserContext";
 
 export const ListingsContext = createContext(null);
 
 export function ListingsProvider({ children }) {
   const [inNetworkListings, setInNetworkListings] = useState([]);
   const [myListings, setMyListings] = useState([]);
+  const { user } = useUser();
 
   useEffect(() => {
     hydrateListings();
-  }, []);
+  }, [user]);
 
   async function hydrateListings() {
     const _inNetworkListings = await getListingsInNetwork();
