@@ -3,7 +3,6 @@ import FeedLayout from "./components/FeedLayout.jsx";
 import App from "./pages/App.jsx";
 import ConnectionsPage from "./pages/ConnectionsPage.jsx";
 import Login from "./pages/Login.jsx";
-import Signup from "./pages/Signup.jsx";
 import CreateListingOptions from "./pages/CreateListingOptions.jsx";
 import CreateListing from "./pages/CreateListing.jsx";
 import PreviewListing from "./pages/PreviewListing.jsx";
