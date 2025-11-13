@@ -14,9 +14,9 @@ function App() {
 
   return (
     <>
-      <div>
+      <div className="flex flex-wrap gap-2 justify-center">
         {listingItems.map((itemData) => (
-          <ListItem data={itemData} />
+          <ListItem key={itemData.id} data={itemData} />
         ))}
       </div>
     </>
