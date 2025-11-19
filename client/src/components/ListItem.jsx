@@ -1,4 +1,4 @@
-export default function ListItem({ data, disabled }) {
+export default function ListItem({ data, disabled, onSave }) {
   const { title, description, imageUrl, tags, intent } = data;
 
   return (
@@ -44,7 +44,9 @@ export default function ListItem({ data, disabled }) {
       </div>
 
       <div className="flex justify-between my-2 [&>button]:mx-2 [&>button]:border-b-2 [&>button]:border-l-2 [&>button]:px-2 [&>button]:rounded [&>button]:bg-teal-100">
-        <button disabled={disabled}>Save</button>
+        <button disabled={disabled} onClick={() => onSave(data)}>
+          Save
+        </button>
         <span className="flex-1"></span>
         <button disabled={disabled}>Suggest to Project</button>
         <button disabled={disabled}>View Chat</button>
