@@ -27,6 +27,26 @@ router.get("/my-listings", async (req, res) => {
   }
 });
 
+router.post("/saved-listings", async (req, res) => {
+  const { _id } = req.body;
+  try {
+    const me = await User.findById(req.user.id);
+
+    if (me.savedProjects.includes(_id)) {
+      return res
+        .status(409)
+        .json({ error: "Listing has already been added to your saved listings." });
+    }
+
+    await me.savedProjects.addToSet(_id);
+  } catch (err) {
+    console.error(err);
+    return res.json({ error: "Server Side Error" });
+  }
+
+  res.json({ message: "Listing saved!" });
+});
+
 router.get("/listings-in-network", async (req, res) => {
   // get all connections
   const me = await User.findById(req.user.id);
@@ -66,10 +86,6 @@ router.post("/my-listings", upload.single("image"), async (req, res) => {
   await User.findByIdAndUpdate(req.user.id, { $push: { listings: listing._id } });
 
   res.json(listing);
-});
-
-router.get("/saved-projects", async (req, res) => {
-  // TODO: get the projects user has saved to their savedProjects field
 });
 
 router.delete("/", async (req, res) => {
