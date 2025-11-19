@@ -1,5 +1,10 @@
 import { useState, useEffect, createContext, useContext } from "react";
-import { getListingsInNetwork, getMyListings } from "../controls/listings";
+import {
+  getListingsInNetwork,
+  getMyListings,
+  getSavedListings,
+  saveListing,
+} from "../controls/listings";
 import { useUser } from "./UserContext";
 
 export const ListingsContext = createContext(null);
@@ -7,6 +12,7 @@ export const ListingsContext = createContext(null);
 export function ListingsProvider({ children }) {
   const [inNetworkListings, setInNetworkListings] = useState([]);
   const [myListings, setMyListings] = useState([]);
+  const [savedListings, setSavedListings] = useState([]);
   const { user } = useUser();
 
   useEffect(() => {
@@ -16,9 +22,20 @@ export function ListingsProvider({ children }) {
   async function hydrateListings() {
     const _inNetworkListings = await getListingsInNetwork();
     const _myListings = await getMyListings();
+    const _savedListings = await getSavedListings();
 
     setInNetworkListings(_inNetworkListings);
     setMyListings(_myListings);
+    setSavedListings(_savedListings);
+  }
+
+  async function _saveListing(listing) {
+    const res = await saveListing(listing);
+    if (res.ok) {
+      console.log("saved listings: ", savedListings);
+      setSavedListings([listing, ...savedListings]);
+    }
+    return await res.json();
   }
 
   return (
@@ -26,6 +43,8 @@ export function ListingsProvider({ children }) {
       value={{
         inNetworkListings,
         myListings,
+        savedListings,
+        saveListing: _saveListing,
         hydrateListings,
       }}
     >
