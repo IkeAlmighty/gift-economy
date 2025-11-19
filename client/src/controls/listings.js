@@ -21,6 +21,21 @@ export async function getMyListings() {
   if (res.ok) return await res.json();
 }
 
+export async function saveListing(listing) {
+  const res = await fetch("/api/listings/saved-listings", {
+    method: "POST",
+    body: JSON.stringify(listing),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return await res;
+}
+
+export async function getSavedListings() {
+  return []; //TODO
+}
+
 export async function editListing({ _id }, newData) {}
 
 export async function deleteListing({ _id }) {
