@@ -48,7 +48,9 @@ export function SavedListingsPage() {
             key={`mylistings${index}`}
             className="border-b-2 flex [&>*]:mx-2 py-2 justify-between"
           >
-            <div>{listing.title}</div>
+            <div>
+              <Link to={`/listing/${listing._id}`}>{listing.title}</Link>
+            </div>
             <div>{listing.intent}</div>
 
             <div>
