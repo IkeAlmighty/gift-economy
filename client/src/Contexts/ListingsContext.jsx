@@ -32,7 +32,6 @@ export function ListingsProvider({ children }) {
   async function _saveListing(listing) {
     const res = await saveListing(listing);
     if (res.ok) {
-      console.log("saved listings: ", savedListings);
       setSavedListings([listing, ...savedListings]);
     }
     return await res.json();
