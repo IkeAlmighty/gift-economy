@@ -5,6 +5,24 @@ import { upload } from "../middleware/upload.js"; // middleware for parseing fil
 
 const router = express.Router();
 
+// get listing by id, if the user is permitted to see it
+router.get("/", async (req, res) => {
+  const { _id } = req.query;
+  try {
+    const listing = await Listing.findById(_id);
+    const me = await User.findById(req.user.id);
+
+    // if the creator or listing is a connection of the user, or the listing was made by the user
+    if (me.connections.includes(listing.creator) || me.id === listing.creator.toString()) {
+      res.json(listing);
+    } else {
+      res.status(401).json({ error: "You are not permitted to view this listing." });
+    }
+  } catch (err) {
+    console.error(err);
+  }
+});
+
 // Get all gifts
 router.get("/gifts", async (req, res) => {
   const gifts = await Listing.find({ creator: req.user.id, intent: "GIFT" });
