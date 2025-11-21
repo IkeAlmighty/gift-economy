@@ -47,3 +47,8 @@ export async function suggestToListing({ _id }, subListing) {
     method: "PATCH",
   });
 }
+
+export async function getListingById({ _id }) {
+  console.log("listing id: ", _id);
+  return await fetch(`/api/listings?_id=${_id}`);
+}
