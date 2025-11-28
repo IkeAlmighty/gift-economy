@@ -45,6 +45,16 @@ router.get("/my-listings", async (req, res) => {
   }
 });
 
+router.get("/saved-listings", async (req, res) => {
+  try {
+    const me = await User.findById(req.user.id).populate("savedProjects");
+    return res.json(me.savedProjects);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Server Side Error" });
+  }
+});
+
 router.post("/saved-listings", async (req, res) => {
   const { _id } = req.body;
   try {
@@ -57,9 +67,10 @@ router.post("/saved-listings", async (req, res) => {
     }
 
     await me.savedProjects.addToSet(_id);
+    await me.save();
   } catch (err) {
     console.error(err);
-    return res.json({ error: "Server Side Error" });
+    return res.status(500).json({ error: "Server Side Error" });
   }
 
   res.json({ message: "Listing saved!" });
@@ -110,6 +121,19 @@ router.delete("/", async (req, res) => {
   const { _id } = req.query;
   await Listing.findByIdAndDelete(_id);
   res.json({ message: "Deleted Listing!" });
+});
+
+router.delete("/saved-listings", async (req, res) => {
+  const { _id } = req.query;
+  try {
+    const me = await User.findById(req.user.id);
+    await me.savedProjects.pull(_id);
+    await me.save();
+    res.json({ message: "Removed from saved listings!" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server Side Error" });
+  }
 });
 
 router.patch("/suggest", (req, res) => {});
