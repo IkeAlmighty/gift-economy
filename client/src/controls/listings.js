@@ -33,7 +33,8 @@ export async function saveListing(listing) {
 }
 
 export async function getSavedListings() {
-  return []; //TODO
+  const res = await fetch("/api/listings/saved-listings");
+  return await res.json();
 }
 
 export async function editListing({ _id }, newData) {}
@@ -51,4 +52,10 @@ export async function suggestToListing({ _id }, subListing) {
 export async function getListingById({ _id }) {
   console.log("listing id: ", _id);
   return await fetch(`/api/listings?_id=${_id}`);
+}
+
+export async function removeSavedListing({ _id }) {
+  return await fetch(`/api/listings/saved-listings?_id=${_id}`, {
+    method: "DELETE",
+  });
 }
