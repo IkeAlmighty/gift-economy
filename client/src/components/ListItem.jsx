@@ -36,8 +36,8 @@ export default function ListItem({ data, disabled, onSave }) {
           <div>Posted by {data.creator?.username}</div>
           {data.intent === "PROJECT" && (
             <div className="[&>*]:inline-block [&>*]:mr-2">
-              <div>{data.listingsSuggestions.length} suggestions</div>
-              <div>{data.listings.length} contributions</div>
+              <div>{data?.listingsSuggestions?.length} suggestions</div>
+              <div>{data?.listings?.length} contributions</div>
             </div>
           )}
         </div>
