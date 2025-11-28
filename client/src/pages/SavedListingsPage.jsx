@@ -7,23 +7,31 @@ import { deleteListing } from "../controls/listings";
 import { toast } from "react-toastify";
 
 export function SavedListingsPage() {
-  const { myListings, setSelectedListing, hydrateListings } = useListingsData();
+  const { myListings, hydrateListings, savedListings, removeSavedListing } = useListingsData();
   const [searchParams, _] = useSearchParams();
   const navigate = useNavigate();
 
-  const [actionText, setActionText] = useState(searchParams.get("actionText") || "Delete");
-  const [actionId, setActionId] = useState(searchParams.get("actionId"));
+  const [action, setAction] = useState(searchParams.get("action"));
 
   async function handleAction(listing) {
     // when there is no action id, default to deleting the listing:
-    if (!actionId) {
-      const res = await deleteListing(listing);
-      await hydrateListings();
-
-      if (res.ok) toast(`Deleted Listing! (${listing.title})`);
-    } else {
+    if (!action) return;
+    else if (action === "Suggest") {
       const res = await suggestToListing({ _id: actionId }, listing);
     }
+  }
+
+  async function handleDelete(listing) {
+    const res = await deleteListing(listing);
+    await hydrateListings();
+  }
+
+  async function handleRemove(listing) {
+    const res = await removeSavedListing(listing);
+    if (res.ok) {
+      toast.success("Removed from saved listings");
+    }
+    await hydrateListings();
   }
 
   return (
@@ -41,7 +49,7 @@ export function SavedListingsPage() {
         <LogoutButton />
       </ToolBar>
       <div className="px-2">
-        <h1>Your Listings</h1>
+        <h2>Your Listings</h2>
 
         {myListings?.map((listing, index) => (
           <div
@@ -54,7 +62,34 @@ export function SavedListingsPage() {
             <div>{listing.intent}</div>
 
             <div>
-              <button onClick={() => handleAction(listing)}>{actionText}</button>
+              {action && (
+                <button className="mx-2 px-2 border-r-2" onClick={() => handleAction(listing)}>
+                  {action}
+                </button>
+              )}
+              <button onClick={() => handleDelete(listing)}>Delete</button>
+            </div>
+          </div>
+        ))}
+
+        <h2>Your Saved Listings</h2>
+        {savedListings?.map((listing, index) => (
+          <div
+            key={`savedlistings${index}`}
+            className="border-b-2 flex [&>*]:mx-2 py-2 justify-between"
+          >
+            <div>
+              <Link to={`/listing/${listing._id}`}>{listing.title}</Link>
+            </div>
+            <div>{listing.intent}</div>
+
+            <div>
+              {action && (
+                <button className="mx-2 px-2 border-r-2" onClick={() => handleAction(listing)}>
+                  {action}
+                </button>
+              )}
+              <button onClick={() => handleRemove(listing)}>Remove</button>
             </div>
           </div>
         ))}
