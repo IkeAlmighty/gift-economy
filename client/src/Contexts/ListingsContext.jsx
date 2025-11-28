@@ -4,6 +4,7 @@ import {
   getMyListings,
   getSavedListings,
   saveListing,
+  removeSavedListing,
 } from "../controls/listings";
 import { useUser } from "./UserContext";
 
@@ -37,6 +38,15 @@ export function ListingsProvider({ children }) {
     return await res.json();
   }
 
+  async function _removeSavedListing(listing) {
+    const res = await removeSavedListing(listing);
+    if (res.ok) {
+      setSavedListings(savedListings.filter((l) => l._id !== listing._id));
+    }
+
+    return await res;
+  }
+
   return (
     <ListingsContext.Provider
       value={{
@@ -45,6 +55,7 @@ export function ListingsProvider({ children }) {
         savedListings,
         saveListing: _saveListing,
         hydrateListings,
+        removeSavedListing: _removeSavedListing,
       }}
     >
       {children}
