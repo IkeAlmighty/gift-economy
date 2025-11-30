@@ -3,12 +3,12 @@ import FeedLayout from "./components/FeedLayout.jsx";
 import App from "./pages/App.jsx";
 import ConnectionsPage from "./pages/ConnectionsPage.jsx";
 import Login from "./pages/Login.jsx";
-import Signup from "./pages/Signup.jsx";
 import CreateListingOptions from "./pages/CreateListingOptions.jsx";
 import CreateListing from "./pages/CreateListing.jsx";
 import PreviewListing from "./pages/PreviewListing.jsx";
 import { SavedListingsPage } from "./pages/SavedListingsPage.jsx";
 import { Protected } from "./components/Protected.jsx";
+import { SingleListingPage } from "./pages/SingleListingPage.jsx";
 
 export default function Router() {
   return (
@@ -40,6 +40,7 @@ export default function Router() {
             </Protected>
           }
         />
+        <Route path="/listing/:_id" element={<SingleListingPage />} />
         <Route path="/login" element={<Login mode="login" />} />
         <Route path="/signup" element={<Login mode="signup" />} />
       </Routes>

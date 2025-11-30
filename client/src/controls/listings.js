@@ -21,6 +21,41 @@ export async function getMyListings() {
   if (res.ok) return await res.json();
 }
 
-export async function editListing({ listingId, newData }) {}
+export async function saveListing(listing) {
+  const res = await fetch("/api/listings/saved-listings", {
+    method: "POST",
+    body: JSON.stringify(listing),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return await res;
+}
 
-export async function deleteListing({ listingId }) {}
+export async function getSavedListings() {
+  const res = await fetch("/api/listings/saved-listings");
+  return await res.json();
+}
+
+export async function editListing({ _id }, newData) {}
+
+export async function deleteListing({ _id }) {
+  return await fetch(`/api/listings?_id=${_id}`, { method: "DELETE" });
+}
+
+export async function suggestToListing({ _id }, subListing) {
+  return await fetch(`/api/listings/suggest?suggest=${subListing._id}&to=${_id}`, {
+    method: "PATCH",
+  });
+}
+
+export async function getListingById({ _id }) {
+  console.log("listing id: ", _id);
+  return await fetch(`/api/listings?_id=${_id}`);
+}
+
+export async function removeSavedListing({ _id }) {
+  return await fetch(`/api/listings/saved-listings?_id=${_id}`, {
+    method: "DELETE",
+  });
+}

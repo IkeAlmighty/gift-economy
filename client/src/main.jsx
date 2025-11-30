@@ -13,7 +13,7 @@ createRoot(document.getElementById("root")).render(
       <ListingsProvider>
         <NewListingProvider>
           <Router />
-          <ToastContainer />
+          <ToastContainer position="bottom-right" />
         </NewListingProvider>
       </ListingsProvider>
     </UserProvider>

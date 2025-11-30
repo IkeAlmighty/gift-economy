@@ -1,9 +1,27 @@
 import express from "express";
-import Listing from "../models/listing.js";
+import Listing from "../models/Listing.js";
 import User from "../models/User.js";
 import { upload } from "../middleware/upload.js"; // middleware for parseing files sent to the server
 
 const router = express.Router();
+
+// get listing by id, if the user is permitted to see it
+router.get("/", async (req, res) => {
+  const { _id } = req.query;
+  try {
+    const listing = await Listing.findById(_id);
+    const me = await User.findById(req.user.id);
+
+    // if the creator or listing is a connection of the user, or the listing was made by the user
+    if (me.connections.includes(listing.creator) || me.id === listing.creator.toString()) {
+      res.json(listing);
+    } else {
+      res.status(401).json({ error: "You are not permitted to view this listing." });
+    }
+  } catch (err) {
+    console.error(err);
+  }
+});
 
 // Get all gifts
 router.get("/gifts", async (req, res) => {
@@ -27,6 +45,37 @@ router.get("/my-listings", async (req, res) => {
   }
 });
 
+router.get("/saved-listings", async (req, res) => {
+  try {
+    const me = await User.findById(req.user.id).populate("savedProjects");
+    return res.json(me.savedProjects);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Server Side Error" });
+  }
+});
+
+router.post("/saved-listings", async (req, res) => {
+  const { _id } = req.body;
+  try {
+    const me = await User.findById(req.user.id);
+
+    if (me.savedProjects.includes(_id)) {
+      return res
+        .status(409)
+        .json({ error: "Listing has already been added to your saved listings." });
+    }
+
+    await me.savedProjects.addToSet(_id);
+    await me.save();
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Server Side Error" });
+  }
+
+  res.json({ message: "Listing saved!" });
+});
+
 router.get("/listings-in-network", async (req, res) => {
   // get all connections
   const me = await User.findById(req.user.id);
@@ -34,7 +83,14 @@ router.get("/listings-in-network", async (req, res) => {
   // for each connection, append all the connection's listings to return list
   let listingsInNetwork = [];
   for (let id of me.connections) {
-    const connection = await User.findById(id).populate("listings");
+    const connection = await User.findById(id).populate({
+      path: "listings",
+      model: Listing,
+      populate: {
+        path: "creator",
+        select: "username",
+      },
+    });
     listingsInNetwork = [...listingsInNetwork, ...connection.listings];
   }
 
@@ -61,8 +117,25 @@ router.post("/my-listings", upload.single("image"), async (req, res) => {
   res.json(listing);
 });
 
-router.get("/saved-projects", async (req, res) => {
-  // TODO: get the projects user has saved to their savedProjects field
+router.delete("/", async (req, res) => {
+  const { _id } = req.query;
+  await Listing.findByIdAndDelete(_id);
+  res.json({ message: "Deleted Listing!" });
 });
+
+router.delete("/saved-listings", async (req, res) => {
+  const { _id } = req.query;
+  try {
+    const me = await User.findById(req.user.id);
+    await me.savedProjects.pull(_id);
+    await me.save();
+    res.json({ message: "Removed from saved listings!" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server Side Error" });
+  }
+});
+
+router.patch("/suggest", (req, res) => {});
 
 export default router;

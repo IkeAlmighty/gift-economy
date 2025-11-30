@@ -1,22 +1,23 @@
-import { useState, useEffect } from "react";
 import ListItem from "../components/ListItem";
-import { getListingsInNetwork } from "../controls/listings";
+import { useListingsData } from "../Contexts/ListingsContext";
+import { toast } from "react-toastify";
 
 function App() {
-  const [listingItems, setListingItems] = useState([]);
+  const { inNetworkListings, saveListing } = useListingsData();
 
-  useEffect(() => {
-    (async () => {
-      const listings = await getListingsInNetwork();
-      setListingItems(listings);
-    })();
-  }, []);
+  async function handleSaveListing(listing) {
+    const res = await saveListing(listing);
+
+    if (res.error) {
+      toast(res.error);
+    } else toast(res.message);
+  }
 
   return (
     <>
-      <div>
-        {listingItems.map((itemData) => (
-          <ListItem data={itemData} />
+      <div className="flex flex-wrap gap-2 justify-center">
+        {inNetworkListings?.map((itemData) => (
+          <ListItem key={itemData.id} data={itemData} onSave={handleSaveListing} />
         ))}
       </div>
     </>
