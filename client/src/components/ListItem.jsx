@@ -1,5 +1,12 @@
+import { useNavigate } from "react-router";
+
 export default function ListItem({ data, disabled, onSave }) {
   const { title, description, imageUrl, tags, intent } = data;
+  const navigate = useNavigate();
+
+  function handleSuggestListing() {
+    navigate(`/saved-projects?action=Suggest&target=${data._id}`);
+  }
 
   return (
     <div
@@ -48,7 +55,9 @@ export default function ListItem({ data, disabled, onSave }) {
           Save
         </button>
         <span className="flex-1"></span>
-        <button disabled={disabled}>Suggest to Project</button>
+        <button disabled={disabled} onClick={() => handleSuggestListing()}>
+          Suggest to Project
+        </button>
         <button disabled={disabled}>View Chat</button>
       </div>
     </div>
