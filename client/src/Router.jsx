@@ -6,7 +6,7 @@ import Login from "./pages/Login.jsx";
 import CreateListingOptions from "./pages/CreateListingOptions.jsx";
 import CreateListing from "./pages/CreateListing.jsx";
 import PreviewListing from "./pages/PreviewListing.jsx";
-import { SavedListingsPage } from "./pages/SavedListingsPage.jsx";
+import { SavedProjectsPage } from "./pages/SavedProjectsPage.jsx";
 import { Protected } from "./components/Protected.jsx";
 import { SingleListingPage } from "./pages/SingleListingPage.jsx";
 
@@ -25,10 +25,10 @@ export default function Router() {
         </Route>
 
         <Route
-          path="/my-listings"
+          path="/saved-projects"
           element={
             <Protected>
-              <SavedListingsPage />
+              <SavedProjectsPage />
             </Protected>
           }
         />
