@@ -5,7 +5,8 @@ import {
   getSavedListings,
   saveListing,
   removeSavedListing,
-} from "../controls/listings";
+  suggestToListing,
+} from "../endpoints/listings";
 import { useUser } from "./UserContext";
 
 export const ListingsContext = createContext(null);
@@ -47,6 +48,15 @@ export function ListingsProvider({ children }) {
     return await res;
   }
 
+  async function _suggestListing(listing, suggestion) {
+    const res = await suggestToListing(listing, suggestion);
+    if (res.ok) {
+      await hydrateListings();
+    }
+
+    return await res;
+  }
+
   return (
     <ListingsContext.Provider
       value={{
@@ -56,6 +66,7 @@ export function ListingsProvider({ children }) {
         saveListing: _saveListing,
         hydrateListings,
         removeSavedListing: _removeSavedListing,
+        suggestListing: _suggestListing,
       }}
     >
       {children}

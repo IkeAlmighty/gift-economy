@@ -4,7 +4,7 @@ import {
   logout as controllerLogout,
   signup as controllerSignup,
   me,
-} from "../controls/user";
+} from "../endpoints/user";
 import { UserContext } from "./UserContext";
 
 export default function UserProvider({ children }) {
