@@ -4,6 +4,14 @@ export default function ListItem({ data, disabled, onSave }) {
   const { title, description, imageUrl, tags, intent } = data;
   const navigate = useNavigate();
 
+  const tagIcons = {
+    shelter: "🏠",
+    food: "🍳",
+    labor: "🛠️",
+    transportation: "🚗",
+    other: "❓",
+  };
+
   function handleSuggestListing() {
     navigate(`/saved-projects?action=Suggest&target=${data._id}`);
   }
@@ -28,10 +36,10 @@ export default function ListItem({ data, disabled, onSave }) {
         </div>
       )}
 
-      <div className="text-sm text-center h-5">
+      <div className="text-2xl text-center h-5">
         {tags.map((t) => (
           <span key={`tag-${data.id}-${t}`} className="ml-2">
-            {t}
+            {tagIcons[t]}
           </span>
         ))}
       </div>
