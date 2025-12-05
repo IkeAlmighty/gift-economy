@@ -76,7 +76,7 @@ export default function ToolBarMenu() {
         <LogoutButton />
       </ToolBar>
 
-      {user && <div className="m-2">Logged in as {user.username}</div>}
+      {user && <div className="fixed bottom-1 right-2">Logged in as {user.username}</div>}
 
       {menuOpen && (
         <div className="text-right [&>button]:underline mt-5 px-2">
