@@ -2,11 +2,10 @@ import ToolBar from "../components/ToolBar";
 import LogoutButton from "../components/LogoutButton";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { useListingsData } from "../Contexts/ListingsContext";
-import { deleteListing } from "../endpoints/listings";
 import { toast } from "react-toastify";
 
 export function SavedProjectsPage() {
-  const { savedListings, removeSavedListing } = useListingsData();
+  const { savedListings, removeSavedListing, suggestToListing } = useListingsData();
   const [searchParams, _] = useSearchParams();
   const navigate = useNavigate();
 
@@ -20,8 +19,11 @@ export function SavedProjectsPage() {
     else if (action === "Suggest") {
       const res = await suggestToListing(listing, { _id: target });
       const json = await res.json();
-      toast.success(json.message);
-      navigate(`/${callback}`);
+
+      if (res.ok) {
+        toast.success(json.message);
+        navigate(`${callback}`);
+      } else toast.error(json.error);
     }
   }
 
