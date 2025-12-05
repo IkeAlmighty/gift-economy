@@ -136,6 +136,22 @@ router.delete("/saved-listings", async (req, res) => {
   }
 });
 
-router.patch("/suggest", (req, res) => {});
+router.patch("/suggest", async (req, res) => {
+  const { suggest, to } = req.query;
+  if (suggest === to) {
+    return res.status(400).json({ error: "You cannot suggest a listing to itself." });
+  }
+
+  try {
+    const listingTo = await Listing.findById(to);
+    listingTo.listingsSuggestions.addToSet(suggest);
+    await listingTo.save();
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Server Side Error" });
+  }
+
+  res.json({ message: "Suggestion sent!" });
+});
 
 export default router;
