@@ -48,7 +48,8 @@ export function ListingsProvider({ children }) {
     return await res;
   }
 
-  async function _suggestListing(listing, suggestion) {
+  async function _suggestToListing(listing, suggestion) {
+    console.log("suggesting", suggestion, "to", listing);
     const res = await suggestToListing(listing, suggestion);
     if (res.ok) {
       await hydrateListings();
@@ -66,7 +67,7 @@ export function ListingsProvider({ children }) {
         saveListing: _saveListing,
         hydrateListings,
         removeSavedListing: _removeSavedListing,
-        suggestListing: _suggestListing,
+        suggestToListing: _suggestToListing,
       }}
     >
       {children}
