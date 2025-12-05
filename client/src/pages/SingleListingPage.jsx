@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { getListingById } from "../controls/listings";
+import { getListingById } from "../endpoints/listings";
 import ListItem from "../components/ListItem";
 
 export function SingleListingPage() {

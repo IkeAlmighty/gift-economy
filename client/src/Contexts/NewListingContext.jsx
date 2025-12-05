@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { createListing } from "../controls/listings";
+import { createListing } from "../endpoints/listings";
 import { convertFormDataTags } from "../utils/forms";
 import { useListingsData } from "./ListingsContext";
 

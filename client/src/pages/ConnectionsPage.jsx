@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { useUser } from "../Contexts/UserContext";
-import { sendConnectionRequest, removeConnection } from "../controls/user";
+import { sendConnectionRequest, removeConnection } from "../endpoints/user";
 import { toast } from "react-toastify";
 import ToolBar from "../components/ToolBar";
 import LogoutButton from "../components/LogoutButton";
