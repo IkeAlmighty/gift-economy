@@ -9,8 +9,8 @@ function App() {
     const res = await saveListing(listing);
 
     if (res.error) {
-      toast(res.error);
-    } else toast(res.message);
+      toast.error(res.error);
+    } else toast.success(res.message);
   }
 
   return (
