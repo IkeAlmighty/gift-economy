@@ -70,7 +70,7 @@ export default function ToolBarMenu() {
         </button>
 
         <button>
-          <Link to="/saved-projects">Saved Listings</Link>
+          <Link to="/saved-projects">💾 Saved Listings</Link>
         </button>
 
         <LogoutButton />
