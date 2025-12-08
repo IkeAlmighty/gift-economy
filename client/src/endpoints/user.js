@@ -78,3 +78,13 @@ export async function removeConnection(username) {
     console.log(err);
   }
 }
+
+export async function getSafeConnectionDataById(id) {
+  try {
+    const response = await fetch(`/api/user/connections?_id=${id} `);
+
+    return response;
+  } catch (err) {
+    console.err(err);
+  }
+}
