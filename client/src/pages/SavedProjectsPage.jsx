@@ -46,23 +46,30 @@ export function SavedProjectsPage() {
         <LogoutButton />
       </ToolBar>
       <div className="px-2">
-        {savedListings?.map((listing, index) => (
-          <div
-            key={`savedlistings${index}`}
-            className="border-b-2 flex [&>*]:mx-2 py-2 justify-between"
-          >
-            <div>
-              <Link to={`/listing/${listing._id}`}>{listing.title}</Link>
-            </div>
-            <div>{listing.intent}</div>
-
-            <div>
-              <button className="mx-2 px-2 " onClick={() => handleAction(listing)}>
-                {action === "Suggest" ? "Suggest" : "Remove"}
-              </button>
-            </div>
+        {savedListings.length === 0 ? (
+          <div className="mt-10">
+            Uh oh! Looks like you don't have any listings saved. Click the 💾 symbol on a listing to
+            save it.
           </div>
-        ))}
+        ) : (
+          savedListings?.map((listing, index) => (
+            <div
+              key={`savedlistings${index}`}
+              className="border-b-2 flex [&>*]:mx-2 py-2 justify-between"
+            >
+              <div>
+                <Link to={`/listing/${listing._id}`}>{listing.title}</Link>
+              </div>
+              <div>{listing.intent}</div>
+
+              <div>
+                <button className="mx-2 px-2 " onClick={() => handleAction(listing)}>
+                  {action === "Suggest" ? "Suggest" : "Remove"}
+                </button>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
