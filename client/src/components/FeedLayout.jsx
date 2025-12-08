@@ -65,9 +65,9 @@ export default function ToolBarMenu() {
       <ToolBar>
         <PlusCloseButton value={menuOpen} onClick={handleMenuButton} />
 
-        <button>
+        {/* <button>
           <Link to="/connections">Connections</Link>
-        </button>
+        </button> */}
 
         <button>
           <Link to="/saved-projects">💾 Saved Listings</Link>
