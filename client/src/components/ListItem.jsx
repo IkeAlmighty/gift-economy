@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 import { tagIcons } from "../utils/emojis";
 
 export default function ListItem({ data, disabled, onSave }) {
+  if (!data) return <div>...Loading</div>;
   const { title, description, tags, intent } = data;
   const navigate = useNavigate();
 
