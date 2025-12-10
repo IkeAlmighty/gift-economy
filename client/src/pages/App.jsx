@@ -15,7 +15,7 @@ function App() {
 
   return (
     <>
-      <div className="flex flex-wrap gap-2 justify-center">
+      <div className="flex flex-wrap gap-x-2 gap-y-5 justify-center my-5">
         {inNetworkListings?.map((itemData) => (
           <ListItem key={itemData.id} data={itemData} onSave={handleSaveListing} />
         ))}
