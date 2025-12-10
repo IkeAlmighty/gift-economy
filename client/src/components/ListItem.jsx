@@ -1,14 +1,18 @@
 import { useNavigate } from "react-router";
 import { tagIcons } from "../utils/emojis";
+import { useLocation } from "react-router";
 
 export default function ListItem({ data, disabled, onSave }) {
   if (!data) return <div>...Loading</div>;
+
   const { title, description, tags, intent } = data;
   const navigate = useNavigate();
 
+  let location = useLocation();
+
   function handleSuggestListing(e) {
     e.stopPropagation();
-    navigate(`/saved-projects?action=Suggest&target=${data._id}`);
+    navigate(`/saved-projects?action=Suggest&target=${data._id}&callback=${location.pathname}`);
   }
 
   function handleNavigate() {
@@ -27,7 +31,7 @@ export default function ListItem({ data, disabled, onSave }) {
 
   return (
     <div
-      className={`flex-1 min-w-[320px] max-w-[346px] mt-5 mb-5 rounded pt-2 border-b-2 border-t-2 bg-secondary hover:bg-secondary/85 cursor-pointer`}
+      className={`flex-1 min-w-[320px] max-w-[346px] rounded pt-2 border-b-2 border-t-2 bg-secondary hover:bg-secondary/85 cursor-pointer`}
       onClick={handleNavigate}
     >
       {title && (
@@ -63,9 +67,11 @@ export default function ListItem({ data, disabled, onSave }) {
       </div>
 
       <div className="flex justify-between my-2 [&>button]:mx-2 [&>button]:border-b-2 [&>button]:border-l-2 [&>button]:px-2 [&>button]:rounded [&>button]:bg-teal-100">
-        <button disabled={disabled} onClick={handleOnSave}>
-          💾
-        </button>
+        {onSave && (
+          <button disabled={disabled} onClick={handleOnSave}>
+            💾
+          </button>
+        )}
         <span className="flex-1"></span>
         <button disabled={disabled} onClick={handleSuggestListing}>
           Suggest to... ↗
