@@ -35,7 +35,6 @@ export function SingleListingPage() {
     const res = await getSafeConnectionDataById(listingData.creator);
     if (res.ok) {
       const data = await res.json();
-      console.log(data);
       setCreator(data);
     } else {
       const { error } = await res.json();
@@ -82,14 +81,37 @@ export function SingleListingPage() {
         </div>
 
         {listingData?.listingsSuggestions && (
-          <h2 className="mt-10 text-center underline">Suggested to Project</h2>
+          <h2 className="mt-10 text-center underline">Suggested to this Project</h2>
         )}
 
-        <div className="flex flex-row gap-x-1">
+        <div className="flex flex-row flex-wrap gap-x-2 gap-y-5 pt-5">
           {listingData?.listingsSuggestions?.map((suggestion) => {
             return (
               <div className="mx-auto">
                 <ListItem data={suggestion} />
+                <div className="[&>button]:p-1 [&>button]:rounded flex flex-row justify-around">
+                  {/* TODO: create handlers for buttons */}
+                  <button className="bg-green-300 w-[100px]">Accept</button>
+                  <button className="bg-red-300 w-[100px]">Deny</button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {listingData?.listings.length > 0 && (
+          <h2 className="mt-10 text-center underline">Confirmed Project Components</h2>
+        )}
+
+        <div className="flex flex-row gap-x-1">
+          {listingData?.listings?.map((suggestion) => {
+            return (
+              <div className="mx-auto">
+                <ListItem data={suggestion} />
+                <div className="text-center">
+                  {/* TODO: create handler for button */}
+                  <button className="p-1 rounded border-2">Remove from Project</button>
+                </div>
               </div>
             );
           })}
