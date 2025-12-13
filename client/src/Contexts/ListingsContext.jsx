@@ -6,6 +6,7 @@ import {
   saveListing,
   removeSavedListing,
   suggestToListing,
+  deleteListing,
 } from "../endpoints/listings";
 import { useUser } from "./UserContext";
 
@@ -49,13 +50,21 @@ export function ListingsProvider({ children }) {
   }
 
   async function _suggestToListing(listing, suggestion) {
-    console.log("suggesting", suggestion, "to", listing);
     const res = await suggestToListing(listing, suggestion);
     if (res.ok) {
       await hydrateListings();
     }
 
-    return await res;
+    return res;
+  }
+
+  async function _deleteMyListing(listing) {
+    const res = await deleteListing(listing);
+    if (res.ok) {
+      await hydrateListings();
+    }
+
+    return res;
   }
 
   return (
@@ -68,6 +77,7 @@ export function ListingsProvider({ children }) {
         hydrateListings,
         removeSavedListing: _removeSavedListing,
         suggestToListing: _suggestToListing,
+        deleteMyListing: _deleteMyListing,
       }}
     >
       {children}

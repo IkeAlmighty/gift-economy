@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router";
 import { useNewListingData } from "../../Contexts/NewListingContext";
+import { tagIcons } from "../../utils/emojis";
 
-export default function CreateGift({ intent }) {
+export default function CreateListing({ intent }) {
   const { newListingData, updateNewListingData } = useNewListingData();
   const navigate = useNavigate();
 
@@ -38,20 +39,26 @@ export default function CreateGift({ intent }) {
           <div>Title: </div>
           <input type="text" name="title" defaultValue={newListingData.title} />
         </label>
-        <label>
+
+        <div>
           <div>Listing Type(s):</div>
-          {["Food", "Shelter", "Labor", "Transportation", "Other"].map((t) => (
-            <label key={t}>
-              <input
-                className="mr-1"
-                type="checkbox"
-                name={`Type-${t}`}
-                defaultChecked={newListingData[`Type-${t}`]}
-              />
-              <span className="mr-5">{t}</span>
-            </label>
-          ))}
-        </label>
+          <div className="flex flex-row space-x-5">
+            {["Food", "Shelter", "Labor", "Transportation", "Other"].map((t) => (
+              <label key={t} className="flex items-center">
+                <input
+                  className="mr-1"
+                  type="checkbox"
+                  name={`Type-${t}`}
+                  defaultChecked={newListingData[`Type-${t}`]}
+                />
+                <span className="-translate-y-0.5">
+                  {tagIcons[t.toLowerCase()]}
+                  {t}
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
 
         {intent === "PROJECT" && (
           <div>
@@ -106,6 +113,7 @@ export default function CreateGift({ intent }) {
         )}
 
         <div>Description:</div>
+
         <textarea
           className="min-h-[200px] border-2 rounded p-2"
           name="description"
@@ -116,10 +124,11 @@ export default function CreateGift({ intent }) {
         <div>
           {description.length} / {MAX_DESCR_CHAR}
         </div>
-        <div>
+
+        {/* <div>
           <div>{newListingData.imageUrl ? "Change image:" : "Select an image:"}</div>
           <input name="image" type="file" accept="image/png, image/jpg, image/jpeg" />
-        </div>
+        </div> */}
 
         <div>
           <input type="submit" value="Preview" />

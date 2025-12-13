@@ -9,13 +9,13 @@ function App() {
     const res = await saveListing(listing);
 
     if (res.error) {
-      toast(res.error);
-    } else toast(res.message);
+      toast.error(res.error);
+    } else toast.success(res.message);
   }
 
   return (
     <>
-      <div className="flex flex-wrap gap-2 justify-center">
+      <div className="flex flex-wrap gap-x-2 gap-y-5 justify-center my-5">
         {inNetworkListings?.map((itemData) => (
           <ListItem key={itemData.id} data={itemData} onSave={handleSaveListing} />
         ))}

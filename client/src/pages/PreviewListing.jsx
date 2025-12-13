@@ -25,7 +25,9 @@ export default function PreviewListing() {
     setData({ title, imageUrl, intent, tags, description });
   }, [newListingData]);
 
-  async function handleSubmit() {
+  async function handleSubmit(e) {
+    e.target.disabled = true;
+    e.target.innerHTML = "One Moment...";
     const res = await submitNewListing();
 
     if (res.ok) {
@@ -33,12 +35,14 @@ export default function PreviewListing() {
       navigate("/");
     } else {
       console.log("error: ", res);
+      e.target.disabled = false;
+      e.target.innerHTML = "Submit";
     }
   }
 
   if (!data) return <>Loading...</>;
   return (
-    <div className="px-2">
+    <div className="px-2 max-w-[400px] mx-auto">
       {data ? <ListItem data={data} disabled={true} /> : "Loading Preview..."}
       <div className="text-center">
         <button className="border-1 text-3xl rounded p-2 m-2" onClick={handleSubmit}>

@@ -9,6 +9,7 @@ import PreviewListing from "./pages/PreviewListing.jsx";
 import { SavedProjectsPage } from "./pages/SavedProjectsPage.jsx";
 import { Protected } from "./components/Protected.jsx";
 import { SingleListingPage } from "./pages/SingleListingPage.jsx";
+import YourListingPage from "./pages/MyListingsPage.jsx";
 
 export default function Router() {
   return (
@@ -40,6 +41,15 @@ export default function Router() {
             </Protected>
           }
         />
+        <Route
+          path="/my-listings"
+          element={
+            <Protected>
+              <YourListingPage />
+            </Protected>
+          }
+        />
+
         <Route path="/listing/:_id" element={<SingleListingPage />} />
         <Route path="/login" element={<Login mode="login" />} />
         <Route path="/signup" element={<Login mode="signup" />} />

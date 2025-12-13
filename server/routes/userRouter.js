@@ -63,4 +63,19 @@ router.delete("/connections", async (req, res) => {
   res.json({ message: `${username} has been removed from your connections` });
 });
 
+router.get("/connections", async (req, res) => {
+  const { _id } = req.query;
+  const me = await User.findById(req.user.id);
+  if (me.connections.includes(_id)) {
+    try {
+      const connection = await User.findById(_id);
+
+      return await res.json({ username: connection.username, listings: connection.listings });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ error: "server side error" });
+    }
+  }
+});
+
 export default router;

@@ -8,18 +8,25 @@ const router = express.Router();
 // get listing by id, if the user is permitted to see it
 router.get("/", async (req, res) => {
   const { _id } = req.query;
+
   try {
-    const listing = await Listing.findById(_id);
+    let listing = await Listing.findById(_id);
     const me = await User.findById(req.user.id);
 
-    // if the creator or listing is a connection of the user, or the listing was made by the user
-    if (me.connections.includes(listing.creator) || me.id === listing.creator.toString()) {
-      res.json(listing);
+    if (listing.creator.toString() === me._id.toString()) {
+      // if the listing was created by the user currently logged in, populate everything
+      listing = await Listing.findById(_id).populate("listings listingsSuggestions");
+    } else if (me.connections.includes(listing.creator)) {
+      // else if the listing was created by a connection, the deselect listingsSuggestions
+      listing = await Listing.findById(_id).select("-listingsSuggestions").populate("listings");
     } else {
-      res.status(401).json({ error: "You are not permitted to view this listing." });
+      return res.status(401).json({ error: "You are not permitted to view this listing." });
     }
+
+    return res.json(listing);
   } catch (err) {
     console.error(err);
+    res.status(500).json({ error: "server side error" });
   }
 });
 

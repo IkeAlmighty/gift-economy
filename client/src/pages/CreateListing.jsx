@@ -17,7 +17,7 @@ export default function CreateGift() {
   }, []);
 
   return (
-    <div className="px-2">
+    <div className="px-2 max-w-[600px] mx-auto">
       <CreateListingForm intent={intent} />
     </div>
   );
