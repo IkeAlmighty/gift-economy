@@ -5,6 +5,7 @@ import { sendConnectionRequest, removeConnection } from "../endpoints/user";
 import { toast } from "react-toastify";
 import ToolBar from "../components/ToolBar";
 import LogoutButton from "../components/LogoutButton";
+import DrawerMenu from "../components/DrawerMenu";
 
 export default function ConnectionsPage() {
   const { user, loading, hydrateUser } = useUser();
@@ -47,7 +48,8 @@ export default function ConnectionsPage() {
         <button>
           <Link to="/">Back to Feed</Link>
         </button>
-        <LogoutButton />
+
+        <DrawerMenu />
       </ToolBar>
 
       <div className="px-2">

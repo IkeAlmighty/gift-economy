@@ -6,6 +6,7 @@ import LogoutButton from "../components/LogoutButton";
 import ChatClient from "../components/ChatClient";
 import ListItem from "../components/ListItem";
 import { getSafeConnectionDataById } from "../endpoints/user";
+import DrawerMenu from "../components/DrawerMenu";
 
 export function SingleListingPage() {
   const { _id } = useParams();
@@ -55,7 +56,7 @@ export function SingleListingPage() {
 
         <Link to="/">Back to Feed</Link>
 
-        <LogoutButton />
+        <DrawerMenu />
       </ToolBar>
 
       <div className="p-1">

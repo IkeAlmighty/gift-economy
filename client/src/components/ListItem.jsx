@@ -12,7 +12,7 @@ export default function ListItem({ data, disabled, onSave }) {
 
   function handleSuggestListing(e) {
     e.stopPropagation();
-    navigate(`/saved-projects?action=Suggest&target=${data._id}&callback=${location.pathname}`);
+    navigate(`/saved-listings?action=Suggest&target=${data._id}&callback=${location.pathname}`);
   }
 
   function handleNavigate() {

@@ -26,7 +26,7 @@ export default function Router() {
         </Route>
 
         <Route
-          path="/saved-projects"
+          path="/saved-listings"
           element={
             <Protected>
               <SavedProjectsPage />
