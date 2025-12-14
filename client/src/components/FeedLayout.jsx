@@ -6,6 +6,7 @@ import LogoutButton from "./LogoutButton";
 import { Protected } from "./Protected";
 import { useNewListingData } from "../Contexts/NewListingContext";
 import { useUser } from "../Contexts/UserContext";
+import DrawerMenu from "../components/DrawerMenu";
 
 export default function ToolBarMenu() {
   const navigate = useNavigate();
@@ -65,15 +66,11 @@ export default function ToolBarMenu() {
       <ToolBar>
         <PlusCloseButton value={menuOpen} onClick={handleMenuButton} />
 
-        {/* <button>
-          <Link to="/connections">Connections</Link>
-        </button> */}
-
         <button>
-          <Link to="/saved-projects">💾 Saved Listings</Link>
+          <Link to="/saved-listings">💾 Saved Listings</Link>
         </button>
 
-        <LogoutButton />
+        <DrawerMenu />
       </ToolBar>
 
       {user && <div className="fixed bottom-1 right-2">Logged in as {user.username}</div>}

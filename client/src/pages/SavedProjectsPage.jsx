@@ -5,6 +5,7 @@ import { useListingsData } from "../Contexts/ListingsContext";
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import ListingsList from "../components/ListingsList";
+import DrawerMenu from "../components/DrawerMenu";
 
 export function SavedProjectsPage() {
   const { savedListings, removeSavedListing, suggestToListing, myListings } = useListingsData();
@@ -55,7 +56,7 @@ export function SavedProjectsPage() {
           <Link to={callback || "/"}>{action ? "Cancel" : "Back to Feed"}</Link>
         </button>
 
-        <LogoutButton />
+        <DrawerMenu />
       </ToolBar>
 
       <h3 className="text-center my-10">Your Saved Projects</h3>

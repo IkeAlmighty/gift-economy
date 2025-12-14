@@ -4,6 +4,7 @@ import { Link, useNavigate, useSearchParams } from "react-router";
 import { useListingsData } from "../Contexts/ListingsContext";
 import { toast } from "react-toastify";
 import ListItem from "../components/ListItem";
+import DrawerMenu from "../components/DrawerMenu";
 
 export default function MyListingsPage() {
   const { myListings, deleteMyListing } = useListingsData();
@@ -24,7 +25,7 @@ export default function MyListingsPage() {
           <Link to="/">Back to Feed</Link>
         </button>
 
-        <LogoutButton />
+        <DrawerMenu />
       </ToolBar>
 
       <div className="flex flex-row flex-wrap justify-center gap-x-2 gap-y-5 my-5">
