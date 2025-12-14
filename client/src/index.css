@@ -5,7 +5,7 @@
 }
 
 body {
-  @apply mx-auto text-gray-700;
+  @apply mx-auto text-gray-700 overflow-x-hidden;
 }
 
 h1 {
