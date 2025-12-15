@@ -57,9 +57,10 @@ export default function DrawerMenu({ children }) {
           children
         ) : (
           <>
+            <Link to="/">Main Feed</Link>
+            <Link to="/saved-listings">💾 Saved Listings</Link>
             <Link to="/connections">Connections</Link>
             <Link to="/my-listings">Your Listings</Link>
-            <Link to="/saved-listings">Saved Listings</Link>
 
             <div>
               <LogoutButton />
