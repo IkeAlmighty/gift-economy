@@ -12,3 +12,9 @@ export default function (req, res, next) {
     res.status(401).json({ error: "Invalid token" });
   }
 }
+
+export async function socketioAuthMiddleware(socket, next) {
+  const token = socket.request.headers.cookie;
+  console.log(token);
+  next();
+}

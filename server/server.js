@@ -3,6 +3,8 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import { fileURLToPath } from "url";
 import path from "path";
+import { Server } from "socket.io";
+import { socketioAuthMiddleware } from "./middleware/authMiddleware.js";
 
 import db from "./db/connection.js";
 import apiRoutes from "./routes/index.js";
@@ -39,11 +41,29 @@ db.once("open", () => {
         console.log(`Express server listening on ${address}\n\n`);
       } else if (address && typeof address === "object") {
         const host = address.address === "::" ? "localhost" : address.address;
-        console.log(
-          `Express server listening on http://${host}:${address.port}\n\n`
-        );
+        console.log(`Express server listening on http://${host}:${address.port}\n\n`);
       }
     });
+
+    const io = new Server(server, {
+      cors: {
+        origin: "http://localhost:5173", // Vite dev server
+        methods: ["GET", "POST"],
+      },
+    });
+
+    io.use(socketioAuthMiddleware);
+
+    io.on("connection", (socket) => {
+      socket.on("notifications", (userId) => {});
+
+      socket.on("disconnect", () => {
+        console.log("User disconnected:", socket.id);
+      });
+    });
+
+    // Make io available globally if needed
+    global.io = io;
   }
 });
 
