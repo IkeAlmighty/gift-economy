@@ -10,6 +10,7 @@ import { SavedProjectsPage } from "./pages/SavedProjectsPage.jsx";
 import { Protected } from "./components/Protected.jsx";
 import { SingleListingPage } from "./pages/SingleListingPage.jsx";
 import YourListingPage from "./pages/MyListingsPage.jsx";
+import NotificationsPage from "./pages/NotificationsPage.jsx";
 
 export default function Router() {
   return (
@@ -23,6 +24,7 @@ export default function Router() {
           <Route path="/create-request" element={<CreateListing />} />
           <Route path="/create-project" element={<CreateListing />} />
           <Route path="/preview-listing" element={<PreviewListing />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
         </Route>
 
         <Route

@@ -13,7 +13,7 @@ export default function DrawerMenu({ children }) {
 
   const drawerCSS = `
     absolute 
-    h-screen 
+    h-[calc(100vh-103px)]
     overflow-y-hidden
     top-15 
     -right-5
@@ -57,9 +57,10 @@ export default function DrawerMenu({ children }) {
           children
         ) : (
           <>
+            <Link to="/">Main Feed</Link>
+            <Link to="/saved-listings">💾 Saved Listings</Link>
             <Link to="/connections">Connections</Link>
             <Link to="/my-listings">Your Listings</Link>
-            <Link to="/saved-listings">Saved Listings</Link>
 
             <div>
               <LogoutButton />

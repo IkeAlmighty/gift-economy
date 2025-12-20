@@ -85,6 +85,6 @@ export async function getSafeConnectionDataById(id) {
 
     return response;
   } catch (err) {
-    console.err(err);
+    console.error(err);
   }
 }

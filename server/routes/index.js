@@ -3,11 +3,13 @@ import authMiddleware from "../middleware/authMiddleware.js";
 import authRouter from "./authRouter.js";
 import listingsRouter from "./listingsRouter.js";
 import userRouter from "./userRouter.js";
+import notificationsRouter from "./notificationsRouter.js";
 
 const router = express.Router();
 
 router.use("/auth", authRouter);
 router.use("/listings", authMiddleware, listingsRouter);
 router.use("/user", authMiddleware, userRouter);
+router.use("/notifications", authMiddleware, notificationsRouter);
 
 export default router;
