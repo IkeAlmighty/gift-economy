@@ -49,12 +49,16 @@ export function SavedProjectsPage() {
   return (
     <div>
       <ToolBar>
-        <h2>{action === "Suggest" ? "Suggest to Project" : "Your Saved Listings"}</h2>
+        <h2>{action === "Suggest" ? "Suggest to Project" : "Saved Listings"}</h2>
         <span />
 
-        <button>
-          <Link to={callback || "/"}>{action ? "Cancel" : "Back to Feed"}</Link>
-        </button>
+        {action !== "Remove" ? (
+          <Link to={callback || "/"}>Cancel</Link>
+        ) : (
+          <div className="text-2xl animate-bounce">
+            <Link to="/notifications">🔔</Link>
+          </div>
+        )}
 
         <DrawerMenu />
       </ToolBar>
