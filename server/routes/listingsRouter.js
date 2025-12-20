@@ -1,6 +1,7 @@
 import express from "express";
 import Listing from "../models/Listing.js";
 import User from "../models/User.js";
+import Notification from "../models/Notification.js";
 import { upload } from "../middleware/upload.js"; // middleware for parseing files sent to the server
 
 const router = express.Router();
@@ -75,6 +76,19 @@ router.post("/saved-listings", async (req, res) => {
 
     await me.savedProjects.addToSet(_id);
     await me.save();
+
+    // Notify the listing creator that their listing was saved
+    try {
+      const listing = await Listing.findById(_id).select("creator title");
+      if (listing && listing.creator.toString() !== me._id.toString()) {
+        const saver = await User.findById(me._id).select("username");
+        await new Notification({
+          userId: listing.creator,
+          message: `${saver.username} saved your listing "${listing.title}"`,
+          link: `/listing/${_id}`,
+        }).save();
+      }
+    } catch (e) {}
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Server Side Error" });
@@ -153,6 +167,17 @@ router.patch("/suggest", async (req, res) => {
     const listingTo = await Listing.findById(to);
     listingTo.listingsSuggestions.addToSet(suggest);
     await listingTo.save();
+
+    // Notify the owner of the target listing about the suggestion
+    try {
+      const suggester = await User.findById(req.user.id).select("username");
+      const suggested = await Listing.findById(suggest).select("title");
+      await new Notification({
+        userId: listingTo.creator,
+        message: `${suggester.username} suggested: "${suggested?.title ?? "a listing"}" to your project`,
+        link: `/listing/${to}`,
+      }).save();
+    } catch (e) {}
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Server Side Error" });

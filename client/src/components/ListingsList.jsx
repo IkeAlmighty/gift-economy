@@ -1,7 +1,6 @@
 import ListItem from "./ListItem";
 
 export default function ListingsList({ listings, onAction, actionText }) {
-  console.log(actionText);
   const color = {
     Suggest: "blue",
     Delete: "red",

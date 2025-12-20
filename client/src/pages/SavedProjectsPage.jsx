@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import ListingsList from "../components/ListingsList";
 import DrawerMenu from "../components/DrawerMenu";
+import NotificationBell from "../components/NotificationBell";
 
 export function SavedProjectsPage() {
   const { savedListings, removeSavedListing, suggestToListing, myListings } = useListingsData();
@@ -28,7 +29,7 @@ export function SavedProjectsPage() {
 
   async function handleAction(listing) {
     // when there is no action id, default to removing the listing:
-    if (!action) return handleRemove(listing);
+    if (action === "Remove") return handleRemove(listing);
     else if (action === "Suggest") {
       const res = await suggestToListing(listing, { _id: target });
       const json = await res.json();
@@ -41,6 +42,7 @@ export function SavedProjectsPage() {
   }
 
   async function handleRemove(listing) {
+    console.log("removing");
     const res = await removeSavedListing(listing);
     const json = await res.json();
     toast.success(json.message);
@@ -52,13 +54,7 @@ export function SavedProjectsPage() {
         <h2>{action === "Suggest" ? "Suggest to Project" : "Saved Listings"}</h2>
         <span />
 
-        {action !== "Remove" ? (
-          <Link to={callback || "/"}>Cancel</Link>
-        ) : (
-          <div className="text-2xl animate-bounce">
-            <Link to="/notifications">🔔</Link>
-          </div>
-        )}
+        {action !== "Remove" ? <Link to={callback || "/"}>Cancel</Link> : <NotificationBell />}
 
         <DrawerMenu />
       </ToolBar>

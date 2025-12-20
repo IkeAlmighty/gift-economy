@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import Notification from "../models/Notification.js";
 import express from "express";
 
 const router = express.Router();
@@ -37,11 +38,35 @@ router.post("/connections", async (req, res) => {
 
     connection.save();
     me.save();
+    try {
+      // Notify both users that the connection was made
+      await new Notification({
+        userId: connection._id,
+        message: `${me.username} and you are now connected!`,
+        link: "/connections",
+      }).save();
+
+      await new Notification({
+        userId: me._id,
+        message: `You are now connected with ${connection.username}!`,
+        link: "/connections",
+      }).save();
+    } catch (e) {
+      // Do not block the response on notification failures
+    }
 
     res.json({ message: "Connection made!", connectionMade: true });
   } else {
     connection.connectionRequests.addToSet(me);
     connection.save();
+    try {
+      // Notify the target user about a new connection request
+      await new Notification({
+        userId: connection._id,
+        message: `${me.username} sent you a connection request`,
+        link: "/connections",
+      }).save();
+    } catch (e) {}
 
     res.json({ message: "Connection request made!", connectionMade: false });
   }
@@ -58,6 +83,13 @@ router.delete("/connections", async (req, res) => {
   if (connectionToRemove) {
     connectionToRemove.connections.remove(me);
     connectionToRemove.save();
+    try {
+      await new Notification({
+        userId: connectionToRemove._id,
+        message: `${me.username} removed you from their connections`,
+        link: "/connections",
+      }).save();
+    } catch (e) {}
   }
 
   res.json({ message: `${username} has been removed from your connections` });
