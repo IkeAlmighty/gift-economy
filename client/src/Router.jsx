@@ -25,6 +25,7 @@ export default function Router() {
           <Route path="/create-project" element={<CreateListing />} />
           <Route path="/preview-listing" element={<PreviewListing />} />
           <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/my-listings" element={<YourListingPage />} />
         </Route>
 
         <Route
@@ -40,14 +41,6 @@ export default function Router() {
           element={
             <Protected>
               <ConnectionsPage />
-            </Protected>
-          }
-        />
-        <Route
-          path="/my-listings"
-          element={
-            <Protected>
-              <YourListingPage />
             </Protected>
           }
         />

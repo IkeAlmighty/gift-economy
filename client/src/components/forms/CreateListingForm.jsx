@@ -24,6 +24,16 @@ export default function CreateListing({ intent }) {
 
     const newFormData = new FormData(e.target);
 
+    // Check if at least one tag is selected
+    const hasTag = ["Food", "Shelter", "Labor", "Transportation", "Other"].some(
+      (t) => newFormData.get(`Type-${t}`) === "on"
+    );
+
+    if (!hasTag) {
+      alert("Please select at least one listing type.");
+      return;
+    }
+
     if (newListingData.imageUrl && !newFormData.image)
       newFormData.append("imageUrl", newListingData.imageUrl);
 
@@ -37,7 +47,7 @@ export default function CreateListing({ intent }) {
       <form className="flex flex-col space-y-5" onSubmit={handleFormSubmit}>
         <label>
           <div>Title: </div>
-          <input type="text" name="title" defaultValue={newListingData.title} />
+          <input type="text" name="title" defaultValue={newListingData.title} required />
         </label>
 
         <div>
@@ -120,6 +130,7 @@ export default function CreateListing({ intent }) {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           maxLength={MAX_DESCR_CHAR}
+          required
         />
         <div>
           {description.length} / {MAX_DESCR_CHAR}

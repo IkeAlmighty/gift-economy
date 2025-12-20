@@ -14,7 +14,7 @@ export default function NotificationsPage() {
   };
 
   const handleClearAll = async () => {
-    if (confirm("Are you sure you want to delete all notifications?")) {
+    if (confirm("Are you sure you want to delete all notifications? This cannot be undone.")) {
       await clearNotifications();
     }
   };

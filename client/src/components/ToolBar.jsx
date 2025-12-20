@@ -1,25 +1,31 @@
 import PlusCloseButton from "./PlusCloseButton";
 import DrawerMenu from "./DrawerMenu";
-import { useLocation } from "react-router";
-import titles from "../utils/titles";
+import { useLocation, Link } from "react-router";
 import NotificationBell from "./NotificationBell";
 
 export default function ToolBar({ menuOpen, onAddButton, children }) {
   const location = useLocation();
+  const isHomePage = location.pathname === "/";
 
   return (
-    <div className="flex items-center justify-between bg-secondary px-5 backdrop-opacity-100 h-[110px] top-0 left-0 w-full sticky border-b-2 border-t-2 z-10">
+    <div className="flex items-center bg-secondary px-5 backdrop-opacity-100 h-[110px] top-0 left-0 w-full sticky border-b-2 border-t-2 z-10">
       {!children ? (
         <>
-          {onAddButton ? (
-            <PlusCloseButton value={menuOpen} onClick={onAddButton} />
-          ) : (
-            <div>{titles[location.pathname]}</div>
-          )}
+          <div className="flex-1">
+            {isHomePage ? (
+              <span className="text-lg">Your Feed</span>
+            ) : (
+              <Link to="/" className="text-lg underline">
+                ← Back to Feed
+              </Link>
+            )}
+          </div>
 
-          <span />
+          <div className="flex-1 flex justify-center">
+            {onAddButton && <PlusCloseButton value={menuOpen} onClick={onAddButton} />}
+          </div>
 
-          <div className="flex items-center justify-end space-x-10">
+          <div className="flex-1 flex items-center justify-end space-x-10">
             <NotificationBell />
             <DrawerMenu />
           </div>
@@ -28,7 +34,7 @@ export default function ToolBar({ menuOpen, onAddButton, children }) {
         <>
           <div>{children.length ? children[0] : children}</div>
           <div className="flex items-center justify-end space-x-10">
-            {children.length && children.map((child, index) => index > 0 && child)}
+            {children.length && children.map((child, index) => index > 0 && <span key={index}>{child}</span>)}
           </div>
         </>
       )}

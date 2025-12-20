@@ -50,8 +50,8 @@ export default function ListItem({ data, disabled, onSave }) {
       </div>
 
       <div className="mx-5 h-[3rem] mb-5 mt-9 overflow-clip">
-        {description.substring(0, 85)}
-        {description.length >= 85 && "..."}
+        {description?.substring(0, 85) || ""}
+        {description && description.length >= 85 && "..."}
       </div>
 
       <div className="h-[27px] text-xs mx-5">

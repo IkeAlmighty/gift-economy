@@ -50,14 +50,16 @@ export function SavedProjectsPage() {
 
   return (
     <div>
-      <ToolBar>
-        <h2>{action === "Suggest" ? "Suggest to Project" : "Saved Listings"}</h2>
-        <span />
-
-        {action !== "Remove" ? <Link to={callback || "/"}>Cancel</Link> : <NotificationBell />}
-
-        <DrawerMenu />
-      </ToolBar>
+      {action !== "Remove" ? (
+        <ToolBar>
+          <h2>{action === "Suggest" ? "Suggest to Project" : "Saved Listings"}</h2>
+          <span />
+          <Link to={callback || "/"}>Cancel</Link>
+          <DrawerMenu />
+        </ToolBar>
+      ) : (
+        <ToolBar />
+      )}
 
       <h3 className="text-center my-10">Your Saved Projects</h3>
       <div>

@@ -51,13 +51,7 @@ export function SingleListingPage() {
   if (errorMessage) return <>{errorMessage}</>;
   return (
     <div>
-      <ToolBar>
-        <span></span>
-
-        <Link to="/">Back to Feed</Link>
-
-        <DrawerMenu />
-      </ToolBar>
+      <ToolBar />
 
       <div className="p-1">
         <div className="mt-5">
@@ -88,7 +82,7 @@ export function SingleListingPage() {
         <div className="flex flex-row flex-wrap gap-x-2 gap-y-5 pt-5">
           {listingData?.listingsSuggestions?.map((suggestion) => {
             return (
-              <div className="mx-auto">
+              <div key={suggestion._id || suggestion.id} className="mx-auto">
                 <ListItem data={suggestion} />
                 <div className="[&>button]:p-1 [&>button]:rounded flex flex-row justify-around">
                   {/* TODO: create handlers for buttons */}
@@ -107,7 +101,7 @@ export function SingleListingPage() {
         <div className="flex flex-row gap-x-1">
           {listingData?.listings?.map((suggestion) => {
             return (
-              <div className="mx-auto">
+              <div key={suggestion._id || suggestion.id} className="mx-auto">
                 <ListItem data={suggestion} />
                 <div className="text-center">
                   {/* TODO: create handler for button */}
