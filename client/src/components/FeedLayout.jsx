@@ -63,15 +63,7 @@ export default function ToolBarMenu() {
 
   return (
     <>
-      <ToolBar>
-        <PlusCloseButton value={menuOpen} onClick={handleMenuButton} />
-
-        <button>
-          <Link to="/saved-listings">💾 Saved Listings</Link>
-        </button>
-
-        <DrawerMenu />
-      </ToolBar>
+      <ToolBar onAddButton={handleMenuButton} menuOpen={menuOpen} />
 
       {user && <div className="fixed bottom-1 right-2">Logged in as {user.username}</div>}
 
