@@ -10,6 +10,14 @@ export default function ListItem({ data, disabled, onSave }) {
 
   let location = useLocation();
 
+  // Map intent to pastel background colors
+  const bgColorMap = {
+    GIFT: "bg-green-100",
+    REQUEST: "bg-orange-100",
+    PROJECT: "bg-purple-100",
+  };
+  const bgColor = bgColorMap[intent] || "bg-secondary";
+
   function handleSuggestListing(e) {
     e.stopPropagation();
     navigate(`/saved-listings?action=Suggest&target=${data._id}&callback=${location.pathname}`);
@@ -31,7 +39,7 @@ export default function ListItem({ data, disabled, onSave }) {
 
   return (
     <div
-      className={`flex-1 min-w-[320px] max-w-[346px] rounded pt-2 border-b-2 border-t-2 bg-secondary hover:bg-secondary/85 cursor-pointer`}
+      className={`flex-1 min-w-[320px] max-w-[346px] rounded pt-2 border-b-2 border-t-2 ${bgColor} hover:opacity-85 cursor-pointer`}
       onClick={handleNavigate}
     >
       {title && (
@@ -50,8 +58,8 @@ export default function ListItem({ data, disabled, onSave }) {
       </div>
 
       <div className="mx-5 h-[3rem] mb-5 mt-9 overflow-clip">
-        {description.substring(0, 85)}
-        {description.length >= 85 && "..."}
+        {description?.substring(0, 85) || ""}
+        {description && description.length >= 85 && "..."}
       </div>
 
       <div className="h-[27px] text-xs mx-5">

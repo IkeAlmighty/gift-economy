@@ -1,20 +1,13 @@
-import { useEffect, useState, useRef } from "react";
+import { useState } from "react";
 import { Link } from "react-router";
 import LogoutButton from "./LogoutButton";
+
 export default function DrawerMenu({ children }) {
   const [isOpen, setIsOpen] = useState(false);
-  const right = useRef(5);
-
-  useEffect(() => {
-    if (isOpen) {
-      while (right.current < 500) right.current += 1;
-    }
-  }, [isOpen]);
 
   const drawerCSS = `
     absolute 
     h-[calc(100vh-103px)]
-    overflow-y-hidden
     top-15 
     -right-5
     w-[200px] 

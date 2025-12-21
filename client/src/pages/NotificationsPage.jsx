@@ -2,7 +2,8 @@ import { useNotifications } from "../Contexts/NotificationsContext";
 import { Link } from "react-router";
 
 export default function NotificationsPage() {
-  const { notifications, markAsRead, markAllAsRead, clearNotifications } = useNotifications();
+  const { notifications, markAsRead, markAllAsRead, deleteNotification, clearNotifications } =
+    useNotifications();
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   const handleMarkAsRead = async (id) => {
@@ -13,8 +14,12 @@ export default function NotificationsPage() {
     await markAllAsRead();
   };
 
+  const handleDelete = async (id) => {
+    await deleteNotification(id);
+  };
+
   const handleClearAll = async () => {
-    if (confirm("Are you sure you want to delete all notifications?")) {
+    if (confirm("Are you sure you want to delete all notifications? This cannot be undone.")) {
       await clearNotifications();
     }
   };
@@ -83,6 +88,13 @@ export default function NotificationsPage() {
                       Mark read
                     </button>
                   )}
+                  <button
+                    onClick={() => handleDelete(notification._id)}
+                    className="px-3 py-1 bg-red-100 rounded hover:bg-red-200 text-sm"
+                    title="Delete notification"
+                  >
+                    🗑️
+                  </button>
                 </div>
               </div>
             </div>

@@ -6,6 +6,7 @@ import {
   markNotificationAsRead,
   markAllNotificationsAsRead,
   clearAllNotifications,
+  deleteNotification,
 } from "../endpoints/notifications";
 
 const NotificationsContext = createContext();
@@ -86,6 +87,17 @@ export function NotificationsProvider({ children }) {
     }
   };
 
+  const _deleteNotification = async (id) => {
+    try {
+      const res = await deleteNotification(id);
+      if (res.ok) {
+        setNotifications((prev) => prev.filter((notif) => notif._id !== id));
+      }
+    } catch (error) {
+      console.error("Failed to delete notification:", error);
+    }
+  };
+
   const clearNotifications = async () => {
     try {
       const res = await clearAllNotifications();
@@ -99,7 +111,13 @@ export function NotificationsProvider({ children }) {
 
   return (
     <NotificationsContext.Provider
-      value={{ notifications, markAsRead, markAllAsRead, clearNotifications }}
+      value={{
+        notifications,
+        markAsRead,
+        markAllAsRead,
+        deleteNotification: _deleteNotification,
+        clearNotifications,
+      }}
     >
       {children}
     </NotificationsContext.Provider>

@@ -17,17 +17,6 @@ export default function MyListingsPage() {
 
   return (
     <div>
-      <ToolBar>
-        <h2>Your Listings</h2>
-        <span />
-
-        <button>
-          <Link to="/">Back to Feed</Link>
-        </button>
-
-        <DrawerMenu />
-      </ToolBar>
-
       <div className="flex flex-row flex-wrap justify-center gap-x-2 gap-y-5 my-5">
         {myListings.length === 0 ? (
           <div className="mt-10">Press the + button to create your first listing.</div>

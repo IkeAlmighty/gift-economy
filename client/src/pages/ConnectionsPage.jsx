@@ -43,14 +43,7 @@ export default function ConnectionsPage() {
 
   return (
     <div>
-      <ToolBar>
-        <span />
-        <button>
-          <Link to="/">Back to Feed</Link>
-        </button>
-
-        <DrawerMenu />
-      </ToolBar>
+      <ToolBar />
 
       <div className="px-2">
         <form className="my-5 [&>*]:mr-2" onSubmit={handleSendConnectionRequest}>
@@ -70,7 +63,10 @@ export default function ConnectionsPage() {
 
         {user?.connections?.map((connection) => {
           return (
-            <div className="[&>*]:mr-3 [&>*]:my-2 border-b-2 flex justify-between">
+            <div
+              key={connection._id || connection.username}
+              className="[&>*]:mr-3 [&>*]:my-2 border-b-2 flex justify-between"
+            >
               <span>{connection.username}</span>
               <button
                 className="border-2 rounded px-2"

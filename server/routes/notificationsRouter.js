@@ -46,10 +46,28 @@ router.patch("/read-all", async (req, res) => {
     res.status(500).json({ error: "Server side error" });
   }
 });
+// Delete a specific notification
+router.delete("/:id", async (req, res) => {
+  console.log("deleting single notification for user", req.user.id);
+  try {
+    const { id } = req.params;
+    const result = await Notification.findOneAndDelete({ _id: id, userId: req.user.id });
+
+    if (!result) {
+      return res.status(404).json({ error: "Notification not found" });
+    }
+
+    res.json({ message: "Notification deleted" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server side error" });
+  }
+});
 
 // Delete all notifications for the logged-in user
 router.delete("/", async (req, res) => {
   try {
+    console.log("deleting notifications for user:", req.user.id);
     await Notification.deleteMany({ userId: req.user.id });
     res.json({ message: "All notifications cleared" });
   } catch (err) {

@@ -2,11 +2,9 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import { getListingById } from "../endpoints/listings";
 import ToolBar from "../components/ToolBar";
-import LogoutButton from "../components/LogoutButton";
 import ChatClient from "../components/ChatClient";
 import ListItem from "../components/ListItem";
 import { getSafeConnectionDataById } from "../endpoints/user";
-import DrawerMenu from "../components/DrawerMenu";
 
 export function SingleListingPage() {
   const { _id } = useParams();
@@ -51,13 +49,7 @@ export function SingleListingPage() {
   if (errorMessage) return <>{errorMessage}</>;
   return (
     <div>
-      <ToolBar>
-        <span></span>
-
-        <Link to="/">Back to Feed</Link>
-
-        <DrawerMenu />
-      </ToolBar>
+      <ToolBar />
 
       <div className="p-1">
         <div className="mt-5">
@@ -88,7 +80,7 @@ export function SingleListingPage() {
         <div className="flex flex-row flex-wrap gap-x-2 gap-y-5 pt-5">
           {listingData?.listingsSuggestions?.map((suggestion) => {
             return (
-              <div className="mx-auto">
+              <div key={suggestion._id || suggestion.id} className="mx-auto">
                 <ListItem data={suggestion} />
                 <div className="[&>button]:p-1 [&>button]:rounded flex flex-row justify-around">
                   {/* TODO: create handlers for buttons */}
@@ -107,7 +99,7 @@ export function SingleListingPage() {
         <div className="flex flex-row gap-x-1">
           {listingData?.listings?.map((suggestion) => {
             return (
-              <div className="mx-auto">
+              <div key={suggestion._id || suggestion.id} className="mx-auto">
                 <ListItem data={suggestion} />
                 <div className="text-center">
                   {/* TODO: create handler for button */}
