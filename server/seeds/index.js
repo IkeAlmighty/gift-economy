@@ -1,4 +1,6 @@
 import User from "../models/User.js";
+import Notification from "../models/Notification.js";
+import Listing from "../models/Listing.js";
 import userData from "./seedUsers.js";
 import db from "../db/connection.js";
 
@@ -8,6 +10,10 @@ async function seed() {
   try {
     // Clean existing data
     await User.deleteMany({});
+    await Notification.deleteMany({});
+    await Listing.deleteMany({});
+
+    console.log("Existing data cleared.");
 
     // Create test users
     for (const user of userData) {
