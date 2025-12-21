@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import ListItem from "../components/ListItem.jsx";
 import { useNewListingData } from "../Contexts/NewListingContext.jsx";
+import { useListingsData } from "../Contexts/ListingsContext.jsx";
 import { convertFormDataTags } from "../utils/forms.js";
 import { toTitleCase } from "../utils/strings.js";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 
 export default function PreviewListing() {
-  const { newListingData, submitNewListing } = useNewListingData();
+  const { newListingData, submitNewListing, clearNewListing } = useNewListingData();
+  const { hydrateListings } = useListingsData();
   const [data, setData] = useState(undefined);
   const [isValid, setIsValid] = useState(false);
   const navigate = useNavigate();
@@ -37,6 +39,25 @@ export default function PreviewListing() {
 
     if (res.ok) {
       navigate("/");
+      hydrateListings();
+      // FIXME: the entire architecture needs to be changed so that
+      // there are no side effects to context changes.
+      // An error boundary is happening with a simple call to clearNewListing
+      // because the context is changing
+      // while the navigation is in progress. We need to ensure that
+      // the context change only happens after navigation is fully
+      // complete. We can do this by wrapping  the clearNewListing in
+      // a setInterval that checks the current page before proceeding, but this
+      // is hacky.
+      const interval = setInterval(() => {
+        if (window.location.pathname === "/") {
+          clearNewListing();
+
+          // and then clear the interval:
+          clearInterval(interval);
+        }
+      }, 100);
+
       toast.success("Created new listing!");
     } else {
       console.log("error: ", res);

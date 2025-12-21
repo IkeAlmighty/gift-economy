@@ -60,22 +60,20 @@ export function NewListingProvider({ children }) {
   async function submitNewListing() {
     try {
       // first, recreate the image file from the url:
-      const image = await recreateImageFromUrl(newListingData.imageUrl, newListingData.imageName);
-
-      // prep payload by rewraping it in a FormData object:
-      const payload = { ...newListingData, image };
-      const multipart = buildMultipart(payload);
-
-      const res = await createListing(multipart);
-
-      if (res.ok) {
-        setNewListingData({});
-        hydrateListings();
+      let image = null;
+      if (newListingData.imageUrl && newListingData.imageUrl.startsWith("blob:")) {
+        image = await recreateImageFromUrl(newListingData.imageUrl, newListingData.imageName);
       }
 
-      return res;
+      // prep payload by rewraping it in a FormData object:
+      const payload = { ...newListingData };
+      if (image) payload.image = image;
+      const multipart = buildMultipart(payload);
+
+      return await createListing(multipart);
     } catch (err) {
       console.error(err);
+      return { ok: false };
     }
   }
 
@@ -93,8 +91,14 @@ export function NewListingProvider({ children }) {
     setNewListingData(copyLD);
   }
 
+  function clearNewListing() {
+    setNewListingData({});
+  }
+
   return (
-    <NewListingContext.Provider value={{ newListingData, updateNewListingData, submitNewListing }}>
+    <NewListingContext.Provider
+      value={{ newListingData, updateNewListingData, submitNewListing, clearNewListing }}
+    >
       {children}
     </NewListingContext.Provider>
   );
