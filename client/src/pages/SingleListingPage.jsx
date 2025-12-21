@@ -2,11 +2,9 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import { getListingById } from "../endpoints/listings";
 import ToolBar from "../components/ToolBar";
-import LogoutButton from "../components/LogoutButton";
 import ChatClient from "../components/ChatClient";
 import ListItem from "../components/ListItem";
 import { getSafeConnectionDataById } from "../endpoints/user";
-import DrawerMenu from "../components/DrawerMenu";
 
 export function SingleListingPage() {
   const { _id } = useParams();

@@ -3,7 +3,7 @@ import { useListingsData } from "../Contexts/ListingsContext";
 import { toast } from "react-toastify";
 
 function App() {
-  const { inNetworkListings, saveListing, suggestListing } = useListingsData();
+  const { inNetworkListings, saveListing } = useListingsData();
 
   async function handleSaveListing(listing) {
     const res = await saveListing(listing);

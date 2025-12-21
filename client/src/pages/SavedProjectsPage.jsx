@@ -1,12 +1,10 @@
 import ToolBar from "../components/ToolBar";
-import LogoutButton from "../components/LogoutButton";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { useListingsData } from "../Contexts/ListingsContext";
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import ListingsList from "../components/ListingsList";
 import DrawerMenu from "../components/DrawerMenu";
-import NotificationBell from "../components/NotificationBell";
 
 export function SavedProjectsPage() {
   const { savedListings, removeSavedListing, suggestToListing, myListings } = useListingsData();
@@ -42,7 +40,6 @@ export function SavedProjectsPage() {
   }
 
   async function handleRemove(listing) {
-    console.log("removing");
     const res = await removeSavedListing(listing);
     const json = await res.json();
     toast.success(json.message);
@@ -52,8 +49,10 @@ export function SavedProjectsPage() {
     <div>
       {action !== "Remove" ? (
         <ToolBar>
-          <h2>{action === "Suggest" ? "Suggest to Project" : "Saved Listings"}</h2>
-          <span />
+          <div>{action === "Suggest" ? "Suggest to Project" : "Saved Listings"}</div>
+
+          <div />
+
           <Link to={callback || "/"}>Cancel</Link>
           <DrawerMenu />
         </ToolBar>
@@ -61,10 +60,10 @@ export function SavedProjectsPage() {
         <ToolBar />
       )}
 
-      <h3 className="text-center my-10">Your Saved Projects</h3>
+      <h3 className="text-center my-10">Your Saved Listings</h3>
       <div>
         {filteredResults.length === 0 ? (
-          <div className="mt-10">
+          <div className="mt-10 text-center px-2">
             Uh oh! Looks like you don't have any {action === "Suggest" ? <b>project</b> : ""}{" "}
             listings saved. Click the 💾 symbol on a listing to save it.
           </div>
@@ -73,14 +72,14 @@ export function SavedProjectsPage() {
         )}
       </div>
 
-      {action && (
+      {action !== "Remove" && (
         <div className="border-t-2 mt-5">
           <h3 className="text-center my-10">Your Projects</h3>
           {myListings.length === 0 ? (
             <div className="mt-10">Press the + button to create your first listing.</div>
           ) : (
             <ListingsList
-              listings={myListings.filter((l) => l.intent === "PROJECT")}
+              listings={myListings.filter((l) => l.intent !== "GIFT")}
               onAction={handleAction}
               actionText={action}
             />
