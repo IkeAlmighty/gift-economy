@@ -19,6 +19,13 @@ export async function markAllNotificationsAsRead() {
   });
 }
 
+export async function deleteNotification(id) {
+  return fetch(`/api/notifications/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+}
+
 export async function clearAllNotifications() {
   return fetch("/api/notifications", {
     method: "DELETE",
