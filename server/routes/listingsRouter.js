@@ -46,7 +46,10 @@ router.get("/my-requests", async (req, res) => {
 // Get all listings created by the loggged in user (gifts, requests, and projects)
 router.get("/my-listings", async (req, res) => {
   try {
-    const listings = await Listing.find({ creator: req.user.id });
+    const listings = await Listing.find({ creator: req.user.id }).populate(
+      "creator",
+      "username screenName"
+    );
     res.json(listings);
   } catch (err) {
     console.log(err);
@@ -55,7 +58,10 @@ router.get("/my-listings", async (req, res) => {
 
 router.get("/saved-listings", async (req, res) => {
   try {
-    const me = await User.findById(req.user.id).populate("savedProjects");
+    const me = await User.findById(req.user.id).populate({
+      path: "savedProjects",
+      populate: { path: "creator", select: "username screenName" },
+    });
     return res.json(me.savedProjects);
   } catch (err) {
     console.error(err);
@@ -109,10 +115,11 @@ router.get("/listings-in-network", async (req, res) => {
       model: Listing,
       populate: {
         path: "creator",
-        select: "username",
+        select: "username screenName",
       },
     });
-    listingsInNetwork = [...listingsInNetwork, ...connection.listings];
+
+    listingsInNetwork = [...listingsInNetwork, ...connection?.listings];
   }
 
   // return list

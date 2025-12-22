@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 const router = express.Router();
 
 router.post("/signup", async (req, res) => {
-  const { username, password } = req.body;
+  const { username, screenName, password } = req.body;
   try {
     const existingUser = await User.findOne({ username });
     if (existingUser) {
@@ -13,7 +13,7 @@ router.post("/signup", async (req, res) => {
       return;
     }
 
-    const user = await new User({ username, password }).save();
+    const user = await new User({ username, screenName, password }).save();
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });

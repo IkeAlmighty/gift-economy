@@ -19,6 +19,7 @@ export default function Login({ mode = "login" }) {
 
   const { login, signup } = useUser();
   const [username, setUsername] = useState("");
+  const [screenName, setScreenName] = useState("");
   const [password, setPassword] = useState("");
 
   const [errorMessage, setErrorMessage] = useState("");
@@ -36,7 +37,7 @@ export default function Login({ mode = "login" }) {
   }
 
   async function handleSignup() {
-    const { error } = await signup({ username, password });
+    const { error } = await signup({ username, screenName, password });
 
     if (!error) {
       const callback = searchParams.get("callback");
@@ -73,6 +74,13 @@ export default function Login({ mode = "login" }) {
         <h1>{getModeText(mode)}</h1>
         <form className="flex flex-col gap-2 w-fit" onSubmit={onSubmit}>
           <InputField label={"Username"} value={username} onChange={(v) => setUsername(v)} />
+          {mode === "signup" && (
+            <InputField
+              label={"Screen Name"}
+              value={screenName}
+              onChange={(v) => setScreenName(v)}
+            />
+          )}
           <PasswordField value={password} onChange={(v) => setPassword(v)} />
           <div className="h-6 text-red-600 italic">{errorMessage}</div>
           <input
