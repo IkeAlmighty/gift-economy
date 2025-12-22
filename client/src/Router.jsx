@@ -11,6 +11,7 @@ import { Protected } from "./components/Protected.jsx";
 import { SingleListingPage } from "./pages/SingleListingPage.jsx";
 import YourListingPage from "./pages/MyListingsPage.jsx";
 import NotificationsPage from "./pages/NotificationsPage.jsx";
+import ManageTags from "./pages/ManageTags.jsx";
 
 export default function Router() {
   return (
@@ -41,6 +42,15 @@ export default function Router() {
           element={
             <Protected>
               <ConnectionsPage />
+            </Protected>
+          }
+        />
+
+        <Route
+          path="/manage-tags"
+          element={
+            <Protected>
+              <ManageTags />
             </Protected>
           }
         />
