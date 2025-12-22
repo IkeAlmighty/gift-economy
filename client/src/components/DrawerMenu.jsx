@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import LogoutButton from "./LogoutButton";
+import { useUser } from "../Contexts/UserContext";
 
 export default function DrawerMenu({ children }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const { user } = useUser();
 
   const drawerCSS = `
     absolute 
@@ -54,11 +57,17 @@ export default function DrawerMenu({ children }) {
             <Link to="/saved-listings">💾 Saved Listings</Link>
             <Link to="/connections">Connections</Link>
             <Link to="/my-listings">Your Listings</Link>
+            <Link to="/manage-tags">Manage Tags</Link>
 
             <div>
               <LogoutButton />
             </div>
           </>
+        )}
+        {user && (
+          <div className="text-xs absolute bottom-0 right-0 !bg-secondary my-2 mx-3 z-20">
+            Logged in as {user.screenName}
+          </div>
         )}
       </div>
     </div>

@@ -2,7 +2,8 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema({
-  username: { type: String, unique: true },
+  username: { type: String, unique: true, required: true },
+  screenName: { type: String, required: true },
   password: String,
   listings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Listing" }],
   savedProjects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Listing" }],

@@ -42,13 +42,13 @@ router.post("/connections", async (req, res) => {
       // Notify both users that the connection was made
       await new Notification({
         userId: connection._id,
-        message: `${me.username} and you are now connected!`,
+        message: `${me.screenName} and you are now connected!`,
         link: "/connections",
       }).save();
 
       await new Notification({
         userId: me._id,
-        message: `You are now connected with ${connection.username}!`,
+        message: `You are now connected with ${connection.screenName}!`,
         link: "/connections",
       }).save();
     } catch (e) {
@@ -63,7 +63,7 @@ router.post("/connections", async (req, res) => {
       // Notify the target user about a new connection request
       await new Notification({
         userId: connection._id,
-        message: `${me.username} sent you a connection request`,
+        message: `${me.screenName} sent you a connection request`,
         link: "/connections",
       }).save();
     } catch (e) {}
@@ -86,7 +86,7 @@ router.delete("/connections", async (req, res) => {
     try {
       await new Notification({
         userId: connectionToRemove._id,
-        message: `${me.username} removed you from their connections`,
+        message: `${me.screenName} removed you from their connections`,
         link: "/connections",
       }).save();
     } catch (e) {}

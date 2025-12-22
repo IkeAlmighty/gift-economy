@@ -7,5 +7,14 @@ export function convertFormDataTags(formData) {
     }
   }
 
+  const customRaw = formData.customTags;
+  if (customRaw) {
+    const customList = customRaw
+      .split(/[,\n]/)
+      .map((t) => t.trim().toLowerCase())
+      .filter(Boolean);
+    listingTypes.push(...customList);
+  }
+
   return listingTypes;
 }

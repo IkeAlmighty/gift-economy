@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router";
 import { useNewListingData } from "../../Contexts/NewListingContext";
-import { tagIcons } from "../../utils/emojis";
+import { useTags } from "../../Contexts/TagsContext.jsx";
 
 export default function CreateListing({ intent }) {
   const { newListingData, updateNewListingData } = useNewListingData();
+  const { tagMap } = useTags();
   const navigate = useNavigate();
 
   // mappings for header string:
@@ -17,6 +18,7 @@ export default function CreateListing({ intent }) {
   const header = chooseHeader[intent];
 
   const [description, setDescription] = useState(newListingData.description || "");
+  const [customTags, setCustomTags] = useState(newListingData.customTags || "");
   const MAX_DESCR_CHAR = 200;
 
   function handleFormSubmit(e) {
@@ -24,10 +26,17 @@ export default function CreateListing({ intent }) {
 
     const newFormData = new FormData(e.target);
 
-    // Check if at least one tag is selected
-    const hasTag = ["Food", "Shelter", "Labor", "Transportation", "Other"].some(
+    // Check if at least one tag is selected (either suggested or custom)
+    const hasSuggestedTag = ["Food", "Shelter", "Labor", "Transportation", "Other"].some(
       (t) => newFormData.get(`Type-${t}`) === "on"
     );
+
+    const customTagList = (newFormData.get("customTags") || "")
+      .split(/[,\n]/)
+      .map((t) => t.trim())
+      .filter(Boolean);
+
+    const hasTag = hasSuggestedTag || customTagList.length > 0;
 
     if (!hasTag) {
       alert("Please select at least one listing type.");
@@ -50,9 +59,9 @@ export default function CreateListing({ intent }) {
           <input type="text" name="title" defaultValue={newListingData.title} required />
         </label>
 
-        <div>
+        <div className="flex flex-col gap-3">
           <div>Listing Type(s):</div>
-          <div className="flex flex-row space-x-5">
+          <div className="flex flex-row flex-wrap gap-4">
             {["Food", "Shelter", "Labor", "Transportation", "Other"].map((t) => (
               <label key={t} className="flex items-center">
                 <input
@@ -62,11 +71,25 @@ export default function CreateListing({ intent }) {
                   defaultChecked={newListingData[`Type-${t}`]}
                 />
                 <span className="-translate-y-0.5">
-                  {tagIcons[t.toLowerCase()]}
+                  {tagMap[t.toLowerCase()] || "❓"}
                   {t}
                 </span>
               </label>
             ))}
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-semibold" htmlFor="customTags">
+              Add your own tags (comma or newline separated)
+            </label>
+            <textarea
+              id="customTags"
+              name="customTags"
+              className="border rounded p-2 min-h-[70px]"
+              placeholder="community, repair, childcare"
+              value={customTags}
+              onChange={(e) => setCustomTags(e.target.value)}
+            />
           </div>
         </div>
 

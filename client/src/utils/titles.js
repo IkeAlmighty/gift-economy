@@ -9,4 +9,5 @@ export default {
   "/create-request": "Create Request",
   "/create-project": "Create Project",
   "/preview-listing": "Preview Listing",
+  "/manage-tags": "Manage Tags",
 };

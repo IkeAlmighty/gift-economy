@@ -6,6 +6,8 @@ import path from "path";
 import { Server } from "socket.io";
 import { socketioAuthMiddleware } from "./middleware/authMiddleware.js";
 import Notification from "./models/Notification.js";
+import Tag from "./models/Tag.js";
+import defaultTags from "./seeds/seedTags.js";
 
 import db from "./db/connection.js";
 import apiRoutes from "./routes/index.js";
@@ -34,6 +36,16 @@ const PORT = process.env.PORT || 3000;
 
 db.once("open", () => {
   console.log("\n\nConnected to database...");
+
+  // Ensure default tag set exists on startup (idempotent)
+  const ensureDefaultTags = async () => {
+    for (const tag of defaultTags) {
+      const name = tag.name.toLowerCase();
+      await Tag.updateOne({ name }, { name, emoji: tag.emoji }, { upsert: true });
+    }
+  };
+
+  ensureDefaultTags().catch((err) => console.error("Failed to ensure tags", err));
 
   if (process.env.NODE_ENV !== "test") {
     const server = app.listen(PORT, async () => {

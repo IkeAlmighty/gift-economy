@@ -1,22 +1,39 @@
 import { useNavigate } from "react-router";
-import { tagIcons } from "../utils/emojis";
+import { useTags } from "../Contexts/TagsContext.jsx";
 import { useLocation } from "react-router";
+import { useListingsData } from "../Contexts/ListingsContext.jsx";
+import { toast } from "react-toastify";
 
-export default function ListItem({ data, disabled, onSave }) {
+export default function ListItem({ data, disabled, isCentered = false }) {
   if (!data) return <div>...Loading</div>;
 
   const { title, description, tags, intent } = data;
   const navigate = useNavigate();
+  const { saveListing } = useListingsData();
 
   let location = useLocation();
+  const { tagMap } = useTags();
 
-  // Map intent to pastel background colors
+  // GIFT: Warm green/teal (generosity, abundance, giving, growth)
+  // REQUEST: Soft blue (trust, support, calm, reliability)
+  // PROJECT: Purple (creativity, collaboration, imagination, community)
   const bgColorMap = {
-    GIFT: "bg-green-100",
-    REQUEST: "bg-orange-100",
+    GIFT: "bg-emerald-100",
+    REQUEST: "bg-sky-100",
     PROJECT: "bg-purple-100",
   };
   const bgColor = bgColorMap[intent] || "bg-secondary";
+
+  // Border styles to match the emotional tone of each intent
+  const borderStyle =
+    intent === "PROJECT"
+      ? "border-4 border-double border-purple-400 shadow-lg"
+      : intent === "REQUEST"
+        ? "border-2 border-dashed border-sky-400"
+        : "border-2 border-solid border-emerald-400 shadow-md";
+
+  // Centered item gets full opacity, others get reduced opacity
+  const opacityClass = isCentered ? "opacity-100" : "opacity-40";
 
   function handleSuggestListing(e) {
     e.stopPropagation();
@@ -32,26 +49,35 @@ export default function ListItem({ data, disabled, onSave }) {
     navigate(`/chat?listing=${data._id}`);
   }
 
-  function handleOnSave(e) {
+  async function handleOnSave(e) {
     e.stopPropagation();
-    onSave(data);
+    const json = await saveListing(data);
+
+    if (json.error) {
+      toast.error(json.error || "Failed to save listing");
+    } else {
+      toast.success(json.message);
+    }
   }
 
   return (
     <div
-      className={`flex-1 min-w-[320px] max-w-[346px] rounded pt-2 border-b-2 border-t-2 ${bgColor} hover:opacity-85 cursor-pointer`}
+      className={`flex-1 min-w-[320px] max-w-[346px] rounded pt-2 ${borderStyle} ${bgColor} ${opacityClass} hover:opacity-100 cursor-pointer transition-opacity duration-150`}
       onClick={handleNavigate}
     >
       {title && (
-        <div className="w-full text-center">
-          <span className="text-2xl">{title}</span> | <span className="text-sm">{intent}</span>
+        <div className="w-full text-center flex items-center justify-center gap-2">
+          <span className="text-xl inline-block max-w-[200px] overflow-hidden text-ellipsis whitespace-nowrap">
+            {title}
+          </span>
+          <span className="text-sm">| {intent}</span>
         </div>
       )}
 
-      <div className="text-xl text-center h-5 mt-2">
+      <div className="text-xl flex justify-center items-center gap-2 h-5 mt-2">
         {tags.map((t) => (
-          <span key={`tag-${data.id}-${t}`} className="ml-2 inline-block">
-            <div>{tagIcons[t]}</div>
+          <span key={`tag-${data.id}-${t}`} className="inline-block text-center">
+            <div className="h-[25px]">{tagMap[t?.toLowerCase?.()] || "❓"}</div>
             <div className="text-xs">{t}</div>
           </span>
         ))}
@@ -64,7 +90,7 @@ export default function ListItem({ data, disabled, onSave }) {
 
       <div className="h-[27px] text-xs mx-5">
         <div className="flex justify-between flex-row-reverse align-middle gap-2">
-          <div>Posted by {data.creator?.username}</div>
+          <div>Posted by {data.creator?.screenName}</div>
           {data.intent === "PROJECT" && (
             <div className="[&>*]:inline-block [&>*]:mr-2">
               <div>{data?.listingsSuggestions?.length} suggestions</div>
@@ -75,11 +101,9 @@ export default function ListItem({ data, disabled, onSave }) {
       </div>
 
       <div className="flex justify-between my-2 [&>button]:mx-2 [&>button]:border-b-2 [&>button]:border-l-2 [&>button]:px-2 [&>button]:rounded [&>button]:bg-teal-100">
-        {onSave && (
-          <button disabled={disabled} onClick={handleOnSave}>
-            💾
-          </button>
-        )}
+        <button disabled={disabled} onClick={handleOnSave}>
+          💾
+        </button>
         <span className="flex-1"></span>
         <button disabled={disabled} onClick={handleSuggestListing}>
           Suggest to... ↗
@@ -88,12 +112,6 @@ export default function ListItem({ data, disabled, onSave }) {
           💬
         </button>
       </div>
-
-      {/* <div className="relative right-0 -bottom-1">
-        <div className="absolute right-0 text-xs underline">
-          <Link to={`/listing/${data._id}`}>View Full Listing</Link>
-        </div>
-      </div> */}
     </div>
   );
 }
