@@ -16,6 +16,7 @@ export function SavedProjectsPage() {
   const callback = searchParams.get("callback") || "/";
 
   const [filteredResults, setFilteredResults] = useState(savedListings);
+  const [viewMode, setViewMode] = useState("saved"); // 'saved' | 'mine'
 
   useEffect(() => {
     if (action === "Suggest") {
@@ -47,44 +48,79 @@ export function SavedProjectsPage() {
 
   return (
     <div>
-      {action !== "Remove" ? (
+      {action === "Suggest" ? (
         <ToolBar>
           <div>{action === "Suggest" ? "Suggest to Project" : "Saved Listings"}</div>
 
-          <div />
-
           <Link to={callback || "/"}>Cancel</Link>
-          <DrawerMenu />
         </ToolBar>
       ) : (
         <ToolBar />
       )}
 
-      <h3 className="text-center my-10">Your Saved Listings</h3>
-      <div>
-        {filteredResults.length === 0 ? (
-          <div className="mt-10 text-center px-2">
-            Uh oh! Looks like you don't have any {action === "Suggest" ? <b>project</b> : ""}{" "}
-            listings saved. Click the 💾 symbol on a listing to save it.
+      {action === "Suggest" ? (
+        <>
+          <div className="text-center">
+            <div className="m-1 mx-auto inline-flex items-center rounded overflow-hidden border">
+              <button
+                className={`px-3 py-1 ${viewMode === "saved" ? "bg-cyan-800 text-white" : "bg-white"}`}
+                onClick={() => setViewMode("saved")}
+              >
+                Saved
+              </button>
+              <button
+                className={`px-3 py-1 ${viewMode === "mine" ? "bg-cyan-800 text-white" : "bg-white"}`}
+                onClick={() => setViewMode("mine")}
+              >
+                My Items
+              </button>
+            </div>
           </div>
-        ) : (
-          <ListingsList listings={filteredResults} actionText={action} onAction={handleAction} />
-        )}
-      </div>
 
-      {action !== "Remove" && (
-        <div className="border-t-2 mt-5">
-          <h3 className="text-center my-10">Your Projects</h3>
-          {myListings.length === 0 ? (
-            <div className="mt-10">Press the + button to create your first listing.</div>
-          ) : (
-            <ListingsList
-              listings={myListings.filter((l) => l.intent !== "GIFT")}
-              onAction={handleAction}
-              actionText={action}
-            />
-          )}
-        </div>
+          <h3 className="text-center my-10">
+            {viewMode === "saved" ? "Your Saved Listings" : "Your Projects"}
+          </h3>
+          <div>
+            {(viewMode === "saved"
+              ? filteredResults
+              : myListings.filter((l) => l.intent !== "GIFT")
+            ).length === 0 ? (
+              <div className="mt-10 text-center px-2">
+                {viewMode === "saved"
+                  ? "Uh oh! Looks like you don't have any project listings saved. Click the 💾 symbol on a listing to save it."
+                  : "Press the + button to create your first listing."}
+              </div>
+            ) : (
+              <ListingsList
+                listings={
+                  viewMode === "saved"
+                    ? filteredResults
+                    : myListings.filter((l) => l.intent !== "GIFT")
+                }
+                actionText={action}
+                onAction={handleAction}
+              />
+            )}
+          </div>
+        </>
+      ) : (
+        <>
+          <h3 className="text-center my-10">Your Saved Listings</h3>
+          <div>
+            {filteredResults.length === 0 ? (
+              <div className="mt-10 text-center px-2">
+                Uh oh! Looks like you don't have any listings saved. Click the 💾 symbol on a
+                listing to save it.
+              </div>
+            ) : (
+              <ListingsList
+                listings={filteredResults}
+                actionText={action}
+                onAction={handleAction}
+              />
+            )}
+          </div>
+        </>
       )}
     </div>
   );
