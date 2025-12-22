@@ -65,8 +65,6 @@ export default function ToolBarMenu() {
     <>
       <ToolBar onAddButton={handleMenuButton} menuOpen={menuOpen} />
 
-      {user && <div className="fixed bottom-1 right-2">Logged in as {user.username}</div>}
-
       {menuOpen && (
         <div className="text-right [&>button]:underline mt-5 px-2">
           <button onClick={handleBackClick}>
