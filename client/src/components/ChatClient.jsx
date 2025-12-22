@@ -13,7 +13,7 @@ export default function ChatClient({ listingId }) {
     setStatus("connecting");
     setError("");
 
-    const socket = io("", {
+    const socket = io(import.meta.env.VITE_SOCKET_SERVER_URL, {
       withCredentials: true,
       transports: ["websocket"],
     });
