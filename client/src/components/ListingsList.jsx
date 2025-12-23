@@ -1,25 +1,35 @@
 import { useEffect, useRef, useState } from "react";
 import ListItem from "./ListItem.jsx";
 
-export default function ListingsList({ listings, onAction, actionText }) {
+export default function ListingsList({ listings, onActionSet = [], itemsDisabled = false }) {
   const containerRef = useRef(null);
   const itemRefs = useRef([]);
-  const [centeredIndex, setCenteredIndex] = useState(null);
-  const [itemsDisabled, setItemsDisabled] = useState(actionText === "Suggest");
+  const [centeredIndex, setCenteredIndex] = useState(0);
 
   const actionColorMap = {
     Suggest: "bg-green-200 hover:bg-green-300",
     Delete: "bg-red-300 hover:bg-red-400",
     Remove: "bg-red-300 hover:bg-red-400",
+    Accept: "bg-green-300 hover:bg-green-400",
+    Deny: "bg-red-300 hover:bg-red-400",
   };
 
   useEffect(() => {
-    setItemsDisabled(actionText === "Suggest");
-  }, [actionText]);
-
-  useEffect(() => {
     const updateCenteredItem = () => {
-      const viewportCenter = window.innerHeight / 2;
+      //FIXME: work on a index incrementing scroll affect so that
+      // the focused item changes predictably as you scroll on larger rows.
+
+      // Use a smooth transition based on scroll position
+      // When scrollY is low, bias toward top; when high, use center
+      const scrollY = window.scrollY;
+      const transitionRange = 200; // pixels over which to transition
+      const scrollFactor = Math.min(scrollY / transitionRange, 1); // 0 to 1
+
+      // Interpolate between top position and center position
+      const topBias = window.innerHeight * 0.2; // 20% from top when not scrolled
+      const centerPosition = window.innerHeight / 2;
+      const effectiveCenter = topBias + (centerPosition - topBias) * scrollFactor;
+
       let closestIndex = null;
       let closestDistance = Infinity;
 
@@ -27,7 +37,7 @@ export default function ListingsList({ listings, onAction, actionText }) {
         if (!item) return;
         const rect = item.getBoundingClientRect();
         const itemCenter = rect.top + rect.height / 2;
-        const distance = Math.abs(viewportCenter - itemCenter);
+        const distance = Math.abs(effectiveCenter - itemCenter);
 
         if (distance < closestDistance) {
           closestDistance = distance;
@@ -65,13 +75,18 @@ export default function ListingsList({ listings, onAction, actionText }) {
           className="flex flex-col flex-wrap gap-y-1"
         >
           <ListItem data={listing} isCentered={index === centeredIndex} disabled={itemsDisabled} />
-          {onAction && actionText && (
-            <button
-              className={`p-2 rounded border-x-2 ${actionColorMap[actionText]}`}
-              onClick={() => onAction(listing)}
-            >
-              {actionText}
-            </button>
+          {onActionSet && (
+            <div className="text-center flex flex-row gap-x-1 mt-2">
+              {onActionSet.map(({ actionText, onAction }) => (
+                <button
+                  key={`action-btn-${actionText}-${index}`}
+                  className={`p-2 rounded border-x-2 w-full ${actionColorMap[actionText]}`}
+                  onClick={() => onAction(listing)}
+                >
+                  {actionText}
+                </button>
+              ))}
+            </div>
           )}
         </div>
       ))}
