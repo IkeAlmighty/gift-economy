@@ -16,7 +16,10 @@ export default function MyListingsPage() {
       {myListings.length === 0 ? (
         <div className="mt-10 text-center">Press the + button to create your first listing.</div>
       ) : (
-        <ListingsList listings={myListings} onAction={handleDelete} actionText="Delete" />
+        <ListingsList
+          listings={myListings}
+          onActionSet={[{ actionText: "Delete", onAction: handleDelete }]}
+        />
       )}
     </div>
   );
