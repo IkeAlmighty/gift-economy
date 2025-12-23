@@ -4,7 +4,7 @@ import { useLocation } from "react-router";
 import { useListingsData } from "../Contexts/ListingsContext.jsx";
 import { toast } from "react-toastify";
 
-export default function ListItem({ data, disabled, isCentered = false }) {
+export default function ListItem({ data, disabled, isCentered = true }) {
   if (!data) return <div>...Loading</div>;
 
   const { title, description, tags, intent } = data;
