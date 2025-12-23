@@ -58,3 +58,21 @@ export async function removeSavedListing({ _id }) {
     method: "DELETE",
   });
 }
+
+export async function handleSuggestionAction(listingId, suggestionId, action) {
+  return await fetch(
+    `/api/listings/handle-suggestion?listingId=${listingId}&suggestionId=${suggestionId}&action=${action}`,
+    {
+      method: "PATCH",
+    }
+  );
+}
+
+export async function removeConfirmedSuggestedListing(listingId, suggestionId) {
+  return await fetch(
+    `/api/listings/remove-confirmed-suggestion?listingId=${listingId}&suggestionId=${suggestionId}`,
+    {
+      method: "PATCH",
+    }
+  );
+}
