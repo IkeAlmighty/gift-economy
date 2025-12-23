@@ -193,4 +193,54 @@ router.patch("/suggest", async (req, res) => {
   res.json({ message: "Suggestion sent!" });
 });
 
+// route for accepting or denying suggestions to a project:
+router.patch("/handle-suggestion", async (req, res) => {
+  const { listingId, suggestionId, action } = req.query;
+
+  try {
+    const listing = await Listing.findById(listingId);
+    const suggestion = await Listing.findById(suggestionId);
+
+    // default behavior always removes the suggestion from the project's suggestions list
+    // accepting suggestion just adds an additional step:
+
+    if (action === "accept") {
+      listing.listings.addToSet(suggestionId);
+      await Notification.create({
+        userId: suggestion.creator,
+        message: `Your suggestion "${suggestion.title}" was accepted!`,
+        link: `/listing/${listingId}`,
+      });
+    }
+
+    listing.listingsSuggestions.pull(suggestionId);
+    await listing.save();
+    return res.json({ message: `Suggestion ${action}ed successfully.` });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Server Side Error" });
+  }
+});
+
+router.patch("/remove-confirmed-suggestion", async (req, res) => {
+  const { listingId, suggestionId } = req.query;
+  try {
+    const suggestionCreator = await Listing.findById(suggestionId).populate("creator");
+    const listing = await Listing.findById(listingId);
+    listing.listings.pull(suggestionId);
+    await listing.save();
+
+    await Notification.create({
+      userId: suggestionCreator._id,
+      message: `Your confirmed suggestion was removed from the project.`,
+      link: `/listing/${listingId}`,
+    });
+
+    return res.json({ message: "Confirmed suggestion removed successfully." });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Server Side Error" });
+  }
+});
+
 export default router;

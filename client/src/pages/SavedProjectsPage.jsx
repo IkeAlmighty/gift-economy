@@ -4,7 +4,6 @@ import { useListingsData } from "../Contexts/ListingsContext";
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import ListingsList from "../components/ListingsList";
-import DrawerMenu from "../components/DrawerMenu";
 
 export function SavedProjectsPage() {
   const { savedListings, removeSavedListing, suggestToListing, myListings } = useListingsData();
@@ -97,8 +96,8 @@ export function SavedProjectsPage() {
                     ? filteredResults
                     : myListings.filter((l) => l.intent !== "GIFT")
                 }
-                actionText={action}
-                onAction={handleAction}
+                onActionSet={[{ actionText: action, onAction: handleAction }]}
+                itemsDisabled={action !== "Remove"}
               />
             )}
           </div>
@@ -115,8 +114,8 @@ export function SavedProjectsPage() {
             ) : (
               <ListingsList
                 listings={filteredResults}
-                actionText={action}
-                onAction={handleAction}
+                onActionSet={[{ actionText: action, onAction: handleAction }]}
+                itemsDisabled={action !== "Remove"}
               />
             )}
           </div>

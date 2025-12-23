@@ -48,7 +48,6 @@ router.patch("/read-all", async (req, res) => {
 });
 // Delete a specific notification
 router.delete("/:id", async (req, res) => {
-  console.log("deleting single notification for user", req.user.id);
   try {
     const { id } = req.params;
     const result = await Notification.findOneAndDelete({ _id: id, userId: req.user.id });

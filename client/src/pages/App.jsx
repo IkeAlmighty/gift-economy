@@ -6,7 +6,7 @@ function App() {
 
   return (
     <>
-      <ListingsList listings={inNetworkListings} onAction={() => {}} actionText="" />
+      <ListingsList listings={inNetworkListings} />
     </>
   );
 }
