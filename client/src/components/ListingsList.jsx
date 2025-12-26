@@ -4,7 +4,7 @@ import ListItem from "./ListItem.jsx";
 export default function ListingsList({ listings, onActionSet = [], itemsDisabled = false }) {
   const containerRef = useRef(null);
   const itemRefs = useRef([]);
-  const [centeredIndex, setCenteredIndex] = useState(0);
+  const [focusedIndex, setFocusedIndex] = useState(0);
 
   const actionColorMap = {
     Suggest: "bg-green-200 hover:bg-green-300",
@@ -16,36 +16,23 @@ export default function ListingsList({ listings, onActionSet = [], itemsDisabled
 
   useEffect(() => {
     const updateCenteredItem = () => {
-      //FIXME: work on a index incrementing scroll affect so that
-      // the focused item changes predictably as you scroll on larger rows.
+      if (!containerRef.current) return;
+      if (window.innerWidth > 700) return setFocusedIndex(null); // disable centering on wider screens
 
-      // Use a smooth transition based on scroll position
-      // When scrollY is low, bias toward top; when high, use center
-      const scrollY = window.scrollY;
-      const transitionRange = 200; // pixels over which to transition
-      const scrollFactor = Math.min(scrollY / transitionRange, 1); // 0 to 1
+      // ratio index / total items = scrollY / scrollableHeight
+      const containerHeight = containerRef.current.scrollHeight;
 
-      // Interpolate between top position and center position
-      const topBias = window.innerHeight * 0.2; // 20% from top when not scrolled
-      const centerPosition = window.innerHeight / 2;
-      const effectiveCenter = topBias + (centerPosition - topBias) * scrollFactor;
+      // get the current scroll position
+      const scrollY = window.scrollY || 0;
 
-      let closestIndex = null;
-      let closestDistance = Infinity;
+      // Calculate the index of the first item viewable in container
+      let offset = 0.5;
+      let index = (scrollY / containerHeight) * listings.length;
+      if (index < 1.2) offset = 0;
+      if (index > listings.length - 2.2) offset = 0.8;
 
-      itemRefs.current.forEach((item, index) => {
-        if (!item) return;
-        const rect = item.getBoundingClientRect();
-        const itemCenter = rect.top + rect.height / 2;
-        const distance = Math.abs(effectiveCenter - itemCenter);
-
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closestIndex = index;
-        }
-      });
-
-      setCenteredIndex(closestIndex);
+      index = Math.round(index + offset);
+      setFocusedIndex(index);
     };
 
     // Listen to scroll on both window and document
@@ -74,7 +61,11 @@ export default function ListingsList({ listings, onActionSet = [], itemsDisabled
           ref={(el) => (itemRefs.current[index] = el)}
           className="flex flex-col flex-wrap gap-y-1"
         >
-          <ListItem data={listing} isCentered={index === centeredIndex} disabled={itemsDisabled} />
+          <ListItem
+            data={listing}
+            isCentered={focusedIndex !== null ? index === focusedIndex : true}
+            disabled={itemsDisabled}
+          />
           {onActionSet && (
             <div className="text-center flex flex-row gap-x-1 mt-2">
               {onActionSet.map(({ actionText, onAction }) => (
