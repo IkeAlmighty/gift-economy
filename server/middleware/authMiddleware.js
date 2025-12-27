@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import User from "../models/User.js";
 
 function parseCookie(header) {
   if (!header) return {};
@@ -35,8 +36,19 @@ export async function socketioAuthMiddleware(socket, next) {
     const token = cookies.token;
     if (!token) return next(new Error("Unauthorized"));
 
-    const user = jwt.verify(token, process.env.JWT_SECRET);
+    const tokenPayload = jwt.verify(token, process.env.JWT_SECRET);
+    // Fetch minimal user info once per connection
+    const dbUser = await User.findById(tokenPayload.id).select("username screenName");
+    if (!dbUser) return next(new Error("Unauthorized"));
+
+    const user = { id: tokenPayload.id, username: dbUser.username, screenName: dbUser.screenName };
+
+    // Prefer socket.data for per-socket state
+    socket.data.user = user;
+    // Back-compat if any code reads socket.user
     socket.user = user;
+
+    // Join personal room for notifications
     socket.join(`user:${user.id}`);
     next();
   } catch (err) {

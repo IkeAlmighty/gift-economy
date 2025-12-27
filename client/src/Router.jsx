@@ -12,6 +12,7 @@ import { SingleListingPage } from "./pages/SingleListingPage.jsx";
 import YourListingPage from "./pages/MyListingsPage.jsx";
 import NotificationsPage from "./pages/NotificationsPage.jsx";
 import ManageTags from "./pages/ManageTags.jsx";
+import ChatClient from "./components/ChatClient.jsx";
 
 export default function Router() {
   return (
@@ -51,6 +52,15 @@ export default function Router() {
           element={
             <Protected>
               <ManageTags />
+            </Protected>
+          }
+        />
+
+        <Route
+          path="chat/:listingId"
+          element={
+            <Protected>
+              <ChatClient listingId={window.location.pathname.split("/").pop()} />
             </Protected>
           }
         />
