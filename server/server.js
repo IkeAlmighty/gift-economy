@@ -64,6 +64,7 @@ db.once("open", () => {
       cors: {
         origin: "http://localhost:5173", // TODO: replace with production origin
         methods: ["GET", "POST"],
+        credentials: true,
       },
     });
 

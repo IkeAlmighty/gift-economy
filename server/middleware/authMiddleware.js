@@ -37,11 +37,20 @@ export async function socketioAuthMiddleware(socket, next) {
     if (!token) return next(new Error("Unauthorized"));
 
     const tokenPayload = jwt.verify(token, process.env.JWT_SECRET);
+
     // Fetch minimal user info once per connection
-    const dbUser = await User.findById(tokenPayload.id).select("username screenName");
+    const dbUser = await User.findById(tokenPayload.id)
+      .select("username screenName connections")
+      .lean();
+
     if (!dbUser) return next(new Error("Unauthorized"));
 
-    const user = { id: tokenPayload.id, username: dbUser.username, screenName: dbUser.screenName };
+    const user = {
+      id: tokenPayload.id,
+      username: dbUser.username,
+      screenName: dbUser.screenName,
+      connections: dbUser.connections,
+    };
 
     // Prefer socket.data for per-socket state
     socket.data.user = user;
