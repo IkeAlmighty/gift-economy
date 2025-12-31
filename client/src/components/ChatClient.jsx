@@ -7,7 +7,7 @@ import { useUser } from "../Contexts/UserContext.jsx";
 export default function ChatClient({ listingId }) {
   const socketRef = useRef(null);
 
-  const { user } = useUser();
+  const { user, loading } = useUser();
 
   const [status, setStatus] = useState("disconnected");
   const [error, setError] = useState("");
@@ -15,8 +15,10 @@ export default function ChatClient({ listingId }) {
   const [text, setText] = useState("");
 
   useEffect(() => {
+    if (loading || !user || !user._id || !listingId) return;
     setStatus("connecting");
     setError("");
+    setMessages([]);
 
     const socket = io(`${import.meta.env.VITE_SOCKET_SERVER_URL}/chat`, {
       withCredentials: true,
@@ -30,6 +32,11 @@ export default function ChatClient({ listingId }) {
       socket.emit("join-room", listingId, { userId: user._id });
     });
 
+    socket.on("connect_error", (err) => {
+      setStatus("disconnected");
+      setError("Connection error: " + err.message);
+    });
+
     socket.on("disconnect", () => {
       setStatus("disconnected");
     });
@@ -41,7 +48,12 @@ export default function ChatClient({ listingId }) {
     socket.on("error", (err) => {
       setError(err.message || "An error occurred");
     });
-  }, [listingId, user._id]);
+
+    // Cleanup function to disconnect socket
+    return () => {
+      if (socket) socket.disconnect();
+    };
+  }, [listingId, user, loading]);
 
   function handleCopyToClipboard() {
     copyToClipboard(window.location.href);
@@ -71,9 +83,10 @@ export default function ChatClient({ listingId }) {
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            className={`mb-2 ${msg.user === "You" ? "text-right flex flex-row-reverse gap-x-2" : "text-left"}`}
+            className={`mb-2 ${msg.sender.id === user._id ? "text-right flex flex-row-reverse gap-x-2" : "text-left"}`}
           >
-            <strong>{msg.sender.screenName}</strong> : <span>{msg.text}</span>
+            {msg.sender.id !== user._id && <strong>{msg.sender.screenName}: </strong>}
+            <span>{msg.text}</span>
           </div>
         ))}
       </div>
