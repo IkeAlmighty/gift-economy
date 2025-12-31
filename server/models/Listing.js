@@ -12,6 +12,7 @@ const ListingSchema = new mongoose.Schema(
     listings: [{ type: mongoose.Types.ObjectId, ref: "Listing" }],
     listingsSuggestions: [{ type: mongoose.Types.ObjectId, ref: "Listing" }],
     tags: [String],
+    messages: [{ type: mongoose.Types.ObjectId, ref: "Message" }],
   },
   { timestamps: true }
 );
