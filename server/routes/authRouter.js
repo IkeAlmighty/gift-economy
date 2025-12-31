@@ -2,6 +2,8 @@ import User from "../models/User.js";
 import express from "express";
 import jwt from "jsonwebtoken";
 
+const development = process.env.NODE_ENV === "development";
+
 const router = express.Router();
 
 router.post("/signup", async (req, res) => {
@@ -18,7 +20,12 @@ router.post("/signup", async (req, res) => {
       expiresIn: "7d",
     });
     res
-      .cookie("token", token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 100 })
+      .cookie("token", token, {
+        httpOnly: true,
+        sameSite: development ? "lax" : "none",
+        secure: development ? false : true,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      })
       .json({ message: "User created" });
   } catch (err) {
     res.status(400).json({ error: "User creation failed" });
@@ -35,7 +42,12 @@ router.post("/login", async (req, res) => {
     expiresIn: "7d",
   });
   res
-    .cookie("token", token, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 100 })
+    .cookie("token", token, {
+      httpOnly: true,
+      sameSite: development ? "lax" : "none",
+      secure: development ? false : true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    })
     .json({ message: "Signed in" });
 });
 

@@ -27,7 +27,7 @@ export default function NotificationsPage() {
   return (
     <div className="p-4 max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Notifications</h1>
+        <h1 className="text-3xl font-bold mx-auto">Notifications</h1>
         <div className="flex gap-2">
           {unreadCount > 0 && (
             <button

@@ -97,17 +97,21 @@ router.delete("/connections", async (req, res) => {
 
 router.get("/connections", async (req, res) => {
   const { _id } = req.query;
-  const me = await User.findById(req.user.id);
-  if (me.connections.includes(_id)) {
+  const me = await User.findById(req.user.id).select("connections");
+
+  // Allow if requesting own data or if connected
+  if (me._id.toString() === _id || me.connections.map((c) => c.toString()).includes(_id)) {
     try {
       const connection = await User.findById(_id);
 
-      return await res.json({ username: connection.username, listings: connection.listings });
+      return res.json({ username: connection.username, listings: connection.listings });
     } catch (err) {
       console.log(err);
       res.status(500).json({ error: "server side error" });
     }
   }
+
+  res.status(403).json({ error: "Not connected with this user" });
 });
 
 export default router;

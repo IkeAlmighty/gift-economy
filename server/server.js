@@ -8,6 +8,8 @@ import { socketioAuthMiddleware } from "./middleware/authMiddleware.js";
 import Notification from "./models/Notification.js";
 import Tag from "./models/Tag.js";
 import defaultTags from "./seeds/seedTags.js";
+import setupChatNamespace from "./routes/socket-io/rooms.js";
+import setupNotificationsNamespace from "./routes/socket-io/notifications.js";
 
 import db from "./db/connection.js";
 import apiRoutes from "./routes/index.js";
@@ -62,22 +64,20 @@ db.once("open", () => {
       cors: {
         origin: "http://localhost:5173", // TODO: replace with production origin
         methods: ["GET", "POST"],
+        credentials: true,
       },
     });
 
     io.use(socketioAuthMiddleware);
 
-    io.on("connection", (socket) => {
-      // Socket authenticated in middleware; user room already joined
-      socket.on("ping", () => socket.emit("pong"));
+    // Setup namespaces
+    const chatNs = setupChatNamespace(io);
+    const notificationsNs = setupNotificationsNamespace(io);
 
-      socket.on("disconnect", () => {
-        console.log("User disconnected:", socket.id);
-      });
-    });
-
-    // Make io available globally
+    // Make io and namespaces available globally
     global.io = io;
+    global.chatNs = chatNs;
+    global.notificationsNs = notificationsNs;
 
     // Attempt to use MongoDB change streams (requires replica set)
     // Falls back to model hooks if not available

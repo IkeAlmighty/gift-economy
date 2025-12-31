@@ -46,7 +46,7 @@ export default function ListItem({ data, disabled, isCentered = true }) {
 
   function handleOpenChat(e) {
     e.stopPropagation();
-    navigate(`/chat?listing=${data._id}`);
+    navigate(`/chat/${data._id}`);
   }
 
   async function handleOnSave(e) {

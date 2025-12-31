@@ -73,7 +73,7 @@ export function SingleListingPage() {
           </div>
           <div className="relative text-center border-2 rounded min-h-[400px] min-w-[300px] flex-grow">
             <div className="absolute -top-5 -right-1 bg-secondary p-1 rounded opacity-90 hover:opacity-100">
-              <Link to={`/chat?listing=${listingData._id}`} target="_blank">
+              <Link to={`/chat/${listingData._id}`} target="_blank">
                 Open in new Tab ↗
               </Link>
             </div>
