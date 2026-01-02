@@ -66,7 +66,6 @@ router.delete("/:id", async (req, res) => {
 // Delete all notifications for the logged-in user
 router.delete("/", async (req, res) => {
   try {
-    console.log("deleting notifications for user:", req.user.id);
     await Notification.deleteMany({ userId: req.user.id });
     res.json({ message: "All notifications cleared" });
   } catch (err) {

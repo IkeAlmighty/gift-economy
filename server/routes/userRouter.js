@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/me", async (req, res) => {
   const { id } = req.user;
-  const user = await User.findById(id).select("-password").populate("connections").lean();
+  const user = await User.findById(id).select("-password").lean();
   res.json(user);
 });
 
@@ -95,8 +95,45 @@ router.delete("/connections", async (req, res) => {
   res.json({ message: `${username} has been removed from your connections` });
 });
 
+router.delete("/connection-requests", async (req, res) => {
+  const { username } = req.query;
+  const requester = await User.findOne({ username });
+
+  if (!requester) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  const me = await User.findById(req.user.id);
+  me.connectionRequests.remove(requester);
+  await me.save();
+
+  res.json({ message: `Connection request from ${username} has been declined` });
+});
+
 router.get("/connections", async (req, res) => {
   const { _id } = req.query;
+
+  // If no _id provided, return user's own connections and connection requests
+  if (!_id) {
+    try {
+      const me = await User.findById(req.user.id)
+        .select("connections connectionRequests")
+        .populate("connections")
+        .populate("connectionRequests")
+        .lean();
+
+      return res.json({
+        connections: me.connections,
+        connectionRequests: me.connectionRequests,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ error: "server side error" });
+    }
+  }
+
+  // If _id provided, return safe data for that connection if allowed
+
   const me = await User.findById(req.user.id).select("connections");
 
   // Allow if requesting own data or if connected
