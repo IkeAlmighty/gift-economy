@@ -8,18 +8,21 @@ import { NewListingProvider } from "./Contexts/NewListingContext";
 import { ToastContainer } from "react-toastify";
 import { NotificationsProvider } from "./Contexts/NotificationsContext";
 import { TagsProvider } from "./Contexts/TagsContext.jsx";
+import { ModalProvider } from "./Contexts/ModelContext.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <TagsProvider>
-    <UserProvider>
-      <ListingsProvider>
-        <NewListingProvider>
-          <NotificationsProvider>
-            <Router />
-            <ToastContainer position="bottom-right" />
-          </NotificationsProvider>
-        </NewListingProvider>
-      </ListingsProvider>
-    </UserProvider>
-  </TagsProvider>
+  <ModalProvider>
+    <TagsProvider>
+      <UserProvider>
+        <ListingsProvider>
+          <NewListingProvider>
+            <NotificationsProvider>
+              <Router />
+              <ToastContainer position="bottom-right" />
+            </NotificationsProvider>
+          </NewListingProvider>
+        </ListingsProvider>
+      </UserProvider>
+    </TagsProvider>
+  </ModalProvider>
 );
