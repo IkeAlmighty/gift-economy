@@ -58,6 +58,7 @@ export default function DrawerMenu({ children }) {
             <Link to="/connections">Connections</Link>
             <Link to="/my-listings">Your Listings</Link>
             <Link to="/manage-tags">Manage Tags</Link>
+            <Link to="/profile">Profile</Link>
 
             <div>
               <LogoutButton />
