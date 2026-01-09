@@ -53,21 +53,21 @@ export default function DrawerMenu({ children }) {
           children
         ) : (
           <>
-            <Link to="/">Main Feed</Link>
-            <Link to="/saved-listings">💾 Saved Listings</Link>
-            <Link to="/connections">Connections</Link>
-            <Link to="/my-listings">Your Listings</Link>
-            <Link to="/manage-tags">Manage Tags</Link>
-            <Link to="/profile">Profile</Link>
-
-            <div>
+            <div className="text-sm flex justify-center items-center gap-2">
+              <Link to="/profile" className="text-lg text-green-500 underline">
+                {user?.username}
+              </Link>
               <LogoutButton />
             </div>
+            <Link to="/saved-listings">💾 Saved Listings</Link>
+            <Link to="/my-listings">Your Listings</Link>
+            <Link to="/connections">Connections</Link>
+            <Link to="/manage-tags">Manage Tags</Link>
           </>
         )}
         {user && (
           <div className="text-xs absolute bottom-0 right-0 !bg-secondary my-2 mx-3 z-20">
-            Logged in as {user.screenName}
+            Logged in as {user?.screenName}
           </div>
         )}
       </div>

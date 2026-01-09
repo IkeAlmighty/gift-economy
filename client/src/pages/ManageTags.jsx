@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTags } from "../Contexts/TagsContext.jsx";
 import ToolBar from "../components/ToolBar.jsx";
 import { toast } from "react-toastify";
+import FloatingBugButton from "../components/FloatingBugButton.jsx";
 
 export default function ManageTags() {
   const { tags, addTag, loading } = useTags();
@@ -31,6 +32,7 @@ export default function ManageTags() {
 
   return (
     <>
+      <FloatingBugButton />
       <ToolBar />
       <div className="max-w-[520px] mx-auto mt-10 px-2 flex flex-col gap-6 pb-10">
         <div>
