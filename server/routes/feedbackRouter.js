@@ -7,7 +7,6 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   try {
     const { type, message, email } = req.body;
-    console.log(req.body);
 
     if (!type || !message) {
       return res.status(400).json({ error: "Type and message are required." });
