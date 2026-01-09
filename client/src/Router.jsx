@@ -13,6 +13,7 @@ import YourListingPage from "./pages/MyListingsPage.jsx";
 import NotificationsPage from "./pages/NotificationsPage.jsx";
 import ManageTags from "./pages/ManageTags.jsx";
 import ChatClient from "./components/ChatClient.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
 
 export default function Router() {
   return (
@@ -28,6 +29,7 @@ export default function Router() {
           <Route path="/preview-listing" element={<PreviewListing />} />
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/my-listings" element={<YourListingPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Route>
 
         <Route

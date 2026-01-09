@@ -79,11 +79,35 @@ export async function removeConnection(username) {
   }
 }
 
+export async function declineConnectionRequest(username) {
+  try {
+    const response = await fetch(`/api/user/connection-requests?username=${username}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    return response;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 export async function getSafeConnectionDataById(id) {
   try {
     const response = await fetch(`/api/user/connections?_id=${id} `);
 
     return response;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+export async function getConnections() {
+  try {
+    const response = await fetch("/api/user/connections");
+    if (response.ok) {
+      return await response.json();
+    }
   } catch (err) {
     console.error(err);
   }
