@@ -28,6 +28,7 @@ router.post("/signup", async (req, res) => {
       })
       .json({ message: "User created" });
   } catch (err) {
+    console.error(err);
     res.status(400).json({ error: "User creation failed" });
   }
 });

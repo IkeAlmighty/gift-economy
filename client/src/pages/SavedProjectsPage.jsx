@@ -4,6 +4,8 @@ import { useListingsData } from "../Contexts/ListingsContext";
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import ListingsList from "../components/ListingsList";
+import ToggleButtonGroup from "../components/ToggleButtonGroup";
+import FloatingBugButton from "../components/FloatingBugButton";
 
 export function SavedProjectsPage() {
   const { savedListings, removeSavedListing, suggestToListing, myListings } = useListingsData();
@@ -47,6 +49,7 @@ export function SavedProjectsPage() {
 
   return (
     <div>
+      <FloatingBugButton />
       {action === "Suggest" ? (
         <ToolBar>
           <div>{action === "Suggest" ? "Suggest to Project" : "Saved Listings"}</div>
@@ -60,20 +63,13 @@ export function SavedProjectsPage() {
       {action === "Suggest" ? (
         <>
           <div className="text-center">
-            <div className="m-1 mx-auto inline-flex items-center rounded overflow-hidden border">
-              <button
-                className={`px-3 py-1 ${viewMode === "saved" ? "bg-cyan-800 text-white" : "bg-white"}`}
-                onClick={() => setViewMode("saved")}
-              >
-                Saved
-              </button>
-              <button
-                className={`px-3 py-1 ${viewMode === "mine" ? "bg-cyan-800 text-white" : "bg-white"}`}
-                onClick={() => setViewMode("mine")}
-              >
-                My Items
-              </button>
-            </div>
+            <ToggleButtonGroup
+              value={viewMode === "saved" ? "left" : "right"}
+              onChange={(val) => setViewMode(val === "left" ? "saved" : "mine")}
+              leftLabel="Saved"
+              rightLabel="My Items"
+              className="m-1 mx-auto"
+            />
           </div>
 
           <h3 className="text-center my-10">

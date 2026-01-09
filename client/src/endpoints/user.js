@@ -22,13 +22,13 @@ export async function logout() {
   return await response.json();
 }
 
-export async function signup({ username, password }) {
+export async function signup({ username, screenName, password }) {
   const response = await fetch("/api/auth/signup", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify({ username, screenName, password }),
   });
 
   const data = await response.json();
@@ -70,7 +70,7 @@ export async function removeConnection(username) {
   try {
     const response = await fetch(`/api/user/connections?username=${username}`, {
       method: "DELETE",
-      headers: { "Content-Type": "appliction/json" },
+      headers: { "Content-Type": "application/json" },
     });
 
     return response;

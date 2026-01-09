@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import ToolBar from "../components/ToolBar";
 import { useModal } from "../Contexts/ModelContext";
 import { ConfirmClearModal } from "../components/ConfirmClearModal";
+import FloatingBugButton from "../components/FloatingBugButton";
 
 export default function ConnectionsPage() {
   const { user, loading } = useUser();
@@ -102,6 +103,7 @@ export default function ConnectionsPage() {
 
   return (
     <div>
+      <FloatingBugButton />
       <ToolBar />
 
       <div className="px-2">

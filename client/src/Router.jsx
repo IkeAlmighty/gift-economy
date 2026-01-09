@@ -14,6 +14,7 @@ import NotificationsPage from "./pages/NotificationsPage.jsx";
 import ManageTags from "./pages/ManageTags.jsx";
 import ChatClient from "./components/ChatClient.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
+import FeedbackPage from "./pages/FeedbackPage.jsx";
 
 export default function Router() {
   return (
@@ -70,6 +71,8 @@ export default function Router() {
         <Route path="/listing/:_id" element={<SingleListingPage />} />
         <Route path="/login" element={<Login mode="login" />} />
         <Route path="/signup" element={<Login mode="signup" />} />
+
+        <Route path="/feedback" element={<FeedbackPage />} />
       </Routes>
     </BrowserRouter>
   );

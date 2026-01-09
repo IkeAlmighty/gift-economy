@@ -1,12 +1,10 @@
 import { Outlet, useLocation, useNavigate, Link } from "react-router";
 import { useEffect, useState } from "react";
 import ToolBar from "./ToolBar";
-import PlusCloseButton from "./PlusCloseButton";
-import LogoutButton from "./LogoutButton";
 import { Protected } from "./Protected";
 import { useNewListingData } from "../Contexts/NewListingContext";
 import { useUser } from "../Contexts/UserContext";
-import DrawerMenu from "../components/DrawerMenu";
+import FloatingBugButton from "./FloatingBugButton";
 
 export default function ToolBarMenu() {
   const navigate = useNavigate();
@@ -76,6 +74,7 @@ export default function ToolBarMenu() {
       <Protected>
         <Outlet />
       </Protected>
+      <FloatingBugButton />
     </>
   );
 }
