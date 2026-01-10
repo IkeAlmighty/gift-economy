@@ -132,10 +132,17 @@ router.post("/my-listings", upload.single("image"), async (req, res) => {
 
   const { intent, description, title } = req.body;
 
+  const allowedSuggestions = [];
+
+  if (req.body.allowGiftSuggestions === "true") allowedSuggestions.push("GIFT");
+  if (req.body.allowRequestSuggestions === "true") allowedSuggestions.push("REQUEST");
+  if (req.body.allowProjectSuggestions === "true") allowedSuggestions.push("PROJECT");
+
   const listing = await new Listing({
     title,
     tags: JSON.parse(req.body.tags),
     intent,
+    allowedSuggestions,
     description,
     creator: req.user.id,
   }).save();
@@ -172,6 +179,14 @@ router.patch("/suggest", async (req, res) => {
 
   try {
     const listingTo = await Listing.findById(to);
+    const listingSuggest = await Listing.findById(suggest);
+
+    if (!listingTo.allowedSuggestions.includes(listingSuggest.intent)) {
+      return res.status(400).json({
+        error: `Suggestions of type ${listingSuggest.intent} are not allowed for this project.`,
+      });
+    }
+
     listingTo.listingsSuggestions.addToSet(suggest);
     await listingTo.save();
 

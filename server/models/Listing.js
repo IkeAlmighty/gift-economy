@@ -11,6 +11,7 @@ const ListingSchema = new mongoose.Schema(
     },
     listings: [{ type: mongoose.Types.ObjectId, ref: "Listing" }],
     listingsSuggestions: [{ type: mongoose.Types.ObjectId, ref: "Listing" }],
+    allowedSuggestions: [String],
     tags: [String],
     messages: [{ type: mongoose.Types.ObjectId, ref: "Message" }],
   },
