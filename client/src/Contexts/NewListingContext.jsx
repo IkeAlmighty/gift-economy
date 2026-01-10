@@ -10,7 +10,6 @@ export const NewListingContext = createContext(null);
 // in the snapshot and sends a formdata object to the controller
 export function NewListingProvider({ children }) {
   const [newListingData, setNewListingData] = useState({});
-  const { hydrateListings } = useListingsData();
 
   function snapshotFormData(fd) {
     const data = {};
