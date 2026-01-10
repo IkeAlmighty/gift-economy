@@ -62,7 +62,7 @@ export default function CreateListing({ intent }) {
         <div className="flex flex-col gap-3">
           <div>Listing Type(s):</div>
           <div className="flex flex-row flex-wrap gap-4">
-            {["Food", "Shelter", "Labor", "Transportation", "Other"].map((t) => (
+            {["Food", "Shelter", "Labor", "Transportation"].map((t) => (
               <label key={t} className="flex items-center">
                 <input
                   className="mr-1"
@@ -80,12 +80,13 @@ export default function CreateListing({ intent }) {
 
           <div className="flex flex-col gap-1">
             <label className="text-sm font-semibold" htmlFor="customTags">
-              Add your own tags (comma or newline separated)
+              Add your own tags (comma separated)
             </label>
-            <textarea
+            <input
               id="customTags"
               name="customTags"
-              className="border rounded p-2 min-h-[70px]"
+              className="border rounded p-2"
+              type="text"
               placeholder="community, repair, childcare"
               value={customTags}
               onChange={(e) => setCustomTags(e.target.value)}
