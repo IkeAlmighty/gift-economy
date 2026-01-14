@@ -19,6 +19,22 @@ describe("signup", () => {
     expect(mongoose.connection.db.collection("users")
       .findOne({ username: "testuser" })).resolves.toBeTruthy();
   });
+
+  it("fails if user already exists", async () => {
+    await mongoose.connection.db.collection("users").insertOne({
+      username: "testuser",
+      screenName: "Test User",
+      password: "hashedpassword", // Assume password is hashed
+    });
+
+    const response = await request(app).post("/api/auth/signup").send({
+      username: "testuser",
+      screenName: "Test User",
+      password: "password123",
+    });
+
+    expect(response.statusCode).toBe(400);
+  });
 });
 
 
