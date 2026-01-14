@@ -1,2 +1,2 @@
-const setup = require("./setup.js");
-module.exports = async () => await setup.teardown();
+import { teardown } from "./setup.js";
+export default async () => await teardown();
