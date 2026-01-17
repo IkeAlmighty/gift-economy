@@ -11,6 +11,7 @@ import ToolBar from "../components/ToolBar";
 import { useModal } from "../Contexts/ModelContext";
 import { ConfirmClearModal } from "../components/ConfirmClearModal";
 import FloatingBugButton from "../components/FloatingBugButton";
+import { copyToClipboard } from "../utils/clipboard";
 
 export default function ConnectionsPage() {
   const { user, loading } = useUser();
@@ -106,10 +107,10 @@ export default function ConnectionsPage() {
       <FloatingBugButton />
       <ToolBar />
 
-      <div className="px-2">
-        <form className="my-5 [&>*]:mr-2" onSubmit={handleSendConnectionRequest}>
-          <label>
-            <span>Add a Connection: </span>
+      <div className="px-2 mx-auto max-w-xl">
+        <form className="my-5 flex flex-row gap-2" onSubmit={handleSendConnectionRequest}>
+          <label className="flex-1 flex-grow">
+            <span className="mr-5">Add a Connection: </span>
             <input
               type="text"
               value={newConnection}
@@ -117,8 +118,23 @@ export default function ConnectionsPage() {
               onChange={(e) => setNewConnection(e.target.value.trim())}
             />
           </label>
-          <input type="submit" value="send request" disabled={newConnection.trim().length === 0} />
+          <input
+            className="flex-shrink-0"
+            type="submit"
+            value="send request"
+            disabled={newConnection.trim().length === 0}
+          />
         </form>
+
+        <div>
+          Your username is{" "}
+          <span
+            className="text-green-500 cursor-pointer"
+            onClick={() => copyToClipboard(user.username)}
+          >
+            {user.username}
+          </span>
+        </div>
 
         {connectionRequests.length > 0 && (
           <>
