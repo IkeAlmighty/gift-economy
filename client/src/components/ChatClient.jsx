@@ -20,7 +20,8 @@ export default function ChatClient({ listingId }) {
     setError("");
     setMessages([]);
 
-    const socket = io(`${import.meta.env.VITE_SOCKET_SERVER_URL}/chat`, {
+    const socketBase = import.meta.env.VITE_SOCKET_SERVER_URL || window.location.origin;
+    const socket = io(`${socketBase}/chat`, {
       withCredentials: true,
       transports: ["websocket"],
     });

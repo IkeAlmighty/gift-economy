@@ -43,7 +43,8 @@ export function NotificationsProvider({ children }) {
   useEffect(() => {
     if (user) {
       // Connect to the server
-      const newSocket = io(import.meta.env.VITE_SOCKET_SERVER_URL);
+      const socketBase = import.meta.env.VITE_SOCKET_SERVER_URL || window.location.origin;
+      const newSocket = io(socketBase);
       setSocket(newSocket);
 
       // Listen for notifications
