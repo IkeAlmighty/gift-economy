@@ -1,39 +1,56 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
-import { getListingById, handleSuggestionAction } from "../endpoints/listings";
+import {
+  getListingById,
+  handleSuggestionAction,
+  getSuggestionsForListing,
+  removeParent,
+} from "../endpoints/listings";
 import ToolBar from "../components/ToolBar";
 import ChatClient from "../components/ChatClient";
 import { getSafeConnectionDataById } from "../endpoints/user";
 import ListingsList from "../components/ListingsList";
+import ListItem from "../components/ListItem.jsx";
+import { useUser } from "../Contexts/UserContext";
+import { toast } from "react-toastify";
 
 export function SingleListingPage() {
   const { _id } = useParams();
+  const { user } = useUser();
   const [listingData, setListingData] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState("Loading...");
-
+  const [suggestions, setSuggestions] = useState({ parentSuggestions: [], childSuggestions: [] });
   const [creator, setCreator] = useState(undefined);
 
-  useEffect(() => {
-    async function fetchAndSetListingData() {
-      const res = await getListingById({ _id });
-      if (res.ok) {
-        setListingData(await res.json());
-        setErrorMessage(undefined);
-      } else if (res.status === 401) {
-        const { error } = await res.json();
-        setErrorMessage(error);
-      } else {
-        setErrorMessage("Server side error");
-      }
-    }
+  async function loadListingData() {
+    const res = await getListingById({ _id });
+    if (res.ok) {
+      const data = await res.json();
+      setListingData(data);
+      setErrorMessage(undefined);
 
-    if (_id) fetchAndSetListingData();
-  }, [_id]);
+      // If user is the creator, fetch suggestions
+      if (user && data.creator === user._id) {
+        const suggestionData = await getSuggestionsForListing(_id);
+        console.log(suggestionData);
+        setSuggestions(suggestionData);
+      }
+    } else if (res.status === 401) {
+      const { error } = await res.json();
+      setErrorMessage(error);
+    } else {
+      setErrorMessage("Server side error");
+    }
+  }
+
+  useEffect(() => {
+    if (_id) loadListingData();
+  }, [_id, user]);
 
   useEffect(() => {
     if (!listingData) return;
     async function fetchAndSetCreatorData() {
-      const res = await getSafeConnectionDataById(listingData.creator);
+      const res = await getSafeConnectionDataById(listingData.creator._id);
       if (res.ok) {
         const data = await res.json();
         setCreator(data);
@@ -45,14 +62,31 @@ export function SingleListingPage() {
     fetchAndSetCreatorData();
   }, [listingData]);
 
-  async function _handleSuggestionAction(suggestionId, action) {
-    const res = await handleSuggestionAction(listingData._id, suggestionId, action);
-
+  async function handleSuggestion(childId, parentId, action) {
+    const res = await handleSuggestionAction(childId, parentId, action);
     if (res.ok) {
-      const updatedListing = await getListingById({ _id: listingData._id });
-      setListingData(await updatedListing.json());
+      const { message } = await res.json();
+      toast(message);
+      loadListingData(); // Reload to get updated data
+    } else {
+      const { error } = await res.json();
+      toast(error || "Error processing suggestion");
     }
   }
+
+  async function handleRemoveParent(listing) {
+    const res = await removeParent(listing._id);
+    if (res.ok) {
+      const { message } = await res.json();
+      toast(message);
+      loadListingData(); // Reload to get updated data
+    } else {
+      const { error } = await res.json();
+      toast(error || "Error removing from project");
+    }
+  }
+
+  const isCreator = user && listingData && listingData.creator === user._id;
 
   if (errorMessage) return <>{errorMessage}</>;
   return (
@@ -82,38 +116,94 @@ export function SingleListingPage() {
           </div>
         </div>
 
-        {listingData?.listingsSuggestions?.length > 0 && (
+        {/* Suggested parent projects this listing could be part of: */}
+        {isCreator && suggestions.childSuggestions?.length > 0 && (
           <>
-            <h2 className="mt-10 text-center underline">Suggested to this Project</h2>
-            <div className="flex flex-row flex-wrap gap-x-2 gap-y-5 pt-5 justify-center text-center">
-              <ListingsList
-                listings={listingData?.listingsSuggestions}
-                onActionSet={[
-                  {
-                    actionText: "Accept",
-                    onAction: (listing) => _handleSuggestionAction(listing._id, "accept"),
-                  },
-                  {
-                    actionText: "Deny",
-                    onAction: (listing) => _handleSuggestionAction(listing._id, "deny"),
-                  },
-                ]}
-              />
+            <h2 className="mt-10 text-center underline">Suggested Projects For This Listing</h2>
+            <div className="flex flex-row gap-2 justify-around my-5">
+              {suggestions.childSuggestions.map((suggestion) => (
+                <div>
+                  <ListItem data={suggestion.parentListing} />
+                  <div className="text-center text-gray-400 text-sm">
+                    Them: {suggestion.parentOwnerStatus} - You: {suggestion.childOwnerStatus}
+                  </div>
+                  <div className="flex justify-center gap-5 my-2">
+                    {["Accept", " Reject"].map((action) => (
+                      <button
+                        className={`${action.trim() === "Accept" ? "bg-green-200" : "bg-red-200"} px-2 rounded`}
+                        onClick={() =>
+                          handleSuggestion(
+                            listingData._id,
+                            suggestion.parentListing._id,
+                            `${action.toUpperCase()}ED`
+                          )
+                        }
+                      >
+                        {action}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           </>
         )}
 
-        {listingData?.listings.length > 0 && (
+        {/* Suggested child projects this listing could incorporated: */}
+        {isCreator && suggestions.parentSuggestions?.length > 0 && (
+          <>
+            <h2 className="mt-10 text-center underline">Suggested Components for this Listing</h2>
+            <div className="flex flex-row gap-2 justify-around my-5">
+              {suggestions.parentSuggestions.map((suggestion) => (
+                <div>
+                  <ListItem data={suggestion.childListing} />
+                  <div className="text-center text-gray-400 text-sm">
+                    Them: {suggestion.childOwnerStatus} - You: {suggestion.parentOwnerStatus}
+                  </div>
+                  <div className="flex justify-center gap-5 my-2">
+                    {["Accept", " Reject"].map((action) => (
+                      <button
+                        className={`${action.trim() === "Accept" ? "bg-green-200" : "bg-red-200"} px-2 rounded`}
+                        onClick={() =>
+                          handleSuggestion(
+                            suggestion.childListing._id,
+                            listingData._id,
+                            `${action.toUpperCase()}ED`
+                          )
+                        }
+                      >
+                        {action}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {listingData?.listings?.length > 0 && (
           <>
             <h2 className="mt-10 text-center underline">Confirmed Project Components</h2>
 
             <div className="flex flex-row gap-x-1 justify-center text-center">
               <ListingsList
                 listings={listingData?.listings}
-                onActionSet={[
-                  { actionText: "Remove", onAction: (listing) => console.log("Remove", listing) },
-                ]}
+                onActionSet={
+                  isCreator
+                    ? [{ actionText: "Remove", onAction: (listing) => handleRemoveParent(listing) }]
+                    : []
+                }
               />
+            </div>
+          </>
+        )}
+
+        {listingData?.parent && (
+          <>
+            <h2 className="mt-10 text-center underline">Part of Project</h2>
+            <div className="flex flex-row gap-x-1 justify-center text-center">
+              <ListItem data={listingData.parent} />
             </div>
           </>
         )}

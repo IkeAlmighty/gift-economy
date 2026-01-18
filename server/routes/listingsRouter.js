@@ -2,6 +2,7 @@ import express from "express";
 import Listing from "../models/Listing.js";
 import User from "../models/User.js";
 import Notification from "../models/Notification.js";
+import Suggestion from "../models/Suggestion.js";
 import { upload } from "../middleware/upload.js"; // middleware for parseing files sent to the server
 
 const router = express.Router();
@@ -11,17 +12,32 @@ router.get("/", async (req, res) => {
   const { _id } = req.query;
 
   try {
-    let listing = await Listing.findById(_id);
+    let listing = await Listing.findById(_id).populate({
+      path: "creator",
+      select: "username screenName",
+    });
     const me = await User.findById(req.user.id);
 
-    if (listing.creator.toString() === me._id.toString()) {
-      // if the listing was created by the user currently logged in, populate everything
-      listing = await Listing.findById(_id).populate("listings listingsSuggestions");
-    } else if (me.connections.includes(listing.creator)) {
-      // else if the listing was created by a connection, the deselect listingsSuggestions
-      listing = await Listing.findById(_id).select("-listingsSuggestions").populate("listings");
+    if (
+      listing.creator._id.toString() === me._id.toString() ||
+      me.connections.includes(listing.creator)
+    ) {
+      // if the listing was created by the user currently logged in, or if the listing creator is in the user's connections,
+      // then populate the child listings
+      await listing.populate([
+        {
+          path: "listings",
+          populate: { path: "creator", select: "username screenName" },
+        },
+        {
+          path: "parent",
+          populate: { path: "creator", select: "username screenName" },
+        },
+      ]);
     } else {
-      return res.status(401).json({ error: "You are not permitted to view this listing." });
+      return res.status(401).json({
+        error: `You are not permitted to view this listing. Send a connection request to '${listing.creator.username}' to view it.`,
+      });
     }
 
     return res.json(listing);
@@ -29,18 +45,6 @@ router.get("/", async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "server side error" });
   }
-});
-
-// Get all gifts
-router.get("/gifts", async (req, res) => {
-  const gifts = await Listing.find({ creator: req.user.id, intent: "GIFT" });
-  res.json(gifts);
-});
-
-// Get all requests
-router.get("/my-requests", async (req, res) => {
-  const requests = await Listing.find({ creator: req.user.id, intent: "REQUEST" });
-  res.json(requests);
 });
 
 // Get all listings created by the loggged in user (gifts, requests, and projects)
@@ -103,27 +107,67 @@ router.post("/saved-listings", async (req, res) => {
   res.json({ message: "Listing saved!" });
 });
 
-router.get("/listings-in-network", async (req, res) => {
-  // get all connections
-  const me = await User.findById(req.user.id);
+// Get suggestions for a listing (both as child and as parent)
+router.get("/suggestions", async (req, res) => {
+  const { listingId } = req.query;
 
-  // for each connection, append all the connection's listings to return list
-  let listingsInNetwork = [];
-  for (let id of me.connections) {
-    const connection = await User.findById(id).populate({
-      path: "listings",
-      model: Listing,
-      populate: {
-        path: "creator",
-        select: "username screenName",
-      },
-    });
+  try {
+    const listing = await Listing.findById(listingId);
+    if (!listing) {
+      return res.status(404).json({ error: "Listing not found." });
+    }
 
-    listingsInNetwork = [...listingsInNetwork, ...connection?.listings];
+    // Verify user has permission to view this listing's suggestions
+    const me = await User.findById(req.user.id);
+    if (listing.creator.toString() !== me._id.toString()) {
+      return res
+        .status(403)
+        .json({ error: "You do not have permission to view these suggestions." });
+    }
+
+    // Get suggestions where this listing is the parent (suggestions to THIS project)
+    const parentSuggestions = await Suggestion.find({ parentListing: listingId })
+      .populate("childListing parentListing")
+      .populate("suggestedBy", "username");
+
+    // Get suggestions where this listing is the child (suggestions to OTHER projects)
+    const childSuggestions = await Suggestion.find({ childListing: listingId })
+      .populate("parentListing childListing")
+      .populate("suggestedBy", "username");
+
+    res.json({ parentSuggestions, childSuggestions });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server Side Error" });
   }
+});
 
-  // return list
-  res.json(listingsInNetwork);
+router.get("/listings-in-network", async (req, res) => {
+  try {
+    // get all connections
+    const me = await User.findById(req.user.id);
+
+    // for each connection, append all the connection's listings to return list
+    let listingsInNetwork = [];
+    for (let id of me.connections) {
+      const connection = await User.findById(id).populate({
+        path: "listings",
+        model: Listing,
+        populate: {
+          path: "creator",
+          select: "username screenName",
+        },
+      });
+
+      listingsInNetwork = [...listingsInNetwork, ...connection?.listings];
+    }
+
+    // return list
+    res.json(listingsInNetwork);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Server side Error");
+  }
 });
 
 // Create listing (gift or request)
@@ -171,35 +215,90 @@ router.delete("/saved-listings", async (req, res) => {
   }
 });
 
+router.delete("/remove-parent", async (req, res) => {
+  const { _id } = req.query;
+  try {
+    const listing = await Listing.findById(_id);
+    const parent = await Listing.findById(listing.parent);
+    parent.listings.pull(_id);
+    await parent.save();
+
+    listing.parent = null;
+    await listing.save();
+
+    res.json({ message: "Parent listing removed successfully." });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Server side error" });
+  }
+});
+
 router.patch("/suggest", async (req, res) => {
   const { suggest, to } = req.query;
   if (suggest === to) {
     return res.status(400).json({ error: "You cannot suggest a listing to itself." });
   }
 
+  // grab the listings to verify they exist and are compatible
+  let childListing, parentListing;
   try {
-    const listingTo = await Listing.findById(to);
-    const listingSuggest = await Listing.findById(suggest);
+    childListing = await Listing.findById(suggest);
+    parentListing = await Listing.findById(to);
 
-    if (!listingTo.allowedSuggestions.includes(listingSuggest.intent)) {
-      return res.status(400).json({
-        error: `Suggestions of type ${listingSuggest.intent} are not allowed for this project.`,
-      });
+    if (!childListing || !parentListing) {
+      return res.status(404).json({ error: "One or both listings not found." });
     }
 
-    listingTo.listingsSuggestions.addToSet(suggest);
-    await listingTo.save();
+    // verify that the parent listing accepts suggestions of the child's intent type
+    if (!parentListing.allowedSuggestions.includes(childListing.intent)) {
+      return res
+        .status(400)
+        .json({ error: "This listing does not accept suggestions of that type." });
+    }
 
-    // Notify the owner of the target listing about the suggestion
-    try {
-      const suggester = await User.findById(req.user.id).select("username");
-      const suggested = await Listing.findById(suggest).select("title");
-      await new Notification({
-        userId: listingTo.creator,
-        message: `${suggester.username} suggested: "${suggested?.title ?? "a listing"}" to your project`,
-        link: `/listing/${to}`,
-      }).save();
-    } catch (e) {}
+    // if the creator, owner, and suggester are all the same, then directly update
+    // the listings object:
+    if (
+      childListing.creator.toString() === req.user.id &&
+      parentListing.creator.toString() === req.user.id
+    ) {
+      parentListing.listings.addToSet(suggest);
+      await parentListing.save();
+      return res.json({ message: "Suggestion added directly to listings." });
+    }
+
+    // check to see if the suggestion already exists:
+    const existingSuggestion = await Suggestion.findOne({
+      childListing: suggest,
+      parentListing: to,
+    });
+
+    if (existingSuggestion) {
+      return res.status(409).json({ error: "This suggestion has already been made." });
+    }
+
+    // otherwise, create a suggestion doc:
+    await new Suggestion({
+      childListing: suggest,
+      parentListing: to,
+      suggestedBy: req.user.id,
+    }).save();
+
+    // notify the child listing owner and the parent listing owner:
+    const childListingOwnerId = childListing.creator.toString();
+    const parentListingOwnerId = parentListing.creator.toString();
+
+    await Notification.create({
+      userId: childListingOwnerId,
+      message: `Your listing "${childListing.title}" was suggested to the project "${parentListing.title}". Accept or Deny the suggestion.`,
+      link: `/listing/${childListing._id}`,
+    });
+
+    await Notification.create({
+      userId: parentListingOwnerId,
+      message: `A new listing "${childListing.title}" was suggested to your project "${parentListing.title}". Accept or Deny the suggestion.`,
+      link: `/listing/${parentListing._id}`,
+    });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Server Side Error" });
@@ -210,27 +309,76 @@ router.patch("/suggest", async (req, res) => {
 
 // route for accepting or denying suggestions to a project:
 router.patch("/handle-suggestion", async (req, res) => {
-  const { listingId, suggestionId, action } = req.query;
+  const { suggested, to, action } = req.query;
 
   try {
-    const listing = await Listing.findById(listingId);
-    const suggestion = await Listing.findById(suggestionId);
+    const suggestion = await Suggestion.findOne({
+      childListing: suggested,
+      parentListing: to,
+    }).populate("childListing parentListing");
 
-    // default behavior always removes the suggestion from the project's suggestions list
-    // accepting suggestion just adds an additional step:
-
-    if (action === "accept") {
-      listing.listings.addToSet(suggestionId);
-      await Notification.create({
-        userId: suggestion.creator,
-        message: `Your suggestion "${suggestion.title}" was accepted!`,
-        link: `/listing/${listingId}`,
-      });
+    if (!suggestion) {
+      return res.status(404).json({ error: "Suggestion not found." });
     }
 
-    listing.listingsSuggestions.pull(suggestionId);
-    await listing.save();
-    return res.json({ message: `Suggestion ${action}ed successfully.` });
+    // if the logged in user is not the owner of one of the listings, then
+    // throw an error:
+    if (
+      suggestion.childListing.creator.toString() !== req.user.id &&
+      suggestion.parentListing.creator.toString() !== req.user.id
+    ) {
+      return res.status(403).json({ error: "You do not have permission to perform this action." });
+    }
+
+    // if the logged in user is the owner of the child listing, update their status:
+    if (suggestion.childListing.creator.toString() === req.user.id) {
+      suggestion.childOwnerStatus = action.toUpperCase();
+    }
+
+    // if the logged in user is the owner of the parent listing, update their status:
+    if (suggestion.parentListing.creator.toString() === req.user.id) {
+      suggestion.parentOwnerStatus = action.toUpperCase();
+    }
+
+    await suggestion.save();
+
+    // if both statuses are accepted, then move the suggestion to the listings array:
+    if (suggestion.childOwnerStatus === "ACCEPTED" && suggestion.parentOwnerStatus === "ACCEPTED") {
+      const parentListing = await Listing.findById(to);
+      parentListing.listings.addToSet(suggested);
+      await parentListing.save();
+
+      const childListing = await Listing.findById(suggested);
+      childListing.parent = parentListing._id;
+      await childListing.save();
+
+      // delete the suggestion document:
+      await Suggestion.findByIdAndDelete(suggestion._id);
+
+      // notify both parties of the acceptance:
+      await Notification.create({
+        userId: suggestion.childListing.creator,
+        message: `Your suggestion "${suggestion.childListing.title}" was accepted into the project "${suggestion.parentListing.title}".`,
+        link: `/listing/${to}`,
+      });
+
+      await Notification.create({
+        userId: suggestion.parentListing.creator,
+        message: `You accepted the suggestion "${suggestion.childListing.title}" into your project "${suggestion.parentListing.title}".`,
+        link: `/listing/${to}`,
+      });
+
+      return res.json({ message: "Suggestion accepted and added to project listings." });
+    }
+
+    // If one party rejected, delete the suggestion
+    if (suggestion.childOwnerStatus === "REJECTED" || suggestion.parentOwnerStatus === "REJECTED") {
+      await Suggestion.findByIdAndDelete(suggestion._id);
+      return res.json({ message: `Suggestion ${action}ed.` });
+    }
+
+    // Otherwise, just one party has responded - wait for the other
+    return res.json({ message: `Your response has been recorded. Waiting for the other party.` });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Server Side Error" });

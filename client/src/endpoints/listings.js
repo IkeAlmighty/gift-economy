@@ -59,13 +59,19 @@ export async function removeSavedListing({ _id }) {
   });
 }
 
-export async function handleSuggestionAction(listingId, suggestionId, action) {
+export async function handleSuggestionAction(childId, parentId, action) {
   return await fetch(
-    `/api/listings/handle-suggestion?listingId=${listingId}&suggestionId=${suggestionId}&action=${action}`,
+    `/api/listings/handle-suggestion?suggested=${childId}&to=${parentId}&action=${action.trim()}`,
     {
       method: "PATCH",
     }
   );
+}
+
+export async function getSuggestionsForListing(listingId) {
+  const res = await fetch(`/api/listings/suggestions?listingId=${listingId}`);
+  if (res.ok) return await res.json();
+  return { parentSuggestions: [], childSuggestions: [] };
 }
 
 export async function removeConfirmedSuggestedListing(listingId, suggestionId) {
@@ -75,4 +81,10 @@ export async function removeConfirmedSuggestedListing(listingId, suggestionId) {
       method: "PATCH",
     }
   );
+}
+
+export async function removeParent(listingId) {
+  return await fetch(`/api/listings/remove-parent?_id=${listingId}`, {
+    method: "PATCH",
+  });
 }

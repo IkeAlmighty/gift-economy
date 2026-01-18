@@ -1,9 +1,10 @@
 import User from "../models/User.js";
 import Notification from "../models/Notification.js";
 import Listing from "../models/Listing.js";
+import Suggestion from "../models/Suggestion.js";
 import Tag from "../models/Tag.js";
 import userData from "./seedUsers.js";
-import { listingTitles } from "./seedListings.js";
+import seedListings from "./seedListings.js";
 import tagData from "./seedTags.js";
 import db from "../db/connection.js";
 
@@ -15,6 +16,7 @@ async function seed() {
     await User.deleteMany({});
     await Notification.deleteMany({});
     await Listing.deleteMany({});
+    await Suggestion.deleteMany({});
     await Tag.deleteMany({});
 
     console.log("Existing data cleared.");
@@ -35,12 +37,13 @@ async function seed() {
 
       // for each user add a couple listings:
       for (let k = 0; k < Math.random() * 3; k++) {
-        const listingData = listingTitles[Math.floor(Math.random() * listingTitles.length)];
+        const listingData = seedListings[Math.floor(Math.random() * seedListings.length)];
         const listing = await Listing.create({
           title: listingData.title,
           description: listingData.description,
           intent: ["GIFT", "REQUEST", "PROJECT"][Math.floor(Math.random() * 3)],
           tags: listingData.tags,
+          allowedSuggestions: listingData.allowedSuggestions,
           creator: user._id,
         });
         user.listings.addToSet(listing);
