@@ -47,9 +47,9 @@ db.once("open", () => {
     }
   };
 
-  ensureDefaultTags().catch((err) => console.error("Failed to ensure tags", err));
-
   if (process.env.NODE_ENV !== "test") {
+    ensureDefaultTags().catch((err) => console.error("Failed to ensure tags", err));
+
     const server = app.listen(PORT, async () => {
       const address = server.address();
       if (typeof address === "string") {
