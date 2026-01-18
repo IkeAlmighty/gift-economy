@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
 
     if (
       listing.creator._id.toString() === me._id.toString() ||
-      me.connections.includes(listing.creator)
+      me.connections.includes(listing.creator._id)
     ) {
       // if the listing was created by the user currently logged in, or if the listing creator is in the user's connections,
       // then populate the child listings

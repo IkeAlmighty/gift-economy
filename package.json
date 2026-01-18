@@ -16,6 +16,8 @@
   "scripts": {
     "dev": "concurrently \"cd server && npm run dev\" \"cd client && npm run dev\"",
     "install": "cd client && npm i && cd ../server && npm i",
+    "build": "cd client && npm run build",
+    "start": "npm run build && npm --prefix server start",
     "seed": "node server/seeds/index.js"
   },
   "dependencies": {
