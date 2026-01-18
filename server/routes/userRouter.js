@@ -137,14 +137,17 @@ router.get("/connections", async (req, res) => {
   const me = await User.findById(req.user.id).select("connections");
 
   // Allow if requesting own data or if connected
-  if (me._id.toString() === _id || me.connections.map((c) => c.toString()).includes(_id)) {
+  if (
+    me._id.toString() === _id.toString() ||
+    me.connections.map((c) => c.toString()).includes(_id)
+  ) {
     try {
       const connection = await User.findById(_id);
 
       return res.json({ username: connection.username, listings: connection.listings });
     } catch (err) {
       console.log(err);
-      res.status(500).json({ error: "server side error" });
+      return res.status(500).json({ error: "server side error" });
     }
   }
 

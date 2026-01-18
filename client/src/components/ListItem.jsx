@@ -93,8 +93,7 @@ export default function ListItem({ data, disabled, isCentered = true }) {
           <div>Posted by {data.creator?.screenName}</div>
           {data.intent === "PROJECT" && (
             <div className="[&>*]:inline-block [&>*]:mr-2">
-              <div>{data?.listingsSuggestions?.length} suggestions</div>
-              <div>{data?.listings?.length} contributions</div>
+              <div>{data?.listings?.length || 0} contributions</div>
             </div>
           )}
         </div>
