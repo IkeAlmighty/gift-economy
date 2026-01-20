@@ -112,7 +112,7 @@ export function SingleListingPage() {
               </Link>
             </div>
 
-            <ChatClient listingId={listingData._id} />
+            <ChatClient listingId={listingData._id} className="h-96" />
           </div>
         </div>
 
