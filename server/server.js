@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, "../client", "dist")));
 
 // For any route not handled by API, send index.html
 app.get(/^\/(?!api).*/, (_req, res) => {
-  res.sendFile(path.join(__dirname, "../../client", "dist", "index.html"));
+  res.sendFile(path.join(__dirname, "../client", "dist", "index.html"));
 });
 
 app.use("/api", apiRoutes);
