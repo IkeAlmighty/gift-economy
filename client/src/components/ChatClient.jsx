@@ -4,7 +4,7 @@ import { copyToClipboard } from "../utils/clipboard.js";
 import { toast } from "react-toastify";
 import { useUser } from "../Contexts/UserContext.jsx";
 
-export default function ChatClient({ listingId }) {
+export default function ChatClient({ listingId, className = "h-[calc(100vh-4rem)]" }) {
   const socketRef = useRef(null);
 
   const { user, loading } = useUser();
@@ -69,7 +69,7 @@ export default function ChatClient({ listingId }) {
   }
 
   return (
-    <div className="m-3">
+    <div className={`m-3 ${className}`}>
       <div className="flex flex-row justify-between items-center text-xs">
         <div>
           <button onClick={handleCopyToClipboard}>Chat Room {listingId} 📋</button>
@@ -79,7 +79,7 @@ export default function ChatClient({ listingId }) {
         </span>
       </div>
 
-      <div className="border rounded p-3 h-96 overflow-y-auto my-2 bg-white">
+      <div className="border rounded p-3 h-[calc(100%_-_65px)] overflow-y-auto my-2 bg-white">
         {messages.length === 0 && <p className="text-gray-500">No messages yet.</p>}
         {messages.map((msg, idx) => (
           <div

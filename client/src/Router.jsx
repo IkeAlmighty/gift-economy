@@ -15,6 +15,7 @@ import ManageTags from "./pages/ManageTags.jsx";
 import ChatClient from "./components/ChatClient.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import FeedbackPage from "./pages/FeedbackPage.jsx";
+import ListingChatClientPage from "./pages/ListingChatClientPage.jsx";
 
 export default function Router() {
   return (
@@ -63,7 +64,7 @@ export default function Router() {
           path="chat/:listingId"
           element={
             <Protected>
-              <ChatClient listingId={window.location.pathname.split("/").pop()} />
+              <ListingChatClientPage />
             </Protected>
           }
         />
