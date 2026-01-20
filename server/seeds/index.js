@@ -29,6 +29,7 @@ async function seed() {
     // Create test users
     for (const user of userData) {
       await User.create(user);
+      console.log(`Created user: ${user.username}`);
     }
 
     // Connect some users to eachother
