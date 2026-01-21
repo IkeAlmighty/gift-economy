@@ -46,10 +46,13 @@ export default function setupChatNamespace(io) {
       } else if (type === "listing") {
         // only allow users that are connected to the original poster to join the listing room:
         const listingId = roomId;
-        const listingOwnerId = (
-          await Listing.findById(listingId).select("creator")
-        ).creator.toString();
-
+        let listingOwnerId = null;
+        try {
+          listingOwnerId = (await Listing.findById(listingId).select("creator")).creator.toString();
+        } catch (err) {
+          socket.emit("error", { message: "Error while fetching listing" });
+          return;
+        }
         if (
           user.id !== listingOwnerId &&
           !user.connections.map((c) => c.toString()).includes(listingOwnerId)
