@@ -51,7 +51,7 @@ export default function CreateListing({ intent }) {
   }
 
   return (
-    <div>
+    <div className="pb-20">
       <h2 className="mb-5">{header}</h2>
       <form className="flex flex-col space-y-5" onSubmit={handleFormSubmit}>
         <label>
@@ -60,7 +60,7 @@ export default function CreateListing({ intent }) {
         </label>
 
         <div className="flex flex-col gap-3">
-          <div>Listing Type(s):</div>
+          <div>Listing Tag(s):</div>
           <div className="flex flex-row flex-wrap gap-4">
             {["Food", "Shelter", "Labor", "Transportation"].map((t) => (
               <label key={t} className="flex items-center">
