@@ -87,7 +87,19 @@ export default function ChatClient({ listingId, className = "h-[calc(100vh-4rem)
             className={`mb-2 ${msg.sender.id === user._id ? "text-right flex flex-row-reverse gap-x-2" : "text-left"}`}
           >
             {msg.sender.id !== user._id && <strong>{msg.sender.screenName}: </strong>}
-            <span>{msg.text}</span>
+            <span className="relative inline-block mb-2">
+              <div>{msg.text}</div>
+              {msg.ts && (messages[idx + 1]?.ts - msg.ts > 60000 || !messages[idx + 1]) && (
+                <span
+                  className={`text-[0.7rem] text-gray-400 w-[100px] absolute top-5 ${msg.sender.id === user._id ? "right-0" : "left-0"}`}
+                >
+                  {new Date(msg.ts).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </span>
+              )}
+            </span>
           </div>
         ))}
       </div>

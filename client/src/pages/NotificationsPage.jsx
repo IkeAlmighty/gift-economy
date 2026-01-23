@@ -1,13 +1,11 @@
 import { useNotifications } from "../Contexts/NotificationsContext";
 import { Link } from "react-router";
 import { toast } from "react-toastify";
-import { useModal } from "../Contexts/ModelContext";
-import { ConfirmClearModal } from "../components/ConfirmClearModal";
 
 export default function NotificationsPage() {
   const { notifications, markAsRead, markAllAsRead, deleteNotification, clearNotifications } =
     useNotifications();
-  const { show } = useModal();
+
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   const handleMarkAsRead = async (id) => {
@@ -23,15 +21,8 @@ export default function NotificationsPage() {
   };
 
   const handleClearAll = async () => {
-    const result = await show(ConfirmClearModal, {
-      title: "Clear All Notifications",
-      message: "Are you sure you want to delete all notifications?",
-    });
-
-    if (result) {
-      await clearNotifications();
-      toast.success("All notifications cleared");
-    }
+    await clearNotifications();
+    toast.success("All notifications cleared");
   };
 
   return (

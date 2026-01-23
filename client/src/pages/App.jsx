@@ -6,6 +6,16 @@ function App() {
 
   return (
     <>
+      {inNetworkListings.length === 0 && (
+        <div className="mt-10 text-center">
+          <div>No listings in your network yet.</div>
+          <div>
+            You can add people to your network on the <Link to="/connections">Connections</Link>{" "}
+            page.
+          </div>
+        </div>
+      )}
+
       <ListingsList listings={inNetworkListings} />
     </>
   );

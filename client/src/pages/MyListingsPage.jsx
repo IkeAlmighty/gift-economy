@@ -1,16 +1,26 @@
 import { useListingsData } from "../Contexts/ListingsContext";
 import { toast } from "react-toastify";
 import ListingsList from "../components/ListingsList";
+import { useModal } from "../Contexts/ModalContext";
+import { ConfirmClearModal } from "../components/ConfirmClearModal";
 
 export default function MyListingsPage() {
   const { myListings, deleteMyListing } = useListingsData();
 
-  async function handleDelete(listing) {
-    const res = await deleteMyListing(listing);
-    const json = await res.json();
-    toast.success(json.message);
-  }
+  const { show } = useModal();
 
+  async function handleDelete(listing) {
+    const result = await show(ConfirmClearModal, {
+      title: "Delete Listing",
+      message: "Are you sure you want to delete this listing?",
+    });
+
+    if (result) {
+      const res = await deleteMyListing(listing);
+      const json = await res.json();
+      toast.success(json.message);
+    }
+  }
   return (
     <div>
       {myListings.length === 0 ? (

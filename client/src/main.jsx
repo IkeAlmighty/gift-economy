@@ -8,7 +8,7 @@ import { NewListingProvider } from "./Contexts/NewListingContext";
 import { ToastContainer } from "react-toastify";
 import { NotificationsProvider } from "./Contexts/NotificationsContext";
 import { TagsProvider } from "./Contexts/TagsContext.jsx";
-import { ModalProvider } from "./Contexts/ModelContext.jsx";
+import { ModalProvider } from "./Contexts/ModalContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <ModalProvider>

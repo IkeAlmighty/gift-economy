@@ -21,7 +21,7 @@ export function SavedProjectsPage() {
 
   useEffect(() => {
     if (action === "Suggest") {
-      setFilteredResults(savedListings.filter((l) => l.intent !== "GIFT"));
+      setFilteredResults(savedListings.filter((l) => l.intent === "PROJECT"));
     } else {
       setFilteredResults(savedListings);
     }

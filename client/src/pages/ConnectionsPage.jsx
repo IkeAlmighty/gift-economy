@@ -8,7 +8,7 @@ import {
 } from "../endpoints/user";
 import { toast } from "react-toastify";
 import ToolBar from "../components/ToolBar";
-import { useModal } from "../Contexts/ModelContext";
+import { useModal } from "../Contexts/ModalContext";
 import { ConfirmClearModal } from "../components/ConfirmClearModal";
 import FloatingBugButton from "../components/FloatingBugButton";
 import { copyToClipboard } from "../utils/clipboard";

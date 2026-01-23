@@ -62,7 +62,7 @@ export default function ListItem({ data, disabled, isCentered = true }) {
 
   return (
     <div
-      className={`flex-1 min-w-[320px] max-w-[346px] rounded pt-2 ${borderStyle} ${bgColor} ${opacityClass} hover:opacity-100 cursor-pointer transition-opacity duration-150`}
+      className={`flex-1 w-[346px] rounded pt-2 ${borderStyle} ${bgColor} ${opacityClass} hover:opacity-100 cursor-pointer transition-opacity duration-150`}
       onClick={handleNavigate}
     >
       {title && (

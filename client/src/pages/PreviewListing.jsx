@@ -67,22 +67,39 @@ export default function PreviewListing() {
     }
   }
 
+  const publishButtonClass = `
+    border-1
+    text-3xl
+    rounded
+    p-2
+    m-2
+    disabled:opacity-50
+    disabled:cursor-not-allowed
+    shadow-lg
+    transition-all
+    hover:scale-105
+    hover:shadow-2xl
+  `;
+
   if (!data) return <>Loading...</>;
   return (
     <div className="px-2 max-w-[400px] mx-auto">
-      {data ? <ListItem data={data} disabled={true} /> : "Loading Preview..."}
+      <div>
+        <h2 className="my-4 text-center">Preview of Your {toTitleCase(data.intent)}</h2>
+      </div>
+
+      <div className="w-[346px] mx-auto mb-4">
+        {data ? <ListItem data={data} disabled={true} /> : "Loading Preview..."}
+      </div>
+
       {!isValid && (
         <div className="text-center text-red-600 my-2">
           Please fill in all required fields (title, description, and at least one tag)
         </div>
       )}
-      <div className="text-center">
-        <button
-          className="border-1 text-3xl rounded p-2 m-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          onClick={handleSubmit}
-          disabled={!isValid}
-        >
-          Submit {toTitleCase(data.intent)}
+      <div className="text-center mx-auto">
+        <button className={publishButtonClass} onClick={handleSubmit} disabled={!isValid}>
+          Publish {toTitleCase(data.intent)}
         </button>
       </div>
     </div>
