@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router";
 import { Link } from "react-router";
 import LogoutButton from "./LogoutButton";
 import { useUser } from "../Contexts/UserContext";
@@ -33,44 +34,50 @@ export default function DrawerMenu({ children }) {
     ${isOpen ? "pointer-events-auto" : "pointer-events-none"}
   `;
 
-  return (
-    <div className="relative">
-      <button className="flex-1 w-[50px] text-right" onClick={() => setIsOpen(!isOpen)}>
-        {isOpen ? "Close" : "Menu"}
-      </button>
+  const location = useLocation();
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location]);
 
-      {/* Optional: click-outside backdrop */}
+  return (
+    <>
+      {/* click-outside backdrop */}
       {isOpen && (
         <button
-          className="fixed inset-0 z-40 cursor-default"
+          className="fixed inset-0 z-40 cursor-default h-[100vh] w-[100vw]"
           onClick={(e) => setIsOpen(false)}
           aria-label="Close menu overlay"
         />
       )}
+      <div className="relative">
+        <button className="flex-1 w-[50px] text-right" onClick={() => setIsOpen(!isOpen)}>
+          {isOpen ? "Close" : "Menu"}
+        </button>
 
-      <div className={drawerCSS}>
-        {children ? (
-          children
-        ) : (
-          <>
-            <div className="text-sm flex justify-center items-center gap-2">
-              <Link to="/profile" className="text-lg text-green-500 underline">
-                {user?.username}
-              </Link>
-              <LogoutButton />
+        <div className={drawerCSS}>
+          {children ? (
+            children
+          ) : (
+            <>
+              <div className="text-sm flex justify-center items-center gap-2">
+                <Link to="/profile" className="text-lg text-green-500 underline">
+                  {user?.username}
+                </Link>
+                <LogoutButton />
+              </div>
+              <Link to="/saved-listings">💾 Saved Listings</Link>
+              <Link to="/my-listings">Your Listings</Link>
+              <Link to="/connections">Connections</Link>
+              <Link to="/manage-tags">Manage Tags</Link>
+            </>
+          )}
+          {user && (
+            <div className="text-xs absolute bottom-0 right-0 !bg-secondary my-2 mx-3 z-20">
+              Logged in as {user?.screenName}
             </div>
-            <Link to="/saved-listings">💾 Saved Listings</Link>
-            <Link to="/my-listings">Your Listings</Link>
-            <Link to="/connections">Connections</Link>
-            <Link to="/manage-tags">Manage Tags</Link>
-          </>
-        )}
-        {user && (
-          <div className="text-xs absolute bottom-0 right-0 !bg-secondary my-2 mx-3 z-20">
-            Logged in as {user?.screenName}
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
