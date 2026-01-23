@@ -51,7 +51,7 @@ export default function ListingsList({ listings, onActionSet = [], itemsDisabled
       window.removeEventListener("resize", updateCenteredItem);
       document.removeEventListener("scroll", handleScroll, true);
     };
-  }, []);
+  }, [listings.length]);
 
   return (
     <div ref={containerRef} className="flex flex-wrap justify-center gap-x-2 gap-y-5 mt-5 mb-50">
