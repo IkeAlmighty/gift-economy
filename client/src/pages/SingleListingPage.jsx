@@ -89,7 +89,7 @@ export function SingleListingPage() {
 
   if (errorMessage) return <>{errorMessage}</>;
   return (
-    <div>
+    <div className="pb-20">
       <ToolBar />
 
       <div className="px-3 max-w-[900px] mx-auto">
@@ -193,11 +193,22 @@ export function SingleListingPage() {
             </div>
           </>
         )}
+
         {listingData?.parent && (
           <>
             <h2 className="mt-10 text-center underline">Part of Project</h2>
-            <div className="flex flex-row gap-x-1 justify-center text-center">
+            <div className="w-[346px] mx-auto mt-5">
               <ListItem data={listingData.parent} />
+              {isCreator && (
+                <div className="text-center mt-2">
+                  <button
+                    className="bg-red-200 p-2 rounded border-x hover:bg-red-300"
+                    onClick={() => handleRemoveParent(listingData)}
+                  >
+                    Remove from Project
+                  </button>
+                </div>
+              )}
             </div>
           </>
         )}

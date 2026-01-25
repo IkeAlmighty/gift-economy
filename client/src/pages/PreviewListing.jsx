@@ -34,6 +34,7 @@ export default function PreviewListing() {
 
   async function handleSubmit(e) {
     e.target.disabled = true;
+    const normalSubmitText = e.target.innerHTML;
     e.target.innerHTML = "One Moment...";
     const res = await submitNewListing();
 
@@ -63,7 +64,7 @@ export default function PreviewListing() {
       console.log("error: ", res);
       toast.error("Failed to create listing");
       e.target.disabled = false;
-      e.target.innerHTML = "Submit";
+      e.target.innerHTML = normalSubmitText;
     }
   }
 

@@ -37,10 +37,9 @@ async function seed() {
       const user = await User.findOne({ username: userData[i].username });
 
       // for each user add a couple listings:
-      for (let k = 0; k < Math.random() * 3; k++) {
+      for (let k = 0; k < Math.random() * 3 && seedListings.length > 0; k++) {
         const indexOfPopped = Math.floor(Math.random() * seedListings.length);
         const listingData = seedListings[indexOfPopped];
-        seedListings.splice(indexOfPopped, 1);
         const listing = await Listing.create({
           title: listingData.title,
           description: listingData.description,
@@ -50,6 +49,7 @@ async function seed() {
           creator: user._id,
         });
         user.listings.addToSet(listing);
+        seedListings.splice(indexOfPopped, 1);
       }
 
       for (let j = 0; j < Math.random() * userData.length; j++) {
