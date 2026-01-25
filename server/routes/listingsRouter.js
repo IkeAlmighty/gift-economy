@@ -215,10 +215,24 @@ router.delete("/saved-listings", async (req, res) => {
   }
 });
 
-router.delete("/remove-parent", async (req, res) => {
+router.patch("/remove-parent", async (req, res) => {
   const { _id } = req.query;
   try {
     const listing = await Listing.findById(_id);
+    const me = await User.findById(req.user.id);
+
+    if (!me.listings.includes(listing._id)) {
+      return res.status(401).json({ error: "You do not have permission to perform this action." });
+    }
+
+    if (!listing) {
+      return res.status(404).json({ error: "Listing does not exist." });
+    }
+
+    if (!listing.parent) {
+      return res.status(400).json({ error: "This listing does not have a parent listing." });
+    }
+
     const parent = await Listing.findById(listing.parent);
     parent.listings.pull(_id);
     await parent.save();
@@ -263,6 +277,8 @@ router.patch("/suggest", async (req, res) => {
       parentListing.creator.toString() === req.user.id
     ) {
       parentListing.listings.addToSet(suggest);
+      childListing.parent = parentListing._id;
+      await childListing.save();
       await parentListing.save();
       return res.json({ message: "Suggestion added directly to listings." });
     }
