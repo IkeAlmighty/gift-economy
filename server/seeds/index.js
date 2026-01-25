@@ -38,7 +38,9 @@ async function seed() {
 
       // for each user add a couple listings:
       for (let k = 0; k < Math.random() * 3; k++) {
-        const listingData = seedListings[Math.floor(Math.random() * seedListings.length)];
+        const indexOfPopped = Math.floor(Math.random() * seedListings.length);
+        const listingData = seedListings[indexOfPopped];
+        seedListings.splice(indexOfPopped, 1);
         const listing = await Listing.create({
           title: listingData.title,
           description: listingData.description,
