@@ -30,9 +30,8 @@ export function SingleListingPage() {
       setErrorMessage(undefined);
 
       // If user is the creator, fetch suggestions
-      if (user && data.creator === user._id) {
+      if (user && data.creator._id === user._id) {
         const suggestionData = await getSuggestionsForListing(_id);
-        console.log(suggestionData);
         setSuggestions(suggestionData);
       }
     } else if (res.status === 401) {
@@ -60,7 +59,7 @@ export function SingleListingPage() {
       }
     }
     fetchAndSetCreatorData();
-  }, [listingData]);
+  }, [listingData, user]);
 
   async function handleSuggestion(childId, parentId, action) {
     const res = await handleSuggestionAction(childId, parentId, action);
@@ -86,7 +85,7 @@ export function SingleListingPage() {
     }
   }
 
-  const isCreator = user && listingData && listingData.creator === user._id;
+  const isCreator = user && listingData && listingData.creator._id === user._id;
 
   if (errorMessage) return <>{errorMessage}</>;
   return (
@@ -99,7 +98,6 @@ export function SingleListingPage() {
           <span className="text-sm">{listingData.intent}</span>
         </div>
         <span>created by {creator?.username}</span>
-
         <div className="flex flex-wrap flex-row mx-auto justify-between my-5 gap-y-10 border-t-2 pt-5 border-gray-200">
           <div className="flex-grow">
             <h3>Description</h3>
@@ -115,7 +113,6 @@ export function SingleListingPage() {
             <ChatClient listingId={listingData._id} className="h-96" />
           </div>
         </div>
-
         {/* Suggested parent projects this listing could be part of: */}
         {isCreator && suggestions.childSuggestions?.length > 0 && (
           <>
@@ -148,7 +145,6 @@ export function SingleListingPage() {
             </div>
           </>
         )}
-
         {/* Suggested child projects this listing could incorporated: */}
         {isCreator && suggestions.parentSuggestions?.length > 0 && (
           <>
@@ -181,7 +177,6 @@ export function SingleListingPage() {
             </div>
           </>
         )}
-
         {listingData?.listings?.length > 0 && (
           <>
             <h2 className="mt-10 text-center underline">Confirmed Project Components</h2>
@@ -198,7 +193,6 @@ export function SingleListingPage() {
             </div>
           </>
         )}
-
         {listingData?.parent && (
           <>
             <h2 className="mt-10 text-center underline">Part of Project</h2>

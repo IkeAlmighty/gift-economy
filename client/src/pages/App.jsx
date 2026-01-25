@@ -7,7 +7,7 @@ function App() {
 
   return (
     <>
-      {inNetworkListings.length === 0 && (
+      {inNetworkListings?.length === 0 && (
         <div className="mt-10 text-center">
           <div>No listings in your network yet.</div>
           <div>
