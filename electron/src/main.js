@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import path from "node:path";
 import started from "electron-squirrel-startup";
 import baseController from "./controller/index.js";
+import RelayService from "./application/services/fastsync-service.js";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -42,6 +43,8 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
+
+  RelayService.connectToRelays(); // Start relay connections on app ready
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
