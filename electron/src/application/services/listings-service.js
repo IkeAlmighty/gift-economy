@@ -1,12 +1,13 @@
-import { ListingsRepository } from "../../infrastructure/listings-repository.js";
+import { listingsRepository } from "../../infrastructure/listings-repository.js";
+import { syncService } from "./sync-service.js";
 
 class ListingService {
   async createListing(listingData) {
     // Logic to create a new listing in the database
-    const newListing = await ListingsRepository.createListing(listingData);
-    await SyncService.syncListing(newListing);
+    const newListing = await listingsRepository.createListing(listingData);
+    await syncService.syncListing(newListing);
     return newListing;
   }
 }
 
-export { ListingService };
+export const listingsService = new ListingService();

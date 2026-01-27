@@ -1,8 +1,8 @@
 class ListingsRepository {
-  static async createListing(listingData) {}
-  static async getListingById(listingId) {}
-  static async updateListing(listingId, updateData) {}
-  static async deleteListing(listingId) {}
+  async createListing(listingData) {}
+  async getListingById(listingId) {}
+  async updateListing(listingId, updateData) {}
+  async deleteListing(listingId) {}
 }
 
-export { ListingsRepository };
+export const listingsRepository = new ListingsRepository();
