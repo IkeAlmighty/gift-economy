@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "node:path";
 import started from "electron-squirrel-startup";
-import baseController from "./controller/index.js";
+import { initBaseController } from "./controller/index.js";
 import RelayService from "./application/services/fastsync-service.js";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -58,6 +58,7 @@ app.on("window-all-closed", () => {
 
 // Listen for events sent from the renderer via the context bridge
 ipcMain.handle("controller-event", async (_, { eventName, payload }) => {
+  const baseController = await initBaseController();
   try {
     return await baseController.handleEvent(eventName, payload);
   } catch (error) {
