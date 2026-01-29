@@ -3,9 +3,13 @@ import { useLocation } from "react-router";
 import { Link } from "react-router";
 import LogoutButton from "./LogoutButton";
 import { useUser } from "../Contexts/UserContext";
+import ToggleButtonGroup from "./ToggleButtonGroup";
+import { useAppSettings } from "../Contexts/AppSettingsContext.jsx";
 
 export default function DrawerMenu({ children }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const { settings, updateSetting } = useAppSettings();
 
   const { user } = useUser();
 
@@ -69,6 +73,18 @@ export default function DrawerMenu({ children }) {
               <Link to="/my-listings">Your Listings</Link>
               <Link to="/connections">Connections</Link>
               <Link to="/manage-tags">Manage Tags</Link>
+
+              <div className="text-sm mt-2 underline">
+                <div className="pb-5">Scroll Animation</div>
+                <ToggleButtonGroup
+                  value={settings.doScrollAnimation === true ? "left" : "right"}
+                  onChange={(value) =>
+                    updateSetting("doScrollAnimation", value === "right" ? false : true)
+                  }
+                  leftLabel="On"
+                  rightLabel="Off"
+                />
+              </div>
             </>
           )}
           {user && (

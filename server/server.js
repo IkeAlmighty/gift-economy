@@ -9,7 +9,6 @@ import Notification from "./models/Notification.js";
 import Tag from "./models/Tag.js";
 import defaultTags from "./seeds/seedTags.js";
 import setupChatNamespace from "./routes/socket-io/rooms.js";
-import setupNotificationsNamespace from "./routes/socket-io/notifications.js";
 
 import db from "./db/connection.js";
 import apiRoutes from "./routes/index.js";
@@ -62,7 +61,7 @@ db.once("open", () => {
 
     const io = new Server(server, {
       cors: {
-        origin: "http://localhost:5173", // TODO: replace with production origin
+        origin: process.env.SERVER_ORIGIN || "http://localhost:5173",
         methods: ["GET", "POST"],
         credentials: true,
       },
@@ -72,12 +71,10 @@ db.once("open", () => {
 
     // Setup namespaces
     const chatNs = setupChatNamespace(io);
-    const notificationsNs = setupNotificationsNamespace(io);
 
     // Make io and namespaces available globally
     global.io = io;
     global.chatNs = chatNs;
-    global.notificationsNs = notificationsNs;
 
     // Attempt to use MongoDB change streams (requires replica set)
     // Falls back to model hooks if not available

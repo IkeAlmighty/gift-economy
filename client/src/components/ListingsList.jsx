@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import ListItem from "./ListItem.jsx";
+import { useAppSettings } from "../Contexts/AppSettingsContext.jsx";
 
 export default function ListingsList({ listings, onActionSet = [], itemsDisabled = false }) {
   const containerRef = useRef(null);
   const itemRefs = useRef([]);
   const [focusedIndex, setFocusedIndex] = useState(0);
+
+  const { settings } = useAppSettings();
 
   const actionColorMap = {
     Suggest: "bg-green-200 hover:bg-green-300",
@@ -63,7 +66,9 @@ export default function ListingsList({ listings, onActionSet = [], itemsDisabled
         >
           <ListItem
             data={listing}
-            isCentered={focusedIndex !== null ? index === focusedIndex : true}
+            isCentered={
+              !settings.doScrollAnimation || (focusedIndex !== null ? index === focusedIndex : true)
+            }
             disabled={itemsDisabled}
           />
           {onActionSet && (
