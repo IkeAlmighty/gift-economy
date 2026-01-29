@@ -15,7 +15,7 @@ notificationSchema.post("save", function (doc) {
   try {
     if (global.io && doc && doc.userId) {
       const payload = {
-        id: doc._id,
+        _id: doc._id,
         userId: doc.userId,
         message: doc.message,
         link: doc.link,
@@ -27,6 +27,7 @@ notificationSchema.post("save", function (doc) {
     }
   } catch (err) {
     // fail silently; notifications should not crash writes
+    console.log(err);
   }
 });
 

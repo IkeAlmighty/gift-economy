@@ -44,7 +44,9 @@ export function NotificationsProvider({ children }) {
     if (user) {
       // Connect to the server
       const socketBase = import.meta.env.VITE_SOCKET_SERVER_URL || window.location.origin;
-      const newSocket = io(socketBase);
+
+      const newSocket = io(socketBase, { withCredentials: true });
+
       setSocket(newSocket);
 
       // Listen for notifications

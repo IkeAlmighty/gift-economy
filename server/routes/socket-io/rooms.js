@@ -1,7 +1,9 @@
 import { socketioAuthMiddleware } from "../../middleware/authMiddleware.js";
 import Listing from "../../models/Listing.js";
 import Message from "../../models/Message.js";
+import Notification from "../../models/Notification.js";
 import { ObjectId } from "mongodb";
+import User from "../../models/User.js";
 
 export default function setupChatNamespace(io) {
   const chatNs = io.of("/chat");
@@ -122,6 +124,32 @@ export default function setupChatNamespace(io) {
         text,
         sender: ObjectId.createFromHexString(user.id),
       });
+
+      // add user to this room's chat subscriptions (asynchronously):
+      try {
+        User.findByIdAndUpdate(user.id, { $addToSet: { chatRooms: roomId } });
+      } catch (err) {
+        console.error("Failed to add chat room to user subscriptions:", err);
+      }
+
+      // create notifications for all users subscribed to this chat room (asynchronously):
+      async function createNotifications() {
+        try {
+          const subscribers = await User.find({ chatRooms: roomId }).select("_id");
+          for (const sub of subscribers) {
+            if (sub._id.toString() === user.id) continue; // don't notify sender
+            await Notification.create({
+              userId: sub._id,
+              message: `New message from ${user.screenName}`,
+              link: `/chat/${roomId}`,
+            });
+          }
+        } catch (err) {
+          console.error("Failed to create notifications:", err);
+        }
+      }
+
+      createNotifications();
     });
 
     socket.on("disconnect", () => {
