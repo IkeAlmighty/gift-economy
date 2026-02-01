@@ -1,4 +1,4 @@
-import { listingsRepository } from "../../infrastructure/listings-repository.js";
+import { listingsRepository } from "../../infrastructure/listings-repository.mjs";
 
 class SyncService {
   async syncListing(listing) {

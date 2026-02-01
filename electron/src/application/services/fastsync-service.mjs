@@ -7,4 +7,5 @@ class FastSyncService {
   }
 }
 
-export const fastSyncService = new FastSyncService();
+const fastSyncService = new FastSyncService();
+export default fastSyncService;
