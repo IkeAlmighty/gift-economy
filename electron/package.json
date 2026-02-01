@@ -5,9 +5,9 @@
   "description": "My Electron application description",
   "main": ".vite/build/main.js",
   "private": true,
-  "type": "module",
   "scripts": {
-    "start": "electron-forge start",
+    "pre-start": "node ./build-renderer-api.mjs",
+    "start": "npm run pre-start && electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
