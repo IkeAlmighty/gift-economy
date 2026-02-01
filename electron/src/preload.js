@@ -6,6 +6,6 @@ import { contextBridge, ipcRenderer } from "electron";
 // Expose a secure API to the renderer process
 contextBridge.exposeInMainWorld("controllerAPI", {
   invoke: (eventName, payload) => {
-    ipcRenderer.invoke("controller-event", { eventName, payload });
+    return ipcRenderer.invoke("controller-event", { eventName, payload });
   },
 });
