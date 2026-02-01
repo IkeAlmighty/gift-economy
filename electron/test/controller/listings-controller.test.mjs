@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { initBaseController } from "../../src/controller/index.js";
+import { initBaseController } from "../../src/controller/index.mjs";
 
 test("listings controller is autoregisters in the baseController", async () => {
   const baseController = await initBaseController();

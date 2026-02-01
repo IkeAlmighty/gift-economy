@@ -1,5 +1,5 @@
-import { listingsRepository } from "../../infrastructure/listings-repository.js";
-import { syncService } from "./sync-service.js";
+import { listingsRepository } from "../../infrastructure/listings-repository.mjs";
+import { syncService } from "./sync-service.mjs";
 
 class ListingService {
   async createListing(listingData) {
@@ -10,4 +10,5 @@ class ListingService {
   }
 }
 
-export const listingsService = new ListingService();
+const listingsService = new ListingService();
+export default listingsService;

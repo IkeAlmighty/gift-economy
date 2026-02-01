@@ -7,7 +7,7 @@ const __dirname = path.dirname(__filename);
 
 async function requireControllers(dirPath) {
   // Dynamically import all .js files in this directory except index.js
-  const files = fs.readdirSync(dirPath).filter((f) => f.endsWith(".js") && f !== "index.js");
+  const files = fs.readdirSync(dirPath).filter((f) => f.endsWith(".mjs") && f !== "index.mjs");
   for (const file of files) {
     const modulePath = path.join(dirPath, file);
     const mod = await import(pathToFileURL(modulePath).href);

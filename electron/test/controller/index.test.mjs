@@ -1,7 +1,6 @@
-// Node.js built-in test for baseController
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { initBaseController } from "../../src/controller/index.js";
+import { initBaseController } from "../../src/controller/index.mjs";
 
 test("registers handlers and routes events", async () => {
   const baseController = await initBaseController();
