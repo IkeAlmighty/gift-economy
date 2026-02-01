@@ -90,3 +90,6 @@ typings/
 
 # Electron-Forge
 out/
+
+# App generated api file for frontend controller interface:
+src/renderer/api.js
