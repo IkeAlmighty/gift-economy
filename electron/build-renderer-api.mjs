@@ -1,11 +1,10 @@
 // Script to initialize BaseController and generate renderer API file
-import { initBaseController, getBaseControllerInstance } from "./src/controller/index.mjs";
+import { BaseController } from "./src/controller/index.mjs";
 import fs from "node:fs";
 import path from "node:path";
 
 // Initialize the BaseController (registers all handlers)
-await initBaseController();
-const baseController = getBaseControllerInstance();
+const baseController = await BaseController.initialize();
 
 // Get all registered handler names
 const handlerNames = Object.keys(baseController.handlers);

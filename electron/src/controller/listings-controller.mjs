@@ -1,7 +1,7 @@
-import CreateListingDTO from "../application/dtos/create-listing-dto.mjs";
-import listingsService from "../application/services/listings-service.mjs";
+import CreateListingDTO from "../use-cases/dtos/CreateListingDTO.mjs";
 
-export async function createListing(payload) {
+export async function createListing(usecases, payload) {
+  const { CreateListingService } = usecases; // BaseController will instantiate this use case class when it is accessed.
   const listingData = new CreateListingDTO(payload);
-  await listingsService.createListing(listingData);
+  await CreateListingService.execute(listingData);
 }

@@ -1,4 +1,4 @@
-class CreateListingDTO {
+export default class CreateListingDTO {
   constructor({
     title,
     description,
@@ -11,7 +11,6 @@ class CreateListingDTO {
     this.tags = tags;
     this.intent = intent;
     this.allowedSuggestionTypes = allowedSuggestionTypes;
+    Object.freeze(this);
   }
 }
-
-export default CreateListingDTO;

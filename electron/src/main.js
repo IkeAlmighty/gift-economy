@@ -1,8 +1,14 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "node:path";
 import started from "electron-squirrel-startup";
-import { initBaseController } from "./controller";
-import RelayService from "./application/services/fastsync-service";
+import BaseController from "./controller";
+import ConnectToHttpRelaysService from "./infrastructure/services/relays/ConnectToHttpRelays.mjs";
+import ConnectToWebSocketRelaysService from "./infrastructure/services/relays/ConnectWebSocketRelays.mjs";
+
+import defaultConfig from "./defaultConfig.mjs";
+
+let controller;
+const config = { ...defaultConfig };
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -33,7 +39,7 @@ const createWindow = () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   createWindow();
 
   // On OS X it's common to re-create a window in the app when the
@@ -44,7 +50,12 @@ app.whenReady().then(() => {
     }
   });
 
-  RelayService.connectToRelays(); // Start relay connections on app ready
+  await new ConnectToHttpRelaysService(config.relayAddresses).execute(); // Start relay connections on app ready
+  await new ConnectToWebSocketRelaysService(config.relayAddresses).execute(); // Start websocket relay connections on app ready
+  controller = await BaseController.initialize({
+    controllersDirectories: [path.join(__dirname, "controller")],
+    usecasesDirectories: [path.join(__dirname, "")],
+  });
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -58,9 +69,8 @@ app.on("window-all-closed", () => {
 
 // Listen for events sent from the renderer via the context bridge
 ipcMain.handle("controller-event", async (_, { eventName, payload }) => {
-  const baseController = await initBaseController();
   try {
-    return await baseController.handleEvent(eventName, payload);
+    return await controller.handleEvent(eventName, payload);
   } catch (error) {
     console.error(`Error handling event ${eventName}:`, error);
     throw error; // Propagate error back to renderer
