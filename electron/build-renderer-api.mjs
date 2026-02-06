@@ -2,9 +2,16 @@
 import { BaseController } from "./src/controller/index.mjs";
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Initialize the BaseController (registers all handlers)
-const baseController = await BaseController.initialize();
+const baseController = await BaseController.initialize({
+  controllersDirectories: [path.join(__dirname, "src", "controller")],
+  usecasesDirectories: [path.join(__dirname, "src", "application", "use-cases")],
+});
 
 // Get all registered handler names
 const handlerNames = Object.keys(baseController.handlers);
