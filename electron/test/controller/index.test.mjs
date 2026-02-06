@@ -25,7 +25,7 @@ test("BaseController handles an event and returns expected result.", async () =>
 test("BaseController throws error for unregistered event.", async () => {
   const controller = await BaseController.initialize();
   try {
-    await controller.handleEvent("nonExistentHandler", {});
+    await controller.handleEvent("nonExistentHandler");
     assert.fail("Expected error was not thrown.");
   } catch (error) {
     assert.equal(

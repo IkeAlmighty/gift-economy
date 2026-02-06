@@ -60,7 +60,7 @@ export class BaseController {
       {},
       {
         get: (_, name) => {
-          const depFunc = this.dependencyInjector.getDependencies()[name]?.func;
+          const depFunc = this.dependencyInjector.trackedFunctions[name];
           if (depFunc) {
             this.dependencyInjector.injectDependencies(depFunc);
             return depFunc;
@@ -70,13 +70,15 @@ export class BaseController {
       }
     );
 
+    // inject dependencies into the handler
+    this.handlers[eventName].dependencies = dependencies;
+
     // handle the event:
     return await this.handlers[eventName](payload, dependencies);
   }
 
   registerHandlers(handlers) {
     // map events to handlers, using the function's name to identify the event
-
     for (const handler of handlers) {
       this.handlers[handler.name] = handler;
     }

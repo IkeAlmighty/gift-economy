@@ -10,9 +10,9 @@ const __dirname = path.dirname(__filename);
 test("maps dependencies from directory", async () => {
   const injector = new DependencyInjector();
   await injector.mapDependencies(path.join(__dirname, "./mock-dependencies"));
-  const dependencies = injector.getDependencies();
+  const dependencies = injector.trackedFunctions;
 
-  assert.ok(dependencies["MockService"], "MockService should be mapped");
+  assert.ok(dependencies["MockService"], "MockService should be tracked.");
 });
 
 // test("retrieves mapped dependency", async () => {});
