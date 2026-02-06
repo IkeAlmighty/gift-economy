@@ -6,7 +6,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export class DependencyInjector {
   constructor() {
-    this.dependenciesMap = {};
+    this.trackedFunctions = {};
   }
 
   async mapDependencies(dir) {
@@ -22,10 +22,7 @@ export class DependencyInjector {
                 `Warning: Default function in file ${file} does not have a 'name' property, and so will be skipped in dependencies.`
               );
             } else {
-              this.dependenciesMap[module.default.name] = {
-                func: module.default,
-                dependencyNames: module.Dependencies || module.dependencies || [],
-              };
+              this.trackedFunctions[module.default.name] = module.default;
             }
           }
         } catch (error) {
@@ -37,10 +34,7 @@ export class DependencyInjector {
     }
   }
 
-  getDependencies() {
-    return this.dependenciesMap;
-  }
-
+  // actually injects proxies for dependencies into the function's 'dependencies' property
   injectDependencies(func, visited = new Set()) {
     // prevent circular dependencies
     if (visited.has(func.name)) {
@@ -48,19 +42,24 @@ export class DependencyInjector {
     }
     visited.add(func.name);
 
-    // injects the dependencies into the function based on its name
-    // grab the names of the dependencies
-    const dependencyNames = this.dependenciesMap[func.name]?.dependencyNames || [];
-    func.dependencies = {};
-    // for each dependency name, get the dependency function and inject it to this function
-    dependencyNames.forEach((depName) => {
-      const depFunc = this.dependenciesMap[depName]?.func;
-      func.dependencies[depName] = depFunc;
+    // first, identify that the function is being tracked:
+    const trackedFunc = this.trackedFunctions[func.name];
+    if (!trackedFunc) {
+      throw new Error(`Function ${func.name} is not tracked for dependency injection.`);
+    }
 
-      // if the dependency has its own dependencies, inject those as well
-      if (this.dependenciesMap[depName]?.dependencyNames.length > 0) {
-        this.injectDependencies(func.dependencies[depName], visited);
-      }
+    const dependencies = {};
+    func.dependencies = new Proxy(dependencies, {
+      get: (_, prop) => {
+        const dependencyFunc = this.trackedFunctions[prop];
+        if (!dependencyFunc) {
+          throw new Error(`Dependency ${prop} for function ${func.name} is not tracked.`);
+        }
+
+        // recursively inject dependencies for the dependency function
+        this.injectDependencies(dependencyFunc, visited);
+        return dependencyFunc;
+      },
     });
 
     // done injecting for this function's dependency tree, remove from visited set

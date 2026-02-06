@@ -1,4 +1,3 @@
-export const dependencies = ["AnotherMockService"];
 export default function MockService() {
   const { AnotherMockService } = MockService.dependencies;
   AnotherMockService();
