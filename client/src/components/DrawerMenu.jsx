@@ -59,16 +59,16 @@ export default function DrawerMenu({ children }) {
             children
           ) : (
             <>
-              <div className="text-sm flex justify-center items-center gap-2">
-                <Link to="/profile" className="text-lg text-green-500 underline">
-                  {user?.username}
-                </Link>
-                <LogoutButton />
-              </div>
+              <Link to="/profile" className="text-lg text-green-500 underline">
+                {user?.username.slice(0, 10)}
+                {user?.username.length > 10 ? "…" : ""}👤
+              </Link>
+
               <Link to="/saved-listings">💾 Saved Listings</Link>
               <Link to="/my-listings">Your Listings</Link>
               <Link to="/connections">Connections</Link>
               <Link to="/manage-tags">Manage Tags</Link>
+              <LogoutButton />
             </>
           )}
           {user && (
