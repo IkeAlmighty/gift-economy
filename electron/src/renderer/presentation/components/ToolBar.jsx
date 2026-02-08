@@ -6,15 +6,10 @@ export default function ToolBar() {
   const location = useLocation();
 
   const [locationHistory, setLocationHistory] = useState([]);
-  const [plusCloseValue, setPlusCloseValue] = useState(false);
 
   useEffect(() => {
     setLocationHistory([...locationHistory.slice(-50), location.pathname]);
   }, [location.pathname]);
-
-  const handlePlusCloseClick = () => {
-    setPlusCloseValue(!plusCloseValue);
-  };
 
   function BackLink({ children }) {
     if (location.pathname === "/") {
@@ -30,10 +25,6 @@ export default function ToolBar() {
   return (
     <div className="h-12 w-full">
       <BackLink>Back</BackLink>
-
-      <div className="fixed bottom-0 py-3 left-0 right-0 flex justify-center items-center bg-primary">
-        <PlusCloseButton value={plusCloseValue} onClick={handlePlusCloseClick} />
-      </div>
     </div>
   );
 }
