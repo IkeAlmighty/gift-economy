@@ -7,6 +7,8 @@ import PageSlider from "./PageSlider.jsx";
 import PlusCloseButton from "./components/PlusCloseButton.jsx";
 import ModalChain from "./components/ModalChain.jsx";
 import Modal from "./components/Modal.jsx";
+import ChooseIntent from "./components/ChooseIntent.jsx";
+import CreateListing from "./components/CreateListing.jsx";
 
 export default function Layout() {
   const containerStyle = `
@@ -18,23 +20,30 @@ export default function Layout() {
 
   const [plusCloseValue, setPlusCloseValue] = useState("+");
 
-  const handlePlusCloseClick = () => {
+  function handlePlusCloseClick() {
     setPlusCloseValue(plusCloseValue === "+" ? "x" : "+");
-    if (plusCloseValue === "+") {
-      // open modal chain for creating new post:
-    } else {
-      // close modal chain for creating new post:
+  }
+
+  function handleOnPrevious(index) {
+    if (index < 0) {
+      handlePlusCloseClick();
     }
-  };
+  }
 
   return (
     <div className="px-2 py-1">
       <ToolBar />
 
-      <ModalChain>
-        <Modal>hello</Modal>
-        <Modal>goodbye</Modal>
-      </ModalChain>
+      {plusCloseValue === "x" && (
+        <ModalChain onPrevious={handleOnPrevious}>
+          <Modal>
+            <ChooseIntent />
+          </Modal>
+          <Modal>
+            <CreateListing />
+          </Modal>
+        </ModalChain>
+      )}
 
       <div className={containerStyle}>
         <PageSlider>
