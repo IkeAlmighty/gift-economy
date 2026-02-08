@@ -1,10 +1,8 @@
 export default function ChooseListingAction() {
   return (
-    <div>
+    <div className="mt-5">
       {["Create Gift", "Create Request", "Create Project"].map((choice) => (
-        <div>
-          <h2>{choice}</h2>
-        </div>
+        <div className="text-2xl my-5">{choice}</div>
       ))}
     </div>
   );
