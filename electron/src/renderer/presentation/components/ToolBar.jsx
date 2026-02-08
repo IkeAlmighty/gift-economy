@@ -24,7 +24,7 @@ export default function ToolBar() {
       return <Link to="/">Feed</Link>;
     }
 
-    return <a href={locationHistory[locationHistory.length - 2]}>{children}</a>;
+    return <Link to={locationHistory[locationHistory.length - 2]}>{children}</Link>;
   }
 
   return (
