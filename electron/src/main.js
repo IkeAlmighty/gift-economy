@@ -40,6 +40,26 @@ const createWindow = () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
+  // await new ConnectToHttpRelaysService(config.relayAddresses); // Start relay connections on app ready
+  // await new ConnectToWebSocketRelaysService(config.relayAddresses); // Start websocket relay connections on app ready
+  controller = await BaseController.initialize({
+    controllersDirectories: [path.join(__dirname, "controller")],
+    usecasesDirectories: [path.join(__dirname, "")],
+  });
+
+  // Listen for events sent from the renderer via the context bridge
+  ipcMain.handle("controller-event", async (_, { eventName, payload }) => {
+    const controller = getController();
+    console.log(controller, "controller in main handler");
+    try {
+      console.log(`Received event from renderer: ${eventName} with payload:`, payload);
+      return await controller.handleEvent(eventName, payload);
+    } catch (error) {
+      console.error(`Error handling event ${eventName}:`, error);
+      throw error; // Propagate error back to renderer
+    }
+  });
+
   createWindow();
 
   // On OS X it's common to re-create a window in the app when the
@@ -49,13 +69,6 @@ app.whenReady().then(async () => {
       createWindow();
     }
   });
-
-  await new ConnectToHttpRelaysService(config.relayAddresses); // Start relay connections on app ready
-  await new ConnectToWebSocketRelaysService(config.relayAddresses); // Start websocket relay connections on app ready
-  controller = await BaseController.initialize({
-    controllersDirectories: [path.join(__dirname, "controller")],
-    usecasesDirectories: [path.join(__dirname, "")],
-  });
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -64,15 +77,5 @@ app.whenReady().then(async () => {
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
-  }
-});
-
-// Listen for events sent from the renderer via the context bridge
-ipcMain.handle("controller-event", async (_, { eventName, payload }) => {
-  try {
-    return await controller.handleEvent(eventName, payload);
-  } catch (error) {
-    console.error(`Error handling event ${eventName}:`, error);
-    throw error; // Propagate error back to renderer
   }
 });
