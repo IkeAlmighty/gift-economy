@@ -1,3 +1,3 @@
-export default function CreateListingForm({ intent }) {
+export default function CreateListing({ intent }) {
   return <div>{intent}</div>;
 }
