@@ -20,70 +20,69 @@ export class BaseController {
     const controller = new BaseController(CONSTRUCT_TOKEN);
     controller.handlers = {};
 
-    const modules = import.meta.glob("./**/*.mjs", { eager: true });
-    controller.dependencyInjector = DependencyInjector.init(modules); // TODO init modules from megaglob
+    // controller.dependencyInjector = DependencyInjector.init(modules); // TODO init modules from megaglob
 
     // allow undefined controllerDirectories to mean "no directories to load"
-    if (controllersDirectories) {
-      for (const dir of controllersDirectories) {
-        await controller.registerHandlersByDirectory(dir);
-      }
-    }
+    // if (controllersDirectories) {
+    //   for (const dir of controllersDirectories) {
+    //     await controller.registerHandlersByDirectory(dir);
+    //   }
+    // }
 
-    // allow undefined usecasesDirectories to mean "no directories to map"
-    if (usecasesDirectories) {
-      for (const dir of usecasesDirectories) {
-        await controller.dependencyInjector.mapDependencies(dir);
-      }
-    }
+    // // allow undefined usecasesDirectories to mean "no directories to map"
+    // if (usecasesDirectories) {
+    //   for (const dir of usecasesDirectories) {
+    //     await controller.dependencyInjector.mapDependencies(dir);
+    //   }
+    // }
 
-    return controller;
+    // return controller;
   }
 
-  async registerDefaultHandlers(dirPath) {
-    // Dynamically import all .js files in this directory except index.js
-    const paths = Object.keys(megaGlob).filter(
-      (path) => path.includes(`/${dirPath}/`) && !path.endsWith("index.mjs")
-    );
+  // async registerDefaultHandlers(dirPath) {
+  // Dynamically import all .js files in this directory except index.js
+  //     const paths = Object.keys(megaGlob).filter(
+  //       (path) => path.includes(`/${dirPath}/`) && !path.endsWith("index.mjs")
+  //     );
 
-    for (const path in paths) {
-      const mod = megaGlob[path];
+  //     for (const path in paths) {
+  //       const mod = megaGlob[path];
 
-      // Register all exported functions as handlers
-      const handlers = Object.values(mod).filter((fn) => typeof fn === "function");
-      this.registerHandlers(handlers);
-    }
-  }
+  //       // Register all exported functions as handlers
+  //       const handlers = Object.values(mod).filter((fn) => typeof fn === "function");
+  //       this.registerHandlers(handlers);
+  //     }
+  //   }
 
-  async handleEvent(eventName, payload) {
-    if (!this.handlers[eventName]) throw new Error(`No handler registered for event: ${eventName}`);
+  //   async handleEvent(eventName, payload) {
+  //     if (!this.handlers[eventName]) throw new Error(`No handler registered for event: ${eventName}`);
 
-    // create a proxy for dependencies, allowing lazy injection.
-    const dependencies = new Proxy(
-      {},
-      {
-        get: (_, name) => {
-          const depFunc = this.dependencyInjector.trackedFunctions[name];
-          if (depFunc) {
-            this.dependencyInjector.injectDependencies(depFunc);
-            return depFunc;
-          }
-          throw new Error(`Dependency ${name} not found for event ${eventName}`);
-        },
-      }
-    );
+  //     // create a proxy for dependencies, allowing lazy injection.
+  //     const dependencies = new Proxy(
+  //       {},
+  //       {
+  //         get: (_, name) => {
+  //           const depFunc = this.dependencyInjector.trackedFunctions[name];
+  //           if (depFunc) {
+  //             this.dependencyInjector.injectDependencies(depFunc);
+  //             return depFunc;
+  //           }
+  //           throw new Error(`Dependency ${name} not found for event ${eventName}`);
+  //         },
+  //       }
+  //     );
 
-    // inject dependencies into the handler
-    this.handlers[eventName].dependencies = dependencies;
+  //     // inject dependencies into the handler
+  //     this.handlers[eventName].dependencies = dependencies;
 
-    // handle the event:
-    return await this.handlers[eventName](payload, dependencies);
-  }
+  //     // handle the event:
+  //     return await this.handlers[eventName](payload, dependencies);
+  //   }
 
-  registerHandlers(handlers) {
-    // map events to handlers, using the function's name to identify the event
-    for (const handler of handlers) {
-      this.handlers[handler.name] = handler;
-    }
-  }
+  //   registerHandlers(handlers) {
+  //     // map events to handlers, using the function's name to identify the event
+  //     for (const handler of handlers) {
+  //       this.handlers[handler.name] = handler;
+  //     }
+  //   }
 }

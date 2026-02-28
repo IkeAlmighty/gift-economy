@@ -4,11 +4,14 @@ import started from "electron-squirrel-startup";
 import { BaseController } from "./controller/index.mjs";
 import ConnectToHttpRelaysService from "./infrastructure/services/relays/ConnectToHttpRelays.mjs";
 import ConnectToWebSocketRelaysService from "./infrastructure/services/relays/ConnectWebSocketRelays.mjs";
-
 import defaultConfig from "./defaultConfig.mjs";
+import { fileURLToPath } from "node:url";
+import { dirname } from "node:path";
 
-let controller;
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const config = { ...defaultConfig };
+
+const isDev = !app.isPackaged;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -21,15 +24,25 @@ const createWindow = () => {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
+      preload: path.join(__dirname, "preload.cjs"),
     },
   });
 
   // and load the index.html of the app.
-  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+  if (isDev) {
+    const loadWithRetry = async () => {
+      try {
+        await win.loadURL("http://127.0.0.1:5173");
+        console.log("Connected to Vite!");
+      } catch (e) {
+        console.log(`Connection failed: ${e.code} - ${e.description}`);
+        console.log("Vite not ready, retrying in 500ms...");
+        setTimeout(loadWithRetry, 500);
+      }
+    };
+    loadWithRetry();
   } else {
-    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
+    mainWindow.loadFile(path.join(__dirname, "index.html"));
   }
 
   // Open the DevTools.
@@ -40,25 +53,25 @@ const createWindow = () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
-  await new ConnectToHttpRelaysService(config.relayAddresses); // Start relay connections on app ready
-  await new ConnectToWebSocketRelaysService(config.relayAddresses); // Start websocket relay connections on app ready
-  controller = await BaseController.initialize({
-    controllersdirectories: ["controller"],
-    usecasesdirectories: [path.join(__dirname, "")],
-  });
+  // await new ConnectToHttpRelaysService(config.relayAddresses); // Start relay connections on app ready
+  // await new ConnectToWebSocketRelaysService(config.relayAddresses); // Start websocket relay connections on app ready
+  // controller = await BaseController.initialize({
+  //   controllersdirectories: ["controller"],
+  //   usecasesdirectories: [path.join(__dirname, "")],
+  // });
 
   // Listen for events sent from the renderer via the context bridge
-  ipcMain.handle("controller-event", async (_, { eventName, payload }) => {
-    const controller = getController();
-    console.log(controller, "controller in main handler");
-    try {
-      console.log(`Received event from renderer: ${eventName} with payload:`, payload);
-      return await controller.handleEvent(eventName, payload);
-    } catch (error) {
-      console.error(`Error handling event ${eventName}:`, error);
-      throw error; // Propagate error back to renderer
-    }
-  });
+  // ipcMain.handle("controller-event", async (_, { eventName, payload }) => {
+  //   const controller = getController();
+  //   console.log(controller, "controller in main handler");
+  //   try {
+  //     console.log(`Received event from renderer: ${eventName} with payload:`, payload);
+  //     return await controller.handleEvent(eventName, payload);
+  //   } catch (error) {
+  //     console.error(`Error handling event ${eventName}:`, error);
+  //     throw error; // Propagate error back to renderer
+  //   }
+  // });
 
   createWindow();
 
