@@ -43,6 +43,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
     "electron-squirrel-startup": "^1.0.1",
+    "esm-di": "^1.0.3",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-router": "^7.13.0"

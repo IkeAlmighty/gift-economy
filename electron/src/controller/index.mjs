@@ -1,7 +1,5 @@
-import path from "node:path";
-import fs from "node:fs";
-import { pathToFileURL } from "node:url";
-import { DependencyInjector } from "../dependency-injection.mjs";
+import { DependencyInjector } from "esm-di";
+// import megaGlob from "../megaGlob.mjs";
 
 const CONSTRUCT_TOKEN = Symbol("construct");
 
@@ -21,7 +19,9 @@ export class BaseController {
   } = {}) {
     const controller = new BaseController(CONSTRUCT_TOKEN);
     controller.handlers = {};
-    controller.dependencyInjector = new DependencyInjector();
+
+    const modules = import.meta.glob("./**/*.mjs", { eager: true });
+    controller.dependencyInjector = DependencyInjector.init(modules); // TODO init modules from megaglob
 
     // allow undefined controllerDirectories to mean "no directories to load"
     if (controllersDirectories) {
@@ -40,15 +40,18 @@ export class BaseController {
     return controller;
   }
 
-  async registerHandlersByDirectory(dirPath) {
+  async registerDefaultHandlers(dirPath) {
     // Dynamically import all .js files in this directory except index.js
-    const files = fs.readdirSync(dirPath).filter((f) => f.endsWith(".mjs") && f !== "index.mjs");
-    for (const file of files) {
-      const modulePath = path.join(dirPath, file);
-      const mod = await import(pathToFileURL(modulePath).href);
+    const paths = Object.keys(megaGlob).filter(
+      (path) => path.includes(`/${dirPath}/`) && !path.endsWith("index.mjs")
+    );
+
+    for (const path in paths) {
+      const mod = megaGlob[path];
 
       // Register all exported functions as handlers
-      this.registerHandlers(Object.values(mod).filter((fn) => typeof fn === "function"));
+      const handlers = Object.values(mod).filter((fn) => typeof fn === "function");
+      this.registerHandlers(handlers);
     }
   }
 

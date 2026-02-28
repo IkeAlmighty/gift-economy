@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "node:path";
 import started from "electron-squirrel-startup";
-import { BaseController } from "./controller";
+import { BaseController } from "./controller/index.mjs";
 import ConnectToHttpRelaysService from "./infrastructure/services/relays/ConnectToHttpRelays.mjs";
 import ConnectToWebSocketRelaysService from "./infrastructure/services/relays/ConnectWebSocketRelays.mjs";
 
@@ -40,11 +40,11 @@ const createWindow = () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
-  // await new ConnectToHttpRelaysService(config.relayAddresses); // Start relay connections on app ready
-  // await new ConnectToWebSocketRelaysService(config.relayAddresses); // Start websocket relay connections on app ready
+  await new ConnectToHttpRelaysService(config.relayAddresses); // Start relay connections on app ready
+  await new ConnectToWebSocketRelaysService(config.relayAddresses); // Start websocket relay connections on app ready
   controller = await BaseController.initialize({
-    controllersDirectories: [path.join(__dirname, "controller")],
-    usecasesDirectories: [path.join(__dirname, "")],
+    controllersdirectories: ["controller"],
+    usecasesdirectories: [path.join(__dirname, "")],
   });
 
   // Listen for events sent from the renderer via the context bridge
