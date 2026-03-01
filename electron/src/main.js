@@ -32,7 +32,7 @@ const createWindow = () => {
   if (isDev) {
     const loadWithRetry = async () => {
       try {
-        await win.loadURL("http://127.0.0.1:5173");
+        await mainWindow.loadURL("http://localhost:5173");
         console.log("Connected to Vite!");
       } catch (e) {
         console.log(`Connection failed: ${e.code} - ${e.description}`);
