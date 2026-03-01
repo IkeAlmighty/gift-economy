@@ -1,5 +1,5 @@
 // Script to initialize BaseController and generate renderer API file
-import { BaseController } from "./src/controller/index.mjs";
+import { BaseController } from "./src/base-controller.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -9,8 +9,8 @@ const __dirname = path.dirname(__filename);
 
 // Initialize the BaseController (registers all handlers)
 const baseController = await BaseController.initialize({
-  controllersDirectories: [path.join(__dirname, "src", "controller")],
-  usecasesDirectories: [path.join(__dirname, "src", "application", "use-cases")],
+  controllersDirs: [path.join(__dirname, "src", "controller")],
+  usecasesDirs: [path.join(__dirname, "src", "application", "use-cases")],
 });
 
 // Get all registered handler names

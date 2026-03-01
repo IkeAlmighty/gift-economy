@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "node:path";
 import started from "electron-squirrel-startup";
-import { BaseController } from "./controller/index.mjs";
+import { BaseController } from "./base-controller.mjs";
 import ConnectToHttpRelaysService from "./infrastructure/services/relays/ConnectToHttpRelays.mjs";
 import ConnectToWebSocketRelaysService from "./infrastructure/services/relays/ConnectWebSocketRelays.mjs";
 import defaultConfig from "./defaultConfig.mjs";
@@ -55,23 +55,21 @@ const createWindow = () => {
 app.whenReady().then(async () => {
   // await new ConnectToHttpRelaysService(config.relayAddresses); // Start relay connections on app ready
   // await new ConnectToWebSocketRelaysService(config.relayAddresses); // Start websocket relay connections on app ready
-  // controller = await BaseController.initialize({
-  //   controllersdirectories: ["controller"],
-  //   usecasesdirectories: [path.join(__dirname, "")],
-  // });
+
+  let controller = await BaseController.initialize({
+    controllersDirs: [path.join(__dirname, "controller")],
+    usecasesDirs: [path.join(__dirname, "application", "use-cases")],
+  });
 
   // Listen for events sent from the renderer via the context bridge
-  // ipcMain.handle("controller-event", async (_, { eventName, payload }) => {
-  //   const controller = getController();
-  //   console.log(controller, "controller in main handler");
-  //   try {
-  //     console.log(`Received event from renderer: ${eventName} with payload:`, payload);
-  //     return await controller.handleEvent(eventName, payload);
-  //   } catch (error) {
-  //     console.error(`Error handling event ${eventName}:`, error);
-  //     throw error; // Propagate error back to renderer
-  //   }
-  // });
+  ipcMain.handle("controller-event", async (_, { eventName, payload }) => {
+    try {
+      return await controller.handleEvent(eventName, payload);
+    } catch (error) {
+      console.error(`Error handling event ${eventName}:`, error);
+      throw error; // Propagate error back to renderer
+    }
+  });
 
   createWindow();
 
