@@ -51,8 +51,8 @@ export class BaseController {
         get: (_, name) => {
           const depFunc = this.dependencyInjector.trackedFunctions[name];
           if (depFunc) {
-            this.dependencyInjector.injectDependencies(depFunc);
-            return depFunc;
+            const bound = this.dependencyInjector.injectDependencies(depFunc);
+            return bound;
           }
           throw new Error(`Dependency ${name} not found for event ${eventName}`);
         },
