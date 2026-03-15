@@ -58,7 +58,10 @@ app.whenReady().then(async () => {
 
   let controller = await BaseController.initialize({
     controllersDirs: [path.join(__dirname, "controller")],
-    usecasesDirs: [path.join(__dirname, "application", "use-cases")],
+    usecasesDirs: [
+      path.join(__dirname, "application", "use-cases"),
+      path.join(__dirname, "infrastructure"),
+    ],
   });
 
   // Listen for events sent from the renderer via the context bridge
