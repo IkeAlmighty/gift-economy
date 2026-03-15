@@ -4,4 +4,4 @@ class RelayRepository {
   removeRelay(ipAddr) {}
 }
 
-export const relayRepository = new RelayRepository();
+export default new RelayRepository();
